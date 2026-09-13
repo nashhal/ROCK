@@ -2,9 +2,9 @@
   'use strict';
 
   const RAW_BASE = 'https://raw.githubusercontent.com/nashhal/ROCK/main/';
-  const VERSION = '20260913-30';
-  const models = new Map();
-  let rafId = 0;
+  const VERSION = '20260913-24';
+  const objects = new Map();
+  let raf = 0;
 
   function normalize(src) {
     if (!src) return null;
@@ -12,256 +12,246 @@
     return clean.startsWith('assets/products/') ? clean : null;
   }
 
-  function pageUrl(path) {
+  function assetUrl(path) {
     const u = new URL(path, document.baseURI);
     u.search = `v=${VERSION}`;
     return u.href;
   }
 
   function injectStyles() {
-    if (document.getElementById('rock-real-3d-product-system')) return;
+    if (document.getElementById('rock-true-3d-system')) return;
     const style = document.createElement('style');
-    style.id = 'rock-real-3d-product-system';
+    style.id = 'rock-true-3d-system';
     style.textContent = `
-      /* ROCK: product presentation is a real 3D DOM object with front, back and thickness. */
       .product-visual {
         background: var(--paper, #f3f3f1) !important;
-        perspective: 1400px;
-        perspective-origin: 50% 48%;
+        perspective: 1400px !important;
+        perspective-origin: 50% 48% !important;
       }
-
       .product-art.has-catalog-image {
-        background: var(--paper, #f3f3f1) !important;
-        border: 1px solid rgba(16,16,16,.06) !important;
-        box-shadow: inset 0 1px rgba(255,255,255,.78) !important;
-        transform: none !important;
+        position: relative !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
         transform-style: preserve-3d !important;
-        overflow: hidden !important;
-        isolation: isolate;
+        perspective: 1400px !important;
+        overflow: visible !important;
       }
-
       .rock-3d-stage {
-        position: absolute;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        perspective: 1400px;
-        perspective-origin: 50% 45%;
-        overflow: visible;
-        touch-action: pan-y;
-        cursor: grab;
-      }
-      .rock-3d-stage:active { cursor: grabbing; }
-
-      .rock-3d-model {
-        position: relative;
-        width: 78%;
-        height: 78%;
-        max-width: 330px;
-        max-height: 330px;
-        transform-style: preserve-3d;
-        transform-origin: 50% 50%;
-        will-change: transform;
-        filter: drop-shadow(0 24px 26px rgba(16,16,16,.14));
-      }
-
-      .rock-3d-face,
-      .rock-3d-side {
-        position: absolute;
-        backface-visibility: visible;
-        -webkit-backface-visibility: visible;
-        transform-style: preserve-3d;
-      }
-
-      .rock-3d-face {
-        inset: 0;
-        border-radius: 20px;
-        background: var(--paper, #f3f3f1);
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-      }
-      .rock-3d-face.front {
-        transform: translateZ(9px);
-        box-shadow: 0 0 0 1px rgba(16,16,16,.045), inset 0 1px rgba(255,255,255,.72);
-      }
-      .rock-3d-face.back {
-        transform: rotateY(180deg) translateZ(9px);
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
-        box-shadow: inset 0 1px rgba(255,255,255,.22), inset 0 -1px rgba(0,0,0,.08);
-      }
-
-      .rock-3d-face .product-image {
+        position: relative !important;
         width: 100% !important;
         height: 100% !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
+        display: grid !important;
+        place-items: center !important;
+        perspective: 1400px !important;
+        perspective-origin: 50% 50% !important;
+        isolation: isolate !important;
+      }
+      .rock-3d-model {
+        position: relative !important;
+        width: min(82%, 330px) !important;
+        height: min(82%, 330px) !important;
+        transform-style: preserve-3d !important;
+        will-change: transform !important;
+        touch-action: pan-y !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        cursor: grab !important;
+      }
+      .rock-3d-model:active { cursor: grabbing !important; }
+      .rock-3d-face {
+        position: absolute !important;
+        inset: 0 !important;
+        display: grid !important;
+        place-items: center !important;
+        border-radius: 18px !important;
+        overflow: hidden !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+      }
+      .rock-3d-front {
+        transform: translateZ(18px) !important;
+        background: #fff !important;
+        box-shadow: 0 24px 40px rgba(16,16,16,.15), inset 0 0 0 1px rgba(16,16,16,.04) !important;
+      }
+      .rock-3d-back {
+        transform: rotateY(180deg) translateZ(18px) !important;
+        background: linear-gradient(145deg, #e9e9e6, #c9c9c4) !important;
+        box-shadow: inset 0 0 0 1px rgba(16,16,16,.08) !important;
+      }
+      .rock-3d-side {
+        position: absolute !important;
+        background: linear-gradient(180deg, #d8d8d4, #9b9b95) !important;
+        border-radius: 8px !important;
+        box-shadow: inset 0 0 0 1px rgba(16,16,16,.06) !important;
+      }
+      .rock-3d-side.left  { width: 36px !important; height: 100% !important; left: 50% !important; top: 0 !important; transform: translateX(-100%) rotateY(-90deg) !important; transform-origin: right center !important; }
+      .rock-3d-side.right { width: 36px !important; height: 100% !important; left: 50% !important; top: 0 !important; transform: translateX(0) rotateY(90deg) !important; transform-origin: left center !important; }
+      .rock-3d-side.top   { width: 100% !important; height: 36px !important; left: 0 !important; top: 50% !important; transform: translateY(-100%) rotateX(90deg) !important; transform-origin: center bottom !important; }
+      .rock-3d-side.bottom{ width: 100% !important; height: 36px !important; left: 0 !important; top: 50% !important; transform: translateY(0) rotateX(-90deg) !important; transform-origin: center top !important; }
+      .rock-3d-face img {
+        width: 100% !important;
+        height: 100% !important;
         object-fit: contain !important;
         object-position: center !important;
         display: block !important;
-        transform: none !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
-        filter: drop-shadow(0 18px 20px rgba(16,16,16,.10));
-        mix-blend-mode: normal !important;
+        border-radius: 16px !important;
+        pointer-events: none !important;
+        user-select: none !important;
+        -webkit-user-drag: none !important;
+        filter: saturate(.98) contrast(1.01) !important;
       }
-
-      .rock-3d-side { background: linear-gradient(180deg,#c7c7c3,#969692 52%,#73736f); opacity: .98; }
-      .rock-3d-side.top { left: 0; right: 0; top: 0; height: 18px; transform-origin: top; transform: rotateX(90deg); border-radius: 12px 12px 0 0; }
-      .rock-3d-side.bottom { left: 0; right: 0; bottom: 0; height: 18px; transform-origin: bottom; transform: rotateX(-90deg); border-radius: 0 0 12px 12px; }
-      .rock-3d-side.left { top: 0; bottom: 0; left: 0; width: 18px; transform-origin: left; transform: rotateY(-90deg); border-radius: 12px 0 0 12px; }
-      .rock-3d-side.right { top: 0; bottom: 0; right: 0; width: 18px; transform-origin: right; transform: rotateY(90deg); border-radius: 0 12px 12px 0; }
-
-      .rock-3d-glow {
-        position: absolute;
-        inset: 8%;
-        border-radius: 30px;
-        pointer-events: none;
-        background: radial-gradient(circle at 35% 20%, rgba(255,255,255,.72), transparent 42%);
-        transform: translateZ(20px);
-        mix-blend-mode: screen;
-        opacity: .35;
+      .rock-3d-badge {
+        position: absolute !important;
+        bottom: 12px !important;
+        left: 12px !important;
+        z-index: 5 !important;
+        padding: 5px 8px !important;
+        border-radius: 999px !important;
+        background: rgba(16,16,16,.72) !important;
+        color: #fff !important;
+        font: 700 8px/1 Montserrat, sans-serif !important;
+        letter-spacing: .12em !important;
+        pointer-events: none !important;
       }
-
-      .rock-3d-reflection {
-        position: absolute;
-        left: 16%;
-        right: 16%;
-        bottom: -8px;
-        height: 18px;
-        border-radius: 50%;
-        background: rgba(16,16,16,.16);
-        filter: blur(13px);
-        transform: translateZ(-4px);
+      .rock-3d-ground {
+        position: absolute !important;
+        width: 58% !important;
+        height: 14% !important;
+        bottom: 9% !important;
+        left: 21% !important;
+        border-radius: 50% !important;
+        background: rgba(16,16,16,.14) !important;
+        filter: blur(14px) !important;
+        transform: rotateX(70deg) translateZ(-12px) !important;
+        pointer-events: none !important;
       }
-
-      @media (max-width: 900px) {
-        .rock-3d-model { width: 82%; height: 82%; }
-      }
+      .product-card:hover .rock-3d-model { filter: drop-shadow(0 30px 24px rgba(16,16,16,.12)); }
       @media (max-width: 560px) {
-        .rock-3d-model { width: 86%; height: 86%; }
+        .rock-3d-model { width: min(86%, 280px) !important; height: min(86%, 280px) !important; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .rock-3d-model { transition: none !important; }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function createModel(img, path) {
-    if (img.dataset.rock3dBound === '1') return models.get(img);
+  function repair(img) {
+    const path = normalize(img.getAttribute('src')) || normalize(img.dataset.rockImage);
+    if (!path) return;
+    img.dataset.rockImage = path;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    const url = assetUrl(path);
+    const raw = `${RAW_BASE}${path}?v=${VERSION}`;
+    if (!img.src || !img.src.includes(`v=${VERSION}`)) img.src = url;
+    if (!img.dataset.rockFallbackBound) {
+      img.dataset.rockFallbackBound = '1';
+      img.addEventListener('error', () => {
+        if (img.dataset.rockFallbackUsed === '1') return;
+        img.dataset.rockFallbackUsed = '1';
+        img.src = raw;
+      });
+    }
+  }
+
+  function build(img) {
+    const art = img.closest('.product-art.has-catalog-image');
+    if (!art || art.dataset.rock3dBuilt === '1') return;
+    repair(img);
 
     const stage = document.createElement('div');
     stage.className = 'rock-3d-stage';
-    stage.setAttribute('aria-label', 'عرض ثلاثي الأبعاد للمنتج');
-
     const model = document.createElement('div');
     model.className = 'rock-3d-model';
-
     const front = document.createElement('div');
-    front.className = 'rock-3d-face front';
+    front.className = 'rock-3d-face rock-3d-front';
     const back = document.createElement('div');
-    back.className = 'rock-3d-face back';
-    back.style.backgroundImage = `url("${pageUrl(path)}")`;
-
-    const sides = ['top', 'bottom', 'left', 'right'].map((side) => {
+    back.className = 'rock-3d-face rock-3d-back';
+    const backImg = img.cloneNode(false);
+    backImg.src = assetUrl(img.dataset.rockImage);
+    backImg.dataset.rockMirror = '1';
+    back.appendChild(backImg);
+    front.appendChild(img);
+    model.append(front, back);
+    ['left','right','top','bottom'].forEach(side => {
       const el = document.createElement('div');
       el.className = `rock-3d-side ${side}`;
-      return el;
+      model.appendChild(el);
     });
+    const badge = document.createElement('span');
+    badge.className = 'rock-3d-badge';
+    badge.textContent = '360° 3D';
+    const ground = document.createElement('div');
+    ground.className = 'rock-3d-ground';
+    model.appendChild(badge);
+    stage.append(ground, model);
+    art.replaceChildren(stage);
+    art.dataset.rock3dBuilt = '1';
+    objects.set(model, { angle: 0, pitch: 0, target: 0, targetPitch: 0, dragging: false, x: 0 });
 
-    const glow = document.createElement('div');
-    glow.className = 'rock-3d-glow';
-    const reflection = document.createElement('div');
-    reflection.className = 'rock-3d-reflection';
-
-    img.parentNode.insertBefore(stage, img);
-    front.appendChild(img);
-    model.append(front, back, ...sides, glow, reflection);
-    stage.appendChild(model);
-
-    const state = {
-      angle: -18 + Math.random() * 26,
-      speed: 0.42 + Math.random() * 0.12,
-      dragging: false,
-      lastX: 0,
-      velocity: 0,
-      model
-    };
-
-    stage.addEventListener('pointerdown', (e) => {
+    let startX = 0, startY = 0, startAngle = 0, startPitch = 0;
+    const down = ev => {
+      const p = ev.touches ? ev.touches[0] : ev;
       state.dragging = true;
-      state.lastX = e.clientX;
-      state.velocity = 0;
-      stage.setPointerCapture?.(e.pointerId);
-    });
-    stage.addEventListener('pointermove', (e) => {
+      state.x = p.clientX;
+      startX = p.clientX;
+      startY = p.clientY;
+      startAngle = state.target;
+      startPitch = state.targetPitch;
+      model.setPointerCapture?.(ev.pointerId);
+    };
+    const move = ev => {
       if (!state.dragging) return;
-      const delta = e.clientX - state.lastX;
-      state.lastX = e.clientX;
-      state.angle += delta * 0.8;
-      state.velocity = delta * 0.45;
-    });
-    const release = () => { state.dragging = false; };
-    stage.addEventListener('pointerup', release);
-    stage.addEventListener('pointercancel', release);
-    stage.addEventListener('lostpointercapture', release);
-
-    img.dataset.rock3dBound = '1';
-    img.dataset.rockImage = path;
-    models.set(img, state);
-    return state;
+      const p = ev.touches ? ev.touches[0] : ev;
+      state.target = startAngle + (p.clientX - startX) * 0.55;
+      state.targetPitch = Math.max(-14, Math.min(14, startPitch - (p.clientY - startY) * 0.16));
+      if (ev.cancelable) ev.preventDefault();
+    };
+    const up = () => { state.dragging = false; };
+    const state = objects.get(model);
+    model.addEventListener('pointerdown', down);
+    window.addEventListener('pointermove', move, { passive: false });
+    window.addEventListener('pointerup', up, { passive: true });
+    model.addEventListener('touchstart', down, { passive: true });
+    window.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('touchend', up, { passive: true });
   }
 
-  function repair(img) {
-    const path = normalize(img.getAttribute('src')) || normalize(img.dataset.rockImage);
-    if (!path || img.dataset.rock3dBound === '1') return;
-
-    const url = pageUrl(path);
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    if (img.src !== url) img.src = url;
-
-    img.addEventListener('error', () => {
-      if (img.dataset.rockFallbackUsed === '1') return;
-      img.dataset.rockFallbackUsed = '1';
-      img.src = `${RAW_BASE}${path}?v=${VERSION}`;
+  function process() {
+    injectStyles();
+    document.querySelectorAll('img.product-image').forEach(img => {
+      repair(img);
+      build(img);
     });
-
-    createModel(img, path);
+    if (!raf) raf = requestAnimationFrame(tick);
   }
 
   function tick() {
-    models.forEach((state, img) => {
-      if (!img.isConnected) {
-        models.delete(img);
+    objects.forEach((state, model) => {
+      if (!model.isConnected) {
+        objects.delete(model);
         return;
       }
-      if (state.dragging) {
-        state.velocity *= 0.92;
-      } else {
-        state.angle += state.speed + state.velocity;
-        state.velocity *= 0.94;
-      }
-      state.model.style.transform = `rotateX(-4deg) rotateY(${state.angle}deg)`;
+      if (!state.dragging) state.target += 0.16;
+      state.angle += (state.target - state.angle) * 0.12;
+      state.pitch += (state.targetPitch - state.pitch) * 0.12;
+      model.style.transform = `rotateX(${state.pitch}deg) rotateY(${state.angle}deg) translateZ(0)`;
     });
-    rafId = requestAnimationFrame(tick);
-  }
-
-  function apply() {
-    injectStyles();
-    document.querySelectorAll('img.product-image').forEach(repair);
-    if (!rafId) rafId = requestAnimationFrame(tick);
+    raf = requestAnimationFrame(tick);
   }
 
   function observe() {
     const grid = document.getElementById('productGrid');
     if (!grid || grid.dataset.rock3dObserver) return;
     grid.dataset.rock3dObserver = '1';
-    new MutationObserver(apply).observe(grid, { childList: true, subtree: true });
+    new MutationObserver(process).observe(grid, { childList: true, subtree: true });
   }
 
-  document.addEventListener('DOMContentLoaded', () => { apply(); observe(); });
-  window.addEventListener('load', () => { apply(); observe(); });
-  setTimeout(() => { apply(); observe(); }, 300);
-  setTimeout(() => { apply(); observe(); }, 1200);
+  const start = () => { process(); observe(); };
+  document.addEventListener('DOMContentLoaded', start);
+  window.addEventListener('load', start);
+  setTimeout(start, 400);
+  setTimeout(start, 1200);
 })();
