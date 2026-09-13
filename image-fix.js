@@ -3,17 +3,36 @@
 
   const RAW_BASE = 'https://raw.githubusercontent.com/nashhal/ROCK/main/';
   const VERSION = '20260913-15';
+  const rotatingImages = new Set();
+  let rotationStarted = false;
 
   function normalizeProductPath(src) {
     if (!src) return null;
     const clean = String(src).split('?')[0].replace(/^\.\//, '').replace(/^\//, '');
-    return clean.startsWith('assets/products/') ? clean : null;
+    if (!clean.startsWith('assets/products/')) return null;
+    return clean;
   }
 
   function buildPageUrl(path) {
     const url = new URL(path, document.baseURI);
     url.search = `v=${VERSION}`;
     return url.href;
+  }
+
+  function injectSpinStyles() {
+    if (document.getElementById('rock-product-spin-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'rock-product-spin-styles';
+    style.textContent = `
+      .product-visual { perspective: 1000px; perspective-origin: 50% 50%; }
+      .product-art.has-catalog-image .product-image {
+        transform-origin: 50% 50% !important;
+        transform-style: preserve-3d !important;
+        backface-visibility: visible !important;
+        will-change: transform;
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   function classifyMotion(art, img) {
@@ -23,82 +42,22 @@
     const name = (card?.querySelector('.product-info h3')?.textContent || '').toLowerCase();
     const source = `${label} ${name} ${img?.dataset.rockImage || ''}`;
 
-    art.classList.remove('rock-spin-slow','rock-spin-medium','rock-spin-fast','rock-spin-power','rock-spin-cable');
+    art.classList.remove(
+      'rock-motion-default','rock-motion-charger','rock-motion-cable','rock-motion-audio',
+      'rock-motion-power','rock-motion-car','rock-motion-protection','rock-motion-speaker','rock-motion-bag'
+    );
 
-    let type = 'rock-spin-slow';
-    if (/cable|wired|كيبل|سلك/.test(source)) type = 'rock-spin-cable';
-    else if (/charger|شاحن|adapter|محول/.test(source)) type = 'rock-spin-medium';
-    else if (/power.?bank|battery|باور|بطارية|energy/.test(source)) type = 'rock-spin-power';
-    else if (/earphone|headphone|audio|سماعة|صوت/.test(source)) type = 'rock-spin-medium';
-    else if (/fast|gaming|speaker/.test(source)) type = 'rock-spin-fast';
+    let type = 'default';
+    if (/charger|شاحن|adapter|محول/.test(source)) type = 'charger';
+    else if (/cable|wired|كيبل|سلك/.test(source)) type = 'cable';
+    else if (/earphone|headphone|audio|سماعة|صوت/.test(source)) type = 'audio';
+    else if (/power.?bank|battery|باور|بطارية|energy/.test(source)) type = 'power';
+    else if (/car|vehicle|سيارة|سيارات/.test(source)) type = 'car';
+    else if (/case|protection|حماية|cover/.test(source)) type = 'protection';
+    else if (/speaker|مكبر|سبيكر/.test(source)) type = 'speaker';
+    else if (/bag|حقيبة|backpack/.test(source)) type = 'bag';
 
-    art.classList.add(type);
-  }
-
-  function injectMotionStyles() {
-    if (document.getElementById('rock-product-spin-styles')) return;
-    const style = document.createElement('style');
-    style.id = 'rock-product-spin-styles';
-    style.textContent = `
-      /* ROCK: visible 3D product spin */
-      .product-art.has-catalog-image .product-image {
-        transform-origin: center center !important;
-        transform-style: preserve-3d;
-        backface-visibility: visible;
-        will-change: transform;
-        animation-timing-function: linear !important;
-        animation-iteration-count: infinite !important;
-        transition: filter .35s ease, scale .35s ease;
-      }
-
-      .product-art.has-catalog-image.rock-spin-slow .product-image {
-        animation: rockProductSpin 9s linear infinite;
-      }
-      .product-art.has-catalog-image.rock-spin-medium .product-image {
-        animation: rockProductSpin 7s linear infinite;
-      }
-      .product-art.has-catalog-image.rock-spin-fast .product-image {
-        animation: rockProductSpin 5s linear infinite;
-      }
-      .product-art.has-catalog-image.rock-spin-power .product-image {
-        animation: rockProductSpin 8s linear infinite;
-      }
-      .product-art.has-catalog-image.rock-spin-cable .product-image {
-        animation: rockProductSpin 11s linear infinite;
-      }
-
-      @keyframes rockProductSpin {
-        from { transform: perspective(900px) rotateY(0deg) scale(1); }
-        to   { transform: perspective(900px) rotateY(360deg) scale(1); }
-      }
-
-      .product-card:hover .product-art.has-catalog-image .product-image,
-      .product-card:focus-within .product-art.has-catalog-image .product-image {
-        animation-play-state: paused;
-        transform: perspective(900px) rotateY(18deg) scale(1.06) !important;
-        filter: drop-shadow(0 22px 28px rgba(0,0,0,.2));
-      }
-
-      .product-card:active .product-art.has-catalog-image .product-image {
-        transform: perspective(900px) rotateY(8deg) scale(1.025) !important;
-      }
-
-      @media (max-width: 900px) {
-        .product-art.has-catalog-image.rock-spin-slow .product-image { animation-duration: 10s; }
-        .product-art.has-catalog-image.rock-spin-medium .product-image { animation-duration: 8s; }
-        .product-art.has-catalog-image.rock-spin-fast .product-image { animation-duration: 6s; }
-        .product-art.has-catalog-image.rock-spin-power .product-image { animation-duration: 9s; }
-        .product-art.has-catalog-image.rock-spin-cable .product-image { animation-duration: 12s; }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .product-art.has-catalog-image .product-image {
-          animation: none !important;
-          transform: none !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
+    art.classList.add(`rock-motion-${type}`);
   }
 
   function repairImage(img) {
@@ -116,6 +75,9 @@
     const art = img.closest('.product-art');
     if (art) classifyMotion(art, img);
 
+    img.dataset.rockSpinReady = '1';
+    rotatingImages.add(img);
+
     if (!img.dataset.rockFallbackBound) {
       img.dataset.rockFallbackBound = '1';
       img.addEventListener('error', () => {
@@ -126,9 +88,54 @@
     }
   }
 
+  function renderSpin(now) {
+    if (!rotationStarted) return;
+    const seconds = now / 1000;
+    rotatingImages.forEach((img) => {
+      if (!img.isConnected || !img.dataset.rockSpinReady) {
+        rotatingImages.delete(img);
+        return;
+      }
+      const rect = img.getBoundingClientRect();
+      const inViewport = rect.bottom > -120 && rect.top < window.innerHeight + 120;
+      if (!inViewport) return;
+
+      const art = img.closest('.product-art');
+      const source = `${art?.className || ''} ${img.alt || ''}`.toLowerCase();
+      let cycle = 7.5;
+      if (/charger|شاحن/.test(source)) cycle = 6.5;
+      else if (/cable|wired|كيبل|سلك/.test(source)) cycle = 8.5;
+      else if (/earphone|headphone|audio|سماعة|صوت/.test(source)) cycle = 7.8;
+      else if (/power|battery|باور|بطارية/.test(source)) cycle = 7.2;
+      else if (/car|vehicle|سيارة/.test(source)) cycle = 8.2;
+
+      const phase = ((seconds + (img.dataset.rockSpinOffset || 0)) % cycle) / cycle;
+      const angle = phase * 360;
+      const bob = Math.sin(phase * Math.PI * 2) * 2;
+      const scale = 1 + Math.sin(phase * Math.PI * 2) * 0.008;
+      img.style.setProperty(
+        'transform',
+        `perspective(900px) translate3d(0, ${bob.toFixed(2)}px, 0) rotateY(${angle.toFixed(2)}deg) scale(${scale.toFixed(4)})`,
+        'important'
+      );
+    });
+
+    requestAnimationFrame(renderSpin);
+  }
+
+  function startSpin() {
+    if (rotationStarted) return;
+    rotationStarted = true;
+    requestAnimationFrame(renderSpin);
+  }
+
   function repairAll() {
-    injectMotionStyles();
-    document.querySelectorAll('img.product-image').forEach(repairImage);
+    injectSpinStyles();
+    document.querySelectorAll('img.product-image').forEach((img) => {
+      if (!img.dataset.rockSpinOffset) img.dataset.rockSpinOffset = String(Math.random() * 3);
+      repairImage(img);
+    });
+    startSpin();
   }
 
   function watchGrid() {
