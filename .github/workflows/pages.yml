@@ -31,10 +31,23 @@ jobs:
         with:
           enablement: true
 
-      - name: Verify requested ROCK logo
+      - name: Fix cart overlay before deploy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          if 'id="overlay"' not in s:
+              marker = '  <div class="search-overlay" id="searchOverlay"'
+              s = s.replace(marker, '  <div class="overlay" id="overlay"></div>\n' + marker, 1)
+          p.write_text(s, encoding="utf-8")
+          PY
+
+      - name: Verify requested ROCK logo and critical UI fix
         run: |
           test -s "rock_logo (1).svg"
           grep -q 'rock_logo%20(1).svg' index.html
+          grep -q 'id="overlay"' index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
