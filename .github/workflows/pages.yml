@@ -26,6 +26,19 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Cache product segmentation model
+        uses: actions/cache@v4
+        with:
+          path: ~/.u2net
+          key: rock-u2net-${{ runner.os }}-v1
+
+      - name: Prepare safe transparent product cutouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --quiet 'rembg[cpu]==2.0.84' Pillow
+          python scripts/prepare_product_media.py
+
       - name: Sanitize deployment HTML and load ROCK brand layer
         shell: bash
         run: |
@@ -40,8 +53,8 @@ jobs:
               text = text.replace(f'script.js?v={version}', 'script.js?v=20260913-11')
           for version in ('20260913-8','20260913-9','20260913-10'):
               text = text.replace(f'enhancements.css?v={version}', 'enhancements.css?v=20260913-11')
-          for version in ('20260913-21','20260913-22','20260913-23','20260913-30','20260913-31','20260913-32','20260913-33','20260913-34'):
-              text = text.replace(f'image-fix.js?v={version}', 'image-fix.js?v=20260913-35')
+          for version in ('20260913-21','20260913-22','20260913-23','20260913-30','20260913-31','20260913-32','20260913-33','20260913-34','20260913-35'):
+              text = text.replace(f'image-fix.js?v={version}', 'image-fix.js?v=20260913-36')
           if 'rock-brand.css?v=20260913-1' not in text:
               text = text.replace('</head>', '  <link rel="stylesheet" href="rock-brand.css?v=20260913-1">\n</head>')
           path.write_text(text, encoding='utf-8')
@@ -86,6 +99,7 @@ jobs:
           test -f script.js
           test -f image-fix.js
           test -f rock-brand.css
+          test -f scripts/prepare_product_media.py
           test -d assets/products
           refs=$(grep -oE "assets/products/[A-Za-z0-9._-]+\.webp" script.js | sort -u)
           count=0
