@@ -1,0 +1,71 @@
+name: Deploy ROCK to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Validate ROCK product images
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f index.html
+          test -f script.js
+          test -d assets/products
+          refs=$(grep -oE "assets/products/[A-Za-z0-9._-]+\.webp" script.js | sort -u)
+          count=0
+          missing=0
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            count=$((count + 1))
+            if [ ! -f "$path" ]; then
+              echo "MISSING PRODUCT IMAGE: $path"
+              missing=$((missing + 1))
+            fi
+          done <<< "$refs"
+          echo "Verified product image references: $count"
+          echo "Missing product images: $missing"
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check script.js
+          if [ -f i18n.js ]; then node --check i18n.js; fi
+          if [ -f image-fix.js ]; then node --check image-fix.js; fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
