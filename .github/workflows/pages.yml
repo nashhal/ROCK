@@ -31,6 +31,23 @@ jobs:
         with:
           enablement: true
 
+      - name: Prepare calm motion system
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          if 'calm-motion.css?v=20260913-1' not in s:
+              marker = '  <link rel="stylesheet" href="logo-system.css?v=20260913-1">'
+              if marker not in s:
+                  raise SystemExit("logo stylesheet marker not found")
+              s = s.replace(marker, marker + '\n  <link rel="stylesheet" href="calm-motion.css?v=20260913-1">', 1)
+          if "document.documentElement.classList.add('motion-ready')" not in s:
+              marker = '  <script type="application/ld+json">'
+              s = s.replace(marker, "  <script>document.documentElement.classList.add('motion-ready');</script>\n" + marker, 1)
+          p.write_text(s, encoding="utf-8")
+          PY
+
       - name: Repair critical UI bindings before deploy
         run: |
           python - <<'PY'
@@ -49,8 +66,12 @@ jobs:
           # Mobile navigation was rendered but its controls were not wired.
           if 'data-rock-mobile-bindings' not in s:
               marker = '  <script src="script.js?v=20260913-5"></script>'
+              if marker not in s:
+                  marker = '  <script src="script.js?v=20260913-6"></script>'
               patch = '''  <script data-rock-mobile-bindings>
           (()=>{
+            document.documentElement.classList.remove('motion-ready');
+            document.documentElement.classList.add('motion-active');
             document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{
               const target=document.querySelector(btn.dataset.jump);
               if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
@@ -74,7 +95,9 @@ jobs:
       - name: Validate ROCK source and critical UI
         run: |
           test -s "rock_logo (1).svg"
+          test -s "calm-motion.css"
           grep -q 'rock_logo%20(1).svg' index.html
+          grep -q 'calm-motion.css?v=20260913-1' index.html
           grep -q 'id="overlay"' index.html
           grep -q 'data-rock-mobile-bindings' index.html
           grep -q 'id="mobileCart"' index.html
