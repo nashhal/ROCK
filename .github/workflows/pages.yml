@@ -116,6 +116,25 @@ jobs:
           pdfinfo "1789300982120_ROCK_To_FUN (1).pdf" > catalog-extract/pdfinfo.txt
           cp "1789300982120_ROCK_To_FUN (1).pdf" catalog-extract/
 
+      - name: Diagnose ROCK product image references
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          js = Path('script.js').read_text(encoding='utf-8')
+          refs = sorted(set(re.findall(r'assets/products/[A-Za-z0-9._-]+\.webp', js)))
+          files = {str(p) for p in Path('assets/products').glob('*.webp')}
+          missing = [p for p in refs if p not in files]
+          print(f'Product image references: {len(refs)}')
+          print(f'Product image files present: {len(refs)-len(missing)}')
+          print(f'Missing product images: {len(missing)}')
+          for p in missing:
+              print(f'MISSING {p}')
+          print('--- available asset sample ---')
+          for p in sorted(files)[:250]:
+              print(p)
+          PY
+
       - name: Validate ROCK source, JavaScript and product images
         run: |
           set -e
