@@ -1,4 +1,4 @@
-/* ROCK — official wordmark only. Base layout and neutral palette live in styles.css + enhancements.css. */
+/* ROCK — official wordmark. Keep the source SVG untouched and only adapt display color to its surface. */
 :root{
   --rock-black:#050505;
   --rock-white:#fff;
@@ -7,12 +7,19 @@
   --rock-line:#d2d2ce;
   --rock-accent:#d9dad7;
   --rock-accent-soft:#ecece9;
-  --rock-radius:2px;
   --accent:#d9dad7;
   --accent2:#ecece9;
 }
-.rock-wordmark{display:block;width:176px;height:auto;max-height:none;object-fit:contain;object-position:center}
-.footer-wordmark{width:184px;filter:invert(1)}
+.rock-wordmark{
+  display:block;
+  width:176px;
+  height:auto;
+  max-height:none;
+  object-fit:contain;
+  object-position:center;
+}
+.nav .rock-wordmark{filter:invert(1);}
+.footer .rock-wordmark{filter:invert(1);}
 .brand:has(.rock-wordmark) i{display:none}
-@media(max-width:900px){.rock-wordmark{width:126px}.footer-wordmark{width:136px}}
-@media(max-width:560px){.rock-wordmark{width:116px}.footer-wordmark{width:126px}}
+@media(max-width:900px){.rock-wordmark{width:126px}}
+@media(max-width:560px){.rock-wordmark{width:116px}}
