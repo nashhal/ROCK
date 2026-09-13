@@ -1,4 +1,3 @@
-@import url("liquid-glass.css?v=20260913-1");
 /* ROCK — bilingual typography calibration */
 :root{--tracking-ar:0;--tracking-ar-display:-.008em;--tracking-en:.035em;--tracking-en-display:-.055em}
 html[lang="ar"] body{letter-spacing:var(--tracking-ar)}
@@ -15,3 +14,42 @@ html[lang="en"] h1,html[lang="en"] h2{letter-spacing:var(--tracking-en-display);
 html[lang="en"] h3{letter-spacing:-.015em}
 html[lang="en"] .eyebrow,html[lang="en"] .ticker-track,html[lang="en"] .announcement-en,html[lang="en"] .product-category,html[lang="en"] .product-badge{letter-spacing:.11em}
 html[lang="en"] p,html[lang="en"] a,html[lang="en"] button,html[lang="en"] input,html[lang="en"] select,html[lang="en"] label{letter-spacing:.01em}
+
+/* ROCK — Liquid Glass system */
+:root{
+  --lg-white:rgba(255,255,255,.78);--lg-white-soft:rgba(255,255,255,.08);--lg-white-line:rgba(255,255,255,.16);--lg-black:rgba(5,5,5,.62);--lg-black-deep:rgba(5,5,5,.78);--lg-shadow:0 18px 55px rgba(0,0,0,.18);--lg-blur:24px;--lg-blur-strong:36px;
+}
+.nav,.icon-btn,.menu-btn,.floating-spec,.finder-trigger,.search-box,#sortProducts,.filter-pills button,.cart-drawer,.mobile-bottom-nav,.search-overlay,.product-badge,.favorite-btn{
+  -webkit-backdrop-filter:blur(var(--lg-blur)) saturate(125%);backdrop-filter:blur(var(--lg-blur)) saturate(125%);
+}
+.nav{
+  background:linear-gradient(180deg,rgba(7,7,7,.72),rgba(7,7,7,.42)) !important;border-bottom-color:rgba(255,255,255,.12) !important;box-shadow:0 12px 45px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden;
+}
+.nav:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,rgba(255,255,255,.10),transparent 22%,transparent 70%,rgba(255,255,255,.035)),radial-gradient(circle at 72% 0%,rgba(255,255,255,.08),transparent 35%);opacity:.72}
+.nav>*{position:relative;z-index:1}
+.nav.scrolled{background:rgba(5,5,5,.58) !important;-webkit-backdrop-filter:blur(var(--lg-blur-strong)) saturate(135%);backdrop-filter:blur(var(--lg-blur-strong)) saturate(135%);box-shadow:0 18px 65px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08)}
+.icon-btn,.menu-btn{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.035)) !important;border-color:rgba(255,255,255,.16) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 7px 22px rgba(0,0,0,.12)}
+.icon-btn:hover,.menu-btn:hover{background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.05)) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 10px 28px rgba(0,0,0,.16)}
+.floating-spec{background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035)) !important;border-color:rgba(255,255,255,.17) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 18px 45px rgba(0,0,0,.18)}
+.category-card{isolation:isolate}
+.category-card:not(.tall):after,.category-card.tall:after{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.26),transparent 23%,transparent 68%,rgba(255,255,255,.05));opacity:.32}
+.category-card.tall:after{background:linear-gradient(115deg,rgba(255,255,255,.12),transparent 25%,transparent 72%,rgba(255,255,255,.03));opacity:.72}
+.finder-trigger,.search-box,#sortProducts,.filter-pills button{box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 10px 28px rgba(0,0,0,.045) !important}
+.finder-trigger{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(246,246,243,.66)) !important;border:1px solid rgba(210,210,205,.78) !important}
+.search-box,#sortProducts{background:linear-gradient(180deg,rgba(255,255,255,.80),rgba(250,250,247,.57)) !important}
+.filter-pills button{background:linear-gradient(180deg,rgba(255,255,255,.44),rgba(255,255,255,.18)) !important}
+.filter-pills button.active,.filter-pills button:hover{background:linear-gradient(180deg,rgba(14,14,14,.92),rgba(14,14,14,.74)) !important}
+.product-card{isolation:isolate}
+.product-visual{position:relative;overflow:hidden}
+.product-visual:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(116deg,rgba(255,255,255,.26),transparent 24%,transparent 67%,rgba(255,255,255,.09));mix-blend-mode:screen;opacity:.42}
+.product-card:hover .product-visual:before{opacity:.62}
+.product-badge,.favorite-btn{background:rgba(255,255,255,.46) !important;border-color:rgba(255,255,255,.55) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 8px 22px rgba(0,0,0,.08)}
+.feature-specs>div{padding:12px 15px;min-width:92px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 14px 32px rgba(0,0,0,.14)}
+.mobile-bottom-nav{background:linear-gradient(180deg,rgba(245,245,242,.68),rgba(245,245,242,.50)) !important;border-top:1px solid rgba(255,255,255,.75) !important;box-shadow:0 -18px 50px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.85) !important}
+.service-band{position:relative;isolation:isolate;overflow:hidden}
+.service-band:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,rgba(255,255,255,.20),transparent 36%,rgba(255,255,255,.08));opacity:.55}
+.service-band>*{position:relative;z-index:1}
+.shop-strip:after{content:"";position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle at 68% 35%,rgba(255,255,255,.06),transparent 20%),linear-gradient(115deg,transparent 30%,rgba(255,255,255,.035) 48%,transparent 66%);filter:blur(18px);opacity:.9}
+@media(prefers-reduced-motion:reduce){.category-card:hover{transform:none}.product-card:hover .product-visual:before{opacity:.42}}
+@media(max-width:900px){.nav{background:linear-gradient(180deg,rgba(7,7,7,.72),rgba(7,7,7,.44)) !important;-webkit-backdrop-filter:blur(26px) saturate(130%);backdrop-filter:blur(26px) saturate(130%)}.feature-specs{flex-wrap:wrap}}
+@media(max-width:560px){.floating-spec{backdrop-filter:blur(22px) saturate(120%)}.product-badge,.favorite-btn{backdrop-filter:blur(18px) saturate(120%)}}
