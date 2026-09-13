@@ -1,0 +1,1 @@
+.rock-wordmark{display:block;width:clamp(118px,10vw,170px);height:auto;max-height:34px;object-fit:contain;object-position:center}.brand:has(.rock-wordmark) i{display:none}.footer-wordmark{width:clamp(126px,11vw,180px);filter:invert(1)}@media(max-width:900px){.rock-wordmark{width:118px;max-height:28px}.footer-wordmark{width:132px}}
