@@ -1,0 +1,29 @@
+/* ROCK — category-specific product motion */
+@keyframes rockFloatSoft{0%,100%{transform:translate3d(0,0,0) rotate(0deg) scale(1)}50%{transform:translate3d(0,-7px,0) rotate(.7deg) scale(1.015)}}
+@keyframes rockFloatAudio{0%,100%{transform:translate3d(0,0,0) rotate(0deg) scale(1)}50%{transform:translate3d(0,-8px,0) rotate(-1.2deg) scale(1.018)}}
+@keyframes rockFloatHeadphones{0%,100%{transform:translate3d(0,0,0) rotate(-1deg) scale(1)}50%{transform:translate3d(0,-5px,0) rotate(1deg) scale(1.02)}}
+@keyframes rockPulsePower{0%,100%{transform:translate3d(0,0,0) rotate(0) scale(1)}50%{transform:translate3d(0,-5px,0) rotate(.8deg) scale(1.028)}}
+@keyframes rockCableDrift{0%,100%{transform:translate3d(-2px,0,0) rotate(-1deg) scale(1)}50%{transform:translate3d(5px,-4px,0) rotate(2deg) scale(1.02)}}
+@keyframes rockProtectionFloat{0%,100%{transform:translate3d(0,0,0) rotate(0) scale(1)}50%{transform:translate3d(0,-6px,0) rotate(.5deg) scale(1.012)}}
+@keyframes rockCarFloat{0%,100%{transform:translate3d(0,0,0) rotate(0) scale(1)}50%{transform:translate3d(4px,-5px,0) rotate(1.2deg) scale(1.018)}}
+
+.product-art.has-catalog-image .product-image{animation:rockFloatSoft 5s cubic-bezier(.45,.05,.55,.95) infinite;transform-origin:center center;will-change:transform;transition:transform .45s cubic-bezier(.2,.7,.2,1),filter .45s ease}
+.product-art.has-catalog-image.charger-art .product-image{animation:rockPulsePower 4.6s ease-in-out infinite}
+.product-art.has-catalog-image.cable-art .product-image{animation:rockCableDrift 5.6s ease-in-out infinite}
+.product-art.has-catalog-image.earbuds-art .product-image{animation:rockFloatAudio 4.4s ease-in-out infinite}
+.product-art.has-catalog-image.case-art .product-image{animation:rockProtectionFloat 5.2s ease-in-out infinite}
+
+/* Headphones and sport-audio variants get a wider, calmer motion profile. */
+.product-card .product-info .product-category:where(:not(:empty)) ~ *{}
+.product-art.has-catalog-image .product-image[alt*="Headphone"],
+.product-art.has-catalog-image .product-image[alt*="HEADPHONES"]{animation:rockFloatHeadphones 5.4s ease-in-out infinite}
+.product-art.has-catalog-image .product-image[alt*="Car"],
+.product-art.has-catalog-image .product-image[alt*="CAR"]{animation:rockCarFloat 5.1s ease-in-out infinite}
+
+.product-card:hover .product-art.has-catalog-image .product-image,
+.product-card:focus-within .product-art.has-catalog-image .product-image{animation-play-state:paused;transform:translate3d(0,-9px,0) scale(1.05) rotate(0deg)!important;filter:drop-shadow(0 24px 28px rgba(0,0,0,.19))}
+.product-card:hover .product-art.has-catalog-image{z-index:4}
+.product-card:hover .product-visual:after{transform:scale(1.14);opacity:.7;transition:transform .55s ease,opacity .55s ease}
+
+@media(max-width:900px){.product-art.has-catalog-image .product-image{animation-duration:5.4s}.product-card:hover .product-art.has-catalog-image .product-image,.product-card:focus-within .product-art.has-catalog-image .product-image{transform:translate3d(0,-6px,0) scale(1.035)!important}}
+@media(prefers-reduced-motion:reduce){.product-art.has-catalog-image .product-image{animation:none!important;transition:none!important}.product-card:hover .product-art.has-catalog-image .product-image,.product-card:focus-within .product-art.has-catalog-image .product-image{transform:none!important}}
