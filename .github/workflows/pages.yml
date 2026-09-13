@@ -26,12 +26,7 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Sanitize deployment HTML and bust asset cache
+      - name: Sanitize deployment HTML and enable ROCK 3D
         shell: bash
         run: |
           set -euo pipefail
@@ -41,10 +36,11 @@ jobs:
           text = path.read_text(encoding='utf-8')
           lines = [line for line in text.splitlines() if 'interactions.js' not in line and 'mobile.js' not in line]
           text = '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
-          for version in ('20260913-21', '20260913-22', '20260913-23'):
-              text = text.replace(f'image-fix.js?v={version}', 'image-fix.js?v=20260913-30')
+          for version in ('20260913-21', '20260913-22', '20260913-23', '20260913-30'):
+              text = text.replace(f'image-fix.js?v={version}', 'image-fix.js?v=20260913-31')
+          text = text.replace('</body>', '  <script type="module" src="product-3d.js?v=20260913-1"></script>\n</body>')
           path.write_text(text, encoding='utf-8')
-          print('Deployment HTML sanitized and cache-busted for ROCK 3D product system.')
+          print('ROCK 3D WebGL viewer enabled in deployment artifact.')
           PY
 
       - name: Validate local asset references
@@ -84,6 +80,7 @@ jobs:
           set -euo pipefail
           test -f script.js
           test -f image-fix.js
+          test -f product-3d.js
           test -d assets/products
           refs=$(grep -oE "assets/products/[A-Za-z0-9._-]+\.webp" script.js | sort -u)
           count=0
@@ -107,6 +104,7 @@ jobs:
           node --check script.js
           node --check image-fix.js
           if [ -f i18n.js ]; then node --check i18n.js; fi
+          node --check product-3d.js
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
