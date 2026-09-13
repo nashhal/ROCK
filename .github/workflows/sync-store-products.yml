@@ -1,0 +1,90 @@
+name: Sync ROCK store products
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/sync-store-products.yml'
+      - 'script.js'
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace storefront catalog with approved price list
+        env:
+          PRODUCTS: |
+            RKCBL146|ROCK RKCBL146 USB-A to Lightning Fast Charging Cable 27W 1m|power|6.25|assets/products/rkcbl146.webp
+            RKCBL144|ROCK RKCBL144 USB-C to Lightning Fast Charging Cable 27W 1m|power|6.25|assets/products/rkcbl144.webp
+            RKCBL148|ROCK RKCBL148 USB-A to Type-C Fast Charging Cable 60W 1m|power|6.25|assets/products/rkcbl148.webp
+            RKCBL147|ROCK RKCBL147 USB-C to Type-C Fast Charging Cable 60W 1m|power|6.25|assets/products/rkcbl147.webp
+            RKCBL145|ROCK RKCBL145 USB-A to Micro USB Fast Charging Cable 12W 1m|power|6.25|assets/products/rkcbl145.webp
+            RCB056|ROCK RCB056 USB-A Multi-Connector Fast Charging Cable 120cm|power|6.25|assets/products/rcb056.webp
+            RKCH720|ROCK RKCH720 20W GaN Wall Charger|power|15|assets/products/rkch720.webp
+            RKCH735|ROCK RKCH735 35W GaN Wall Charger|power|20|assets/products/rkch735.webp
+            RKCH765|ROCK RKCH765 65W GaN Wall Charger|power|40|assets/products/rkch765.webp
+            C43|ROCK C43 H30 30W Car Charger with Retractable Type-C Cable|power|46|assets/products/c43.webp
+            SD-017|ROCK SD-017 H16 72W A+C PD Car Charger|power|40|assets/products/sd-017.webp
+            NC-20|ROCK NC-20 H20 15W A+C Car Charger|power|12|assets/products/nc-20.webp
+            RO-700W|ROCK Pods 700 Bluetooth Earphones White|audio|79|assets/products/ro-700w.webp
+            RO-701W|ROCK Pods 701 Bluetooth Earphones White|audio|69|assets/products/ro-701w.webp
+            RAU0785|ROCK EB TWS AI Smart Earphones White|audio|59|assets/products/rau0785.webp
+            rau0785-black|ROCK EB TWS AI Smart Earphones Black|audio|59|assets/products/rau0785-black.webp
+            RAU0788|ROCK EB710 Bluetooth Earphones White|audio|44|assets/products/rau0788.webp
+            RAU0790|ROCK S1 Smart Touch TWS Earphones|audio|50|assets/products/s1.webp
+            RAU0782|ROCK A5 Pro ANC TWS Smart Touch Screen Earphones|audio|65|assets/products/a5pro.webp
+            HP-6030BT-S|ROCK 05 Wireless Headphones Silver|audio|46|assets/products/hp-6030bt-s.webp
+            HP-6030BT-G|ROCK 05 Wireless Headphones Gray|audio|46|assets/products/hp-6030bt-g.webp
+            RO-0545|ROCK RO-0545 Lightning Wired Side Earphone White|audio|15|assets/products/ro-0545.webp
+            RO-0546T|ROCK RO-0546T Type-C Wired Side Earphone White|audio|14|assets/products/ro0546t.webp
+            AUX-139|ROCK AUX-139 Wired Side Earphone White|audio|7|assets/products/aux139.webp
+            RAU0768|ROCK Y6 Wireless Sports Neckband Earphone Black|audio|39|assets/products/y6.webp
+            RAU0791|ROCK ES09 Type-C Digital Wired Earphone Black|audio|12|assets/products/es09.webp
+            RPH1003|ROCK RPH1003 Rotating Metal Desktop Phone Stand|lifestyle|20|assets/products/rph1003.webp
+            RPH0878|ROCK RPH0878 Adjustable Desktop Stand|lifestyle|48|assets/products/rph0878.webp
+            RAM0037|ROCK RAM0037 Q08 Magnetic Car Mount|lifestyle|28|assets/products/ram0037.webp
+            118A-15W|ROCK 118A-15W W31 Gravity Wireless Charging Car Mount|lifestyle|15|assets/products/118a-15w.webp
+            ROCK-TAG-BEIGE|ROCK Tag Smart Wireless Tracker Beige|lifestyle|20|assets/products/rock-tag-beige.webp
+            ROCK-TAG-BLACK|ROCK Tag Smart Wireless Tracker Black|lifestyle|20|assets/products/rock-tag-black.webp
+            RST10860|ROCK RST10860 B0B Active Magnetic Stylus|lifestyle|39|assets/products/rst10860.webp
+            RST10887|ROCK RST10887 Laptop Bag|lifestyle|28|assets/products/rst10887.webp
+            RST10890|ROCK RST10890 Hair Trimming Kit Black|lifestyle|40|assets/products/rst10890.webp
+            RETRACT-120W|ROCK Dual-Ended USB + Type-C Retractable Cable 120W|power|13|assets/products/retract120.webp
+            CAR-68W|ROCK 68W 3-Port Car Charger 2x Type-C + USB|power|28|assets/products/car68.webp
+            WALL-50W|ROCK 50W GaN Wall Charger USB + Type-C with Integrated Cable|power|37|assets/products/wall50.webp
+            CAR-45W|ROCK 45W Dual-Port Car Charger with Lightning + Type-C Cables|power|36|assets/products/car45.webp
+            WIRED-TYPEC|ROCK Type-C Wired Comfortable Earphone with Microphone|audio|19|assets/products/wired-typec.webp
+            WALL-45W|ROCK 45W GaN Type-C PD Wall Charger with Reinforced Cable|power|25|assets/products/wall45.webp
+          PY
+          python - <<'PY'
+          import os,re
+          path='script.js'
+          text=open(path,encoding='utf-8').read()
+          rows=[]
+          for line in os.environ['PRODUCTS'].splitlines():
+              code,name,cat,price,image=line.split('|')
+              image=image if os.path.exists(image) else ''
+              rows.append((code,name,cat,price,image))
+          items=[]
+          for code,name,cat,price,image in rows:
+              img=(f",image:'{image}'" if image else '')
+              items.append("{id:%r%s,name:%r,category:%r,label:%r,desc:%r,price:%s,art:%r,badge:'PRICE LIST',rating:null,reviews:0,bestFor:[],specs:[]}"%(code,img,name,cat,cat.upper(),name,price,'product-art'))
+          new='const products=[\n'+',\n'.join(items)+'\n];'
+          pattern=r'const products=\[[\s\S]*?\n\];'
+          updated,n=re.subn(pattern,new,text,count=1)
+          if n!=1: raise SystemExit('Could not locate products array')
+          open(path,'w',encoding='utf-8').write(updated)
+          print('Products synced:',len(items))
+          print('Images found:',sum(bool(x[4]) for x in rows))
+          PY
+      - name: Validate JavaScript
+        run: node --check script.js
+      - name: Commit catalog-only storefront
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add script.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Show only approved ROCK 2026 price list products'
+          git push
