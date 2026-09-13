@@ -44,6 +44,8 @@ jobs:
               s = s.replace(marker, marker + '\n  <link rel="stylesheet" href="calm-motion.css?v=20260913-1">', 1)
           if "document.documentElement.classList.add('motion-ready')" not in s:
               marker = '  <script type="application/ld+json">'
+              if marker not in s:
+                  raise SystemExit("JSON-LD marker not found")
               s = s.replace(marker, "  <script>document.documentElement.classList.add('motion-ready');</script>\n" + marker, 1)
           p.write_text(s, encoding="utf-8")
           PY
@@ -52,14 +54,15 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           p = Path("index.html")
           s = p.read_text(encoding="utf-8")
-          marker = '  <script src="script.js?v=20260913-6"></script>'
           tag = '  <script src="i18n.js?v=20260913-1"></script>'
           if tag not in s:
-              if marker not in s:
-                  raise SystemExit("main script marker not found")
-              s = s.replace(marker, marker + '\n' + tag, 1)
+              marker = re.search(r'  <script src="script\\.js(?:\\?[^\"]*)?"></script>', s)
+              if not marker:
+                  raise SystemExit("main script tag not found")
+              s = s[:marker.end()] + '\n' + tag + s[marker.end():]
           p.write_text(s, encoding="utf-8")
           PY
 
@@ -67,6 +70,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           p = Path("index.html")
           s = p.read_text(encoding="utf-8")
 
@@ -78,25 +82,17 @@ jobs:
               s = s.replace(marker, replacement, 1)
 
           if 'data-rock-mobile-bindings' not in s:
-              marker = '  <script src="script.js?v=20260913-6"></script>'
-              patch = '''  <script data-rock-mobile-bindings>
-          (()=>{
-            document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{
-              const target=document.querySelector(btn.dataset.jump);
-              if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
-            }));
-            const mobileCart=document.getElementById('mobileCart');
-            const cartBtn=document.getElementById('cartBtn');
-            if(mobileCart&&cartBtn) mobileCart.addEventListener('click',()=>cartBtn.click());
-            const mobileSearch=document.getElementById('mobileSearch');
-            const searchBtn=document.getElementById('searchBtn');
-            if(mobileSearch&&searchBtn) mobileSearch.addEventListener('click',()=>searchBtn.click());
-          })();
-          </script>
-          ''' + marker
-              if marker not in s:
-                  raise SystemExit("script marker not found")
-              s = s.replace(marker, patch, 1)
+              marker = re.search(r'  <script src="script\\.js(?:\\?[^\"]*)?"></script>', s)
+              if not marker:
+                  raise SystemExit("main script tag not found")
+              patch = '''  <script data-rock-mobile-bindings>\n  (()=>{\n    document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{\n      const target=document.querySelector(btn.dataset.jump);\n      if(target) target.scrollIntoView({behavior:'smooth',block:'start'});\n    }));\n    const mobileCart=document.getElementById('mobileCart');\n    const cartBtn=document.getElementById('cartBtn');\n    if(mobileCart&&cartBtn) mobileCart.addEventListener('click',()=>cartBtn.click());\n    const mobileSearch=document.getElementById('mobileSearch');\n    const searchBtn=document.getElementById('searchBtn');\n    if(mobileSearch&&searchBtn) mobileSearch.addEventListener('click',()=>searchBtn.click());\n  })();\n  </script>\n'''
+              s = s[:marker.start()] + patch + s[marker.start():]
+
+          if 'image-fix.js?' not in s:
+              marker = re.search(r'  <script src="script\\.js(?:\\?[^\"]*)?"></script>', s)
+              if not marker:
+                  raise SystemExit("main script tag not found")
+              s = s[:marker.end()] + '\n  <script src="image-fix.js?v=20260913-12"></script>' + s[marker.end():]
 
           p.write_text(s, encoding="utf-8")
           PY
@@ -110,16 +106,19 @@ jobs:
           pdfinfo "1789300982120_ROCK_To_FUN (1).pdf" > catalog-extract/pdfinfo.txt
           cp "1789300982120_ROCK_To_FUN (1).pdf" catalog-extract/
 
-      - name: Validate ROCK source and critical UI
+      - name: Validate ROCK source, JavaScript and product images
         run: |
+          set -e
           test -s "rock_logo (1).svg"
           test -s "calm-motion.css"
           test -s "i18n.js"
+          test -s "image-fix.js"
           test -s "1789300982120_ROCK_To_FUN (1).pdf"
           test -s "catalog-extract/catalog.txt"
           grep -q 'rock_logo%20(1).svg' index.html
           grep -q 'calm-motion.css?v=20260913-1' index.html
           grep -q 'i18n.js?v=20260913-1' index.html
+          grep -q 'image-fix.js?v=20260913-12' index.html
           grep -q 'id="overlay"' index.html
           grep -q 'data-rock-mobile-bindings' index.html
           grep -q 'id="mobileCart"' index.html
@@ -131,6 +130,23 @@ jobs:
           grep -q 'id="finderModal"' index.html
           node --check script.js
           node --check i18n.js
+          node --check image-fix.js
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path('index.html').read_text(encoding='utf-8')
+          js = Path('script.js').read_text(encoding='utf-8')
+          refs = set(re.findall(r'assets/products/[A-Za-z0-9._-]+\\.webp', js))
+          missing = sorted(p for p in refs if not Path(p).is_file())
+          print(f'Product image references: {len(refs)}')
+          print(f'Product image files present: {len(refs)-len(missing)}')
+          if missing:
+              print('Missing product images:')
+              for p in missing: print(p)
+              raise SystemExit(1)
+          if 'image-fix.js?v=20260913-12' not in html:
+              raise SystemExit('image-fix.js is not included in the deployed HTML')
+          PY
 
       - name: Upload catalog extraction artifact
         uses: actions/upload-artifact@v4
