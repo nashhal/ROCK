@@ -3,17 +3,16 @@
   --deep:#0b0b0b;
   --deep2:#151515;
   --paper:#f3f3f1;
-  --surface:#ecece9;
+  --surface:#e6e6e2;
   --surface-2:#e6e6e2;
   --surface-3:#deded9;
   --text-muted:#686864;
   --line:#d5d5d1;
   --accent:#d9dad7;
-  --accent2:#ecece9;
+  --accent2:#e6e6e2;
   --shadow:0 24px 70px rgba(0,0,0,.12);
 }
 
-/* ROCK visual system: one neutral family across the store */
 body{background:var(--paper);color:var(--ink)}
 .ticker{background:var(--accent);color:#111}
 .category-card{background:var(--surface);border:1px solid rgba(16,16,16,.06)}
@@ -21,12 +20,14 @@ body{background:var(--paper);color:var(--ink)}
 .showcase{background:var(--surface-3)}
 .showcase-visual{background:var(--surface-2)}
 .service-band{background:var(--surface-3)}
+
+/* One continuous surface: the card and the product image area share exactly the same background. */
 .product-grid{gap:16px}
-.product-card{background:var(--surface)!important;border:1px solid var(--line)!important;box-shadow:none}
+.product-card{background:var(--surface-2)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:20px;overflow:hidden}
 .product-card:hover{box-shadow:var(--shadow)!important}
 .product-visual{background:var(--surface-2)!important}
-.product-visual:after{background:rgba(180,181,177,.30)!important}
-.product-info{background:var(--surface)!important}
+.product-visual:after{background:rgba(180,181,177,.24)!important}
+.product-info{background:var(--surface-2)!important}
 .product-category{color:#73736e}
 .product-info p,.rating,.product-category{color:#70706b}
 .product-add{background:#111;color:#fff}
@@ -43,7 +44,7 @@ body{background:var(--paper);color:var(--ink)}
 .modal-specs div,.finder-match,.best-for span{background:var(--surface-3)}
 .empty-products{color:#6f6f6b}
 
-/* Product photography: clean, consistent presentation without artificial product geometry */
+/* Product photography: no artificial geometry and no white image plate. */
 .product-art.has-catalog-image{background:transparent!important;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .product-art.has-catalog-image:before,.product-art.has-catalog-image:after{content:none!important;display:none!important}
 .product-art.has-catalog-image .product-image{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;padding:12px!important;box-sizing:border-box!important;object-fit:contain!important;object-position:center!important;display:block!important;position:relative!important;z-index:2!important;transform:none!important;filter:drop-shadow(0 18px 22px rgba(0,0,0,.12))}
@@ -51,5 +52,4 @@ body{background:var(--paper);color:var(--ink)}
 @media(max-width:900px){.product-art.has-catalog-image{height:200px!important;max-width:210px!important}}
 @media(max-width:560px){.product-art.has-catalog-image{height:165px!important;max-width:180px!important}.product-art.has-catalog-image .product-image{padding:10px!important}}
 
-/* Prevent product cards from inheriting unrelated legacy art backgrounds */
 .product-visual .product-art:not(.has-catalog-image){box-shadow:0 22px 32px rgba(0,0,0,.16)}
