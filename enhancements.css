@@ -11,3 +11,27 @@
 .product-visual:has(.has-catalog-image)::after { width: 150px; height: 150px; background: rgba(140,140,136,.12); filter: blur(30px); }
 @media(max-width:900px){ .product-art.has-catalog-image { height: 200px !important; max-width: 210px !important; } }
 @media(max-width:560px){ .product-art.has-catalog-image { height: 165px !important; max-width: 180px !important; } .product-art.has-catalog-image .product-image { padding: 10px !important; } }
+
+/* Premium product-photo motion: subtle idle movement + responsive hover depth. */
+@keyframes rockProductFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate3d(0, -6px, 0) rotate(0.8deg) scale(1.012); }
+}
+.product-art.has-catalog-image .product-image {
+  animation: rockProductFloat 4.8s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform;
+  transition: filter .35s ease;
+}
+.product-card:hover .product-art.has-catalog-image .product-image,
+.product-card:focus-within .product-art.has-catalog-image .product-image {
+  animation-play-state: paused;
+  transform: translate3d(0, -8px, 0) scale(1.045) rotate(-1deg) !important;
+  filter: drop-shadow(0 24px 28px rgba(0,0,0,.18));
+}
+.product-card:hover .product-visual:after { transform: scale(1.12); opacity: .75; transition: transform .5s ease, opacity .5s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .product-art.has-catalog-image .product-image { animation: none !important; transition: none !important; }
+  .product-card:hover .product-art.has-catalog-image .product-image,
+  .product-card:focus-within .product-art.has-catalog-image .product-image { transform: none !important; }
+}
