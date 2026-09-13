@@ -2,152 +2,103 @@
   'use strict';
 
   const RAW_BASE = 'https://raw.githubusercontent.com/nashhal/ROCK/main/';
-  const VERSION = '20260913-15';
-  const rotatingImages = new Set();
-  let rotationStarted = false;
+  const VERSION = '20260913-20';
 
-  function normalizeProductPath(src) {
+  function normalize(src) {
     if (!src) return null;
     const clean = String(src).split('?')[0].replace(/^\.\//, '').replace(/^\//, '');
-    if (!clean.startsWith('assets/products/')) return null;
-    return clean;
+    return clean.startsWith('assets/products/') ? clean : null;
   }
 
-  function buildPageUrl(path) {
-    const url = new URL(path, document.baseURI);
-    url.search = `v=${VERSION}`;
-    return url.href;
+  function pageUrl(path) {
+    const u = new URL(path, document.baseURI);
+    u.search = `v=${VERSION}`;
+    return u.href;
   }
 
-  function injectSpinStyles() {
-    if (document.getElementById('rock-product-spin-styles')) return;
+  function inject() {
+    if (document.getElementById('rock-final-product-system')) return;
     const style = document.createElement('style');
-    style.id = 'rock-product-spin-styles';
+    style.id = 'rock-final-product-system';
     style.textContent = `
-      .product-visual { perspective: 1000px; perspective-origin: 50% 50%; }
+      /* Final ROCK catalog presentation: real visible spin + palette harmony. */
+      .product-visual {
+        background: linear-gradient(145deg, var(--paper, #f3f3f1), var(--accent2, #ecece9)) !important;
+      }
+      .product-art.has-catalog-image {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        perspective: 900px;
+      }
       .product-art.has-catalog-image .product-image {
-        transform-origin: 50% 50% !important;
-        transform-style: preserve-3d !important;
-        backface-visibility: visible !important;
-        will-change: transform;
+        transform: none !important;
+        transform-origin: center center !important;
+        rotate: 0deg;
+        will-change: rotate, scale, filter;
+        animation: rockSpinFlat 7.5s linear infinite !important;
+        filter: saturate(.86) contrast(1.03) drop-shadow(0 18px 24px rgba(16,16,16,.14));
+      }
+      @keyframes rockSpinFlat {
+        from { rotate: 0deg; scale: 1; }
+        to { rotate: 360deg; scale: 1; }
+      }
+      .product-card:nth-child(3n) .product-art.has-catalog-image .product-image { animation-duration: 8.5s !important; }
+      .product-card:nth-child(4n) .product-art.has-catalog-image .product-image { animation-duration: 9.5s !important; }
+      .product-card:hover .product-art.has-catalog-image .product-image,
+      .product-card:focus-within .product-art.has-catalog-image .product-image {
+        animation-play-state: paused !important;
+        rotate: 0deg;
+        scale: 1.04;
+        filter: saturate(.92) contrast(1.05) drop-shadow(0 25px 30px rgba(16,16,16,.20));
+      }
+      .product-art.has-catalog-image .product-image::selection { background: transparent; }
+      @media (max-width: 900px) {
+        .product-art.has-catalog-image .product-image { animation-duration: 8.5s !important; }
+      }
+      @media (max-width: 560px) {
+        .product-art.has-catalog-image .product-image { animation-duration: 9s !important; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .product-art.has-catalog-image .product-image { animation: none !important; rotate: 0deg !important; }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function classifyMotion(art, img) {
-    if (!art) return;
-    const card = art.closest('.product-card');
-    const label = (card?.querySelector('.product-category')?.textContent || '').toLowerCase();
-    const name = (card?.querySelector('.product-info h3')?.textContent || '').toLowerCase();
-    const source = `${label} ${name} ${img?.dataset.rockImage || ''}`;
-
-    art.classList.remove(
-      'rock-motion-default','rock-motion-charger','rock-motion-cable','rock-motion-audio',
-      'rock-motion-power','rock-motion-car','rock-motion-protection','rock-motion-speaker','rock-motion-bag'
-    );
-
-    let type = 'default';
-    if (/charger|شاحن|adapter|محول/.test(source)) type = 'charger';
-    else if (/cable|wired|كيبل|سلك/.test(source)) type = 'cable';
-    else if (/earphone|headphone|audio|سماعة|صوت/.test(source)) type = 'audio';
-    else if (/power.?bank|battery|باور|بطارية|energy/.test(source)) type = 'power';
-    else if (/car|vehicle|سيارة|سيارات/.test(source)) type = 'car';
-    else if (/case|protection|حماية|cover/.test(source)) type = 'protection';
-    else if (/speaker|مكبر|سبيكر/.test(source)) type = 'speaker';
-    else if (/bag|حقيبة|backpack/.test(source)) type = 'bag';
-
-    art.classList.add(`rock-motion-${type}`);
-  }
-
-  function repairImage(img) {
-    const path = normalizeProductPath(img.getAttribute('src')) || normalizeProductPath(img.dataset.rockImage);
+  function repair(img) {
+    const path = normalize(img.getAttribute('src')) || normalize(img.dataset.rockImage);
     if (!path) return;
-
     img.dataset.rockImage = path;
     img.loading = 'lazy';
     img.decoding = 'async';
-
-    const pageUrl = buildPageUrl(path);
-    const rawUrl = `${RAW_BASE}${path}?v=${VERSION}`;
-    if (img.src !== pageUrl) img.src = pageUrl;
-
-    const art = img.closest('.product-art');
-    if (art) classifyMotion(art, img);
-
-    img.dataset.rockSpinReady = '1';
-    rotatingImages.add(img);
-
+    const url = pageUrl(path);
+    const raw = `${RAW_BASE}${path}?v=${VERSION}`;
+    if (img.src !== url) img.src = url;
     if (!img.dataset.rockFallbackBound) {
       img.dataset.rockFallbackBound = '1';
       img.addEventListener('error', () => {
         if (img.dataset.rockFallbackUsed === '1') return;
         img.dataset.rockFallbackUsed = '1';
-        img.src = rawUrl;
+        img.src = raw;
       });
     }
   }
 
-  function renderSpin(now) {
-    if (!rotationStarted) return;
-    const seconds = now / 1000;
-    rotatingImages.forEach((img) => {
-      if (!img.isConnected || !img.dataset.rockSpinReady) {
-        rotatingImages.delete(img);
-        return;
-      }
-      const rect = img.getBoundingClientRect();
-      const inViewport = rect.bottom > -120 && rect.top < window.innerHeight + 120;
-      if (!inViewport) return;
-
-      const art = img.closest('.product-art');
-      const source = `${art?.className || ''} ${img.alt || ''}`.toLowerCase();
-      let cycle = 7.5;
-      if (/charger|شاحن/.test(source)) cycle = 6.5;
-      else if (/cable|wired|كيبل|سلك/.test(source)) cycle = 8.5;
-      else if (/earphone|headphone|audio|سماعة|صوت/.test(source)) cycle = 7.8;
-      else if (/power|battery|باور|بطارية/.test(source)) cycle = 7.2;
-      else if (/car|vehicle|سيارة/.test(source)) cycle = 8.2;
-
-      const phase = ((seconds + (img.dataset.rockSpinOffset || 0)) % cycle) / cycle;
-      const angle = phase * 360;
-      const bob = Math.sin(phase * Math.PI * 2) * 2;
-      const scale = 1 + Math.sin(phase * Math.PI * 2) * 0.008;
-      img.style.setProperty(
-        'transform',
-        `perspective(900px) translate3d(0, ${bob.toFixed(2)}px, 0) rotateY(${angle.toFixed(2)}deg) scale(${scale.toFixed(4)})`,
-        'important'
-      );
-    });
-
-    requestAnimationFrame(renderSpin);
+  function apply() {
+    inject();
+    document.querySelectorAll('img.product-image').forEach(repair);
   }
 
-  function startSpin() {
-    if (rotationStarted) return;
-    rotationStarted = true;
-    requestAnimationFrame(renderSpin);
-  }
-
-  function repairAll() {
-    injectSpinStyles();
-    document.querySelectorAll('img.product-image').forEach((img) => {
-      if (!img.dataset.rockSpinOffset) img.dataset.rockSpinOffset = String(Math.random() * 3);
-      repairImage(img);
-    });
-    startSpin();
-  }
-
-  function watchGrid() {
+  function observe() {
     const grid = document.getElementById('productGrid');
-    if (!grid || grid.dataset.rockImageObserver) return;
-    grid.dataset.rockImageObserver = '1';
-    new MutationObserver(repairAll).observe(grid, { childList: true, subtree: true });
-    repairAll();
+    if (!grid || grid.dataset.rockFinalObserver) return;
+    grid.dataset.rockFinalObserver = '1';
+    new MutationObserver(apply).observe(grid, { childList: true, subtree: true });
   }
 
-  document.addEventListener('DOMContentLoaded', () => { watchGrid(); repairAll(); });
-  window.addEventListener('load', () => { watchGrid(); repairAll(); });
-  setTimeout(() => { watchGrid(); repairAll(); }, 250);
-  setTimeout(() => { watchGrid(); repairAll(); }, 1000);
+  document.addEventListener('DOMContentLoaded', () => { apply(); observe(); });
+  window.addEventListener('load', () => { apply(); observe(); });
+  setTimeout(() => { apply(); observe(); }, 300);
+  setTimeout(() => { apply(); observe(); }, 1200);
 })();
