@@ -39,13 +39,12 @@ jobs:
           from pathlib import Path
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
-          lines = text.splitlines()
-          lines = [line for line in lines if 'interactions.js' not in line and 'mobile.js' not in line]
+          lines = [line for line in text.splitlines() if 'interactions.js' not in line and 'mobile.js' not in line]
           text = '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
-          text = text.replace('image-fix.js?v=20260913-22', 'image-fix.js?v=20260913-23')
-          text = text.replace('image-fix.js?v=20260913-21', 'image-fix.js?v=20260913-23')
+          for version in ('20260913-21', '20260913-22', '20260913-23'):
+              text = text.replace(f'image-fix.js?v={version}', 'image-fix.js?v=20260913-30')
           path.write_text(text, encoding='utf-8')
-          print('Deployment HTML sanitized and cache-busted.')
+          print('Deployment HTML sanitized and cache-busted for ROCK 3D product system.')
           PY
 
       - name: Validate local asset references
@@ -62,12 +61,10 @@ jobs:
                   super().__init__()
                   self.refs=[]
               def handle_starttag(self, tag, attrs):
-                  attrs = dict(attrs)
+                  attrs=dict(attrs)
                   for key in ('src','href'):
-                      value = attrs.get(key)
-                      if not value:
-                          continue
-                      if value.startswith(('http://','https://','data:','#','mailto:','javascript:')):
+                      value=attrs.get(key)
+                      if not value or value.startswith(('http://','https://','data:','#','mailto:','javascript:')):
                           continue
                       self.refs.append(unquote(value.split('?',1)[0].split('#',1)[0]))
 
