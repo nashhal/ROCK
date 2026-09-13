@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections import deque
-from io import BytesIO
 from math import hypot
 from pathlib import Path
 
@@ -76,7 +75,6 @@ def clean_alpha(image: Image.Image) -> Image.Image:
         dy = c["center"][1] - ay
         distance = hypot(dx, dy)
         keep = c["area"] >= keep_area or (c["area"] >= min_area and distance <= max_distance)
-        # Tiny components touching an image edge are almost always catalog typography or decoration.
         x1, y1, x2, y2 = c["bbox"]
         touches_edge = x1 <= 2 or y1 <= 2 or x2 >= w - 2 or y2 >= h - 2
         if touches_edge and c["area"] < keep_area * 2:
@@ -85,7 +83,6 @@ def clean_alpha(image: Image.Image) -> Image.Image:
             for x, y in c["points"]:
                 out_px[x, y] = 255
 
-    # Close tiny gaps in legitimate product pieces without expanding into the old background.
     out = out.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
     image.putalpha(out)
     return image
@@ -109,21 +106,15 @@ def fit_square(image: Image.Image) -> Image.Image:
 
 def process(path: Path, session) -> None:
     source = Image.open(path).convert("RGB")
-    out_bytes = remove(
-        source,
-        session=session,
-        alpha_matting=False,
-        post_process_mask=True,
-    )
-    image = Image.open(BytesIO(out_bytes)).convert("RGBA")
+    result = remove(source, session=session, alpha_matting=False, post_process_mask=True)
+    image = result.convert("RGBA") if isinstance(result, Image.Image) else Image.open(result).convert("RGBA")
     image = clean_alpha(image)
     image = fit_square(image)
     image.thumbnail((1200, 1200), Image.Resampling.LANCZOS)
     image.save(path, "WEBP", lossless=True, method=6)
 
     alpha = image.getchannel("A")
-    bbox = alpha.getbbox()
-    if bbox is None:
+    if alpha.getbbox() is None:
         raise RuntimeError(f"No visible product remains after processing: {path}")
     transparent = sum(1 for value in alpha.getdata() if value == 0)
     if transparent < image.width * image.height * 0.05:
