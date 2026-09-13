@@ -21,13 +21,13 @@ body{background:var(--paper);color:var(--ink)}
 .showcase-visual{background:var(--surface-2)}
 .service-band{background:var(--surface-3)}
 
-/* Product cards use one continuous white surface so the original catalog photography keeps every detail. */
+/* Product cards: use the ROCK paper surface so transparent cutouts blend naturally. */
 .product-grid{gap:16px}
-.product-card{background:#fff!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:20px;overflow:hidden}
+.product-card{background:var(--paper)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:20px;overflow:hidden}
 .product-card:hover{box-shadow:var(--shadow)!important}
-.product-visual{background:#fff!important}
+.product-visual{background:var(--paper)!important}
 .product-visual:after{content:none!important;display:none!important}
-.product-info{background:#fff!important}
+.product-info{background:var(--paper)!important}
 .product-category{color:#73736e}
 .product-info p,.rating,.product-category{color:#70706b}
 .product-add{background:#111;color:#fff}
@@ -44,10 +44,10 @@ body{background:var(--paper);color:var(--ink)}
 .modal-specs div,.finder-match,.best-for span{background:var(--surface-3)}
 .empty-products{color:#6f6f6b}
 
-/* Real catalog photography: preserve the entire source image; no fake 3D geometry. */
-.product-art.has-catalog-image{background:#fff!important;overflow:hidden;display:flex;align-items:center;justify-content:center}
+/* Transparent catalog cutouts: the source photo has already been segmented at build time. */
+.product-art.has-catalog-image{background:transparent!important;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .product-art.has-catalog-image:before,.product-art.has-catalog-image:after{content:none!important;display:none!important}
-.product-art.has-catalog-image .product-image{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;padding:12px!important;box-sizing:border-box!important;object-fit:contain!important;object-position:center!important;display:block!important;position:relative!important;z-index:2!important;transform:none!important;filter:drop-shadow(0 18px 22px rgba(0,0,0,.12));background:#fff!important}
+.product-art.has-catalog-image .product-image{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;padding:12px!important;box-sizing:border-box!important;object-fit:contain!important;object-position:center!important;display:block!important;position:relative!important;z-index:2!important;transform:none!important;filter:drop-shadow(0 14px 18px rgba(0,0,0,.10));background:transparent!important}
 .product-art.has-catalog-image{width:min(100%,220px)!important;height:230px!important;min-width:0!important;min-height:0!important;padding:0!important;margin:0 auto!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:none!important}
 @media(max-width:900px){.product-art.has-catalog-image{height:200px!important;max-width:210px!important}}
 @media(max-width:560px){.product-art.has-catalog-image{height:165px!important;max-width:180px!important}.product-art.has-catalog-image .product-image{padding:10px!important}}
