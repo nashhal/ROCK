@@ -31,23 +31,60 @@ jobs:
         with:
           enablement: true
 
-      - name: Fix cart overlay before deploy
+      - name: Repair critical UI bindings before deploy
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path("index.html")
           s = p.read_text(encoding="utf-8")
+
+          # Cart drawer needs a real backdrop because script.js controls #overlay.
           if 'id="overlay"' not in s:
               marker = '  <div class="search-overlay" id="searchOverlay"'
-              s = s.replace(marker, '  <div class="overlay" id="overlay"></div>\n' + marker, 1)
+              replacement = '  <div class="overlay" id="overlay"></div>\n' + marker
+              if marker not in s:
+                  raise SystemExit("search overlay marker not found")
+              s = s.replace(marker, replacement, 1)
+
+          # Mobile navigation was rendered but its controls were not wired.
+          if 'data-rock-mobile-bindings' not in s:
+              marker = '  <script src="script.js?v=20260913-5"></script>'
+              patch = '''  <script data-rock-mobile-bindings>
+          (()=>{
+            document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{
+              const target=document.querySelector(btn.dataset.jump);
+              if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+            }));
+            const mobileCart=document.getElementById('mobileCart');
+            const cartBtn=document.getElementById('cartBtn');
+            if(mobileCart&&cartBtn) mobileCart.addEventListener('click',()=>cartBtn.click());
+            const mobileSearch=document.getElementById('mobileSearch');
+            const searchBtn=document.getElementById('searchBtn');
+            if(mobileSearch&&searchBtn) mobileSearch.addEventListener('click',()=>searchBtn.click());
+          })();
+          </script>
+          ''' + marker
+              if marker not in s:
+                  raise SystemExit("script marker not found")
+              s = s.replace(marker, patch, 1)
+
           p.write_text(s, encoding="utf-8")
           PY
 
-      - name: Verify requested ROCK logo and critical UI fix
+      - name: Validate ROCK source and critical UI
         run: |
           test -s "rock_logo (1).svg"
           grep -q 'rock_logo%20(1).svg' index.html
           grep -q 'id="overlay"' index.html
+          grep -q 'data-rock-mobile-bindings' index.html
+          grep -q 'id="mobileCart"' index.html
+          grep -q 'id="mobileSearch"' index.html
+          grep -q 'id="cartBtn"' index.html
+          grep -q 'id="searchBtn"' index.html
+          grep -q 'id="cartDrawer"' index.html
+          grep -q 'id="productGrid"' index.html
+          grep -q 'id="finderModal"' index.html
+          node --check script.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
