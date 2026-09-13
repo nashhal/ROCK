@@ -24,3 +24,13 @@
 .modal-art{transform:none!important}
 @media(max-width:900px){.hero{grid-template-columns:1fr!important}.hero-copy{max-width:100%!important}.feature-dark{min-height:620px!important}.product-card .product-image{padding:20px 20px 12px!important}.product-modal-card .modal-art{height:300px!important}}
 @media(max-width:560px){.product-card .product-image{padding:18px 16px 10px!important}.product-modal-card .modal-art{height:240px!important}}
+
+/* Final media-plane isolation: never place text, badges, hearts or legacy spans over product photography. */
+.product-visual>.product-badge,.product-visual>.favorite-btn{display:none!important}
+.product-visual>.product-art{width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;position:relative!important;inset:auto!important;z-index:1!important}
+.product-visual>.product-art .product-image{position:relative!important;z-index:1!important}
+.product-visual>.product-art span,.product-visual>.product-art small,.product-visual>.product-art b,.product-visual>.product-art i{display:none!important}
+.product-visual>*:not(.product-art){pointer-events:none}
+.product-card{overflow:hidden!important}
+.product-card .product-info{position:relative!important;z-index:2!important;background:#e6e6e2!important}
+.product-card .product-category{display:block!important}
