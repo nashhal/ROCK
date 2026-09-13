@@ -4,7 +4,7 @@
   --deep2:#151515;
   --paper:#f3f3f1;
   --surface:#e6e6e2;
-  --surface-2:#e6e6e2;
+  --surface-2:#ffffff;
   --surface-3:#deded9;
   --text-muted:#686864;
   --line:#d5d5d1;
@@ -21,19 +21,19 @@ body{background:var(--paper);color:var(--ink)}
 .showcase-visual{background:var(--surface-2)}
 .service-band{background:var(--surface-3)}
 
-/* One continuous surface: the card and the product image area share exactly the same background. */
+/* Product cards use one continuous white surface so the original catalog photography keeps every detail. */
 .product-grid{gap:16px}
-.product-card{background:var(--surface-2)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:20px;overflow:hidden}
+.product-card{background:#fff!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:20px;overflow:hidden}
 .product-card:hover{box-shadow:var(--shadow)!important}
-.product-visual{background:var(--surface-2)!important}
-.product-visual:after{background:rgba(180,181,177,.24)!important}
-.product-info{background:var(--surface-2)!important}
+.product-visual{background:#fff!important}
+.product-visual:after{content:none!important;display:none!important}
+.product-info{background:#fff!important}
 .product-category{color:#73736e}
 .product-info p,.rating,.product-category{color:#70706b}
 .product-add{background:#111;color:#fff}
 .product-add:hover{background:var(--accent);color:#111}
 .product-badge{background:#111;color:#fff}
-.favorite-btn{background:rgba(250,250,248,.94);border-color:rgba(16,16,16,.10);color:#171715}
+.favorite-btn{background:#f7f7f4;border-color:rgba(16,16,16,.10);color:#171715}
 .favorite-btn.active{background:#111;color:#fff}
 .search-box,.finder-trigger,#sortProducts,.finder-options button,.qty button{background:#f7f7f4;border-color:var(--line)}
 .filter-pills button{border-color:var(--line);color:#686864}
@@ -44,12 +44,13 @@ body{background:var(--paper);color:var(--ink)}
 .modal-specs div,.finder-match,.best-for span{background:var(--surface-3)}
 .empty-products{color:#6f6f6b}
 
-/* Product photography: no artificial geometry and no white image plate. */
-.product-art.has-catalog-image{background:transparent!important;overflow:hidden;display:flex;align-items:center;justify-content:center}
+/* Real catalog photography: preserve the entire source image; no fake 3D geometry. */
+.product-art.has-catalog-image{background:#fff!important;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .product-art.has-catalog-image:before,.product-art.has-catalog-image:after{content:none!important;display:none!important}
-.product-art.has-catalog-image .product-image{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;padding:12px!important;box-sizing:border-box!important;object-fit:contain!important;object-position:center!important;display:block!important;position:relative!important;z-index:2!important;transform:none!important;filter:drop-shadow(0 18px 22px rgba(0,0,0,.12))}
+.product-art.has-catalog-image .product-image{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;padding:12px!important;box-sizing:border-box!important;object-fit:contain!important;object-position:center!important;display:block!important;position:relative!important;z-index:2!important;transform:none!important;filter:drop-shadow(0 18px 22px rgba(0,0,0,.12));background:#fff!important}
 .product-art.has-catalog-image{width:min(100%,220px)!important;height:230px!important;min-width:0!important;min-height:0!important;padding:0!important;margin:0 auto!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:none!important}
 @media(max-width:900px){.product-art.has-catalog-image{height:200px!important;max-width:210px!important}}
 @media(max-width:560px){.product-art.has-catalog-image{height:165px!important;max-width:180px!important}.product-art.has-catalog-image .product-image{padding:10px!important}}
 
-.product-visual .product-art:not(.has-catalog-image){box-shadow:0 22px 32px rgba(0,0,0,.16)}
+/* No visual fallback art for catalog items. */
+.product-visual .product-art:not(.has-catalog-image){box-shadow:none!important}
