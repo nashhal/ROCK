@@ -1,0 +1,16 @@
+/* ROCK — bilingual typography calibration */
+:root{--tracking-ar:0;--tracking-ar-display:-.008em;--tracking-en:.035em;--tracking-en-display:-.055em}
+html[lang="ar"] body{letter-spacing:var(--tracking-ar)}
+html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] h3,html[lang="ar"] p,html[lang="ar"] a,html[lang="ar"] button,html[lang="ar"] input,html[lang="ar"] select,html[lang="ar"] label{font-kerning:normal;text-rendering:optimizeLegibility}
+html[lang="ar"] h1,html[lang="ar"] h2{letter-spacing:var(--tracking-ar-display);word-spacing:0}
+html[lang="ar"] h3{letter-spacing:-.004em;word-spacing:0}
+html[lang="ar"] h1 em,html[lang="ar"] h2 em{letter-spacing:0}
+html[lang="ar"] p,html[lang="ar"] a,html[lang="ar"] button,html[lang="ar"] input,html[lang="ar"] select,html[lang="ar"] label{letter-spacing:0}
+html[lang="ar"] .hero h1,html[lang="ar"] .section h2,html[lang="ar"] .feature-copy h2,html[lang="ar"] .showcase h2,html[lang="ar"] .story-title h2,html[lang="ar"] .shop-strip h2{letter-spacing:var(--tracking-ar-display)}
+html[lang="ar"] .hero-text,html[lang="ar"] .section-head>p,html[lang="ar"] .category-card p,html[lang="ar"] .product-info p,html[lang="ar"] .story-copy>p,html[lang="ar"] .feature-copy>p:not(.eyebrow),html[lang="ar"] .service-band strong{line-height:1.75;letter-spacing:0}
+html[lang="ar"] .product-info h3,html[lang="ar"] .category-card h3,html[lang="ar"] .why-card h3,html[lang="ar"] .modal-copy h2,html[lang="ar"] .finder-card h2{letter-spacing:-.004em}
+html[lang="en"] body{letter-spacing:var(--tracking-en)}
+html[lang="en"] h1,html[lang="en"] h2{letter-spacing:var(--tracking-en-display);font-kerning:normal;text-rendering:optimizeLegibility}
+html[lang="en"] h3{letter-spacing:-.015em}
+html[lang="en"] .eyebrow,html[lang="en"] .ticker-track,html[lang="en"] .announcement-en,html[lang="en"] .product-category,html[lang="en"] .product-badge{letter-spacing:.11em}
+html[lang="en"] p,html[lang="en"] a,html[lang="en"] button,html[lang="en"] input,html[lang="en"] select,html[lang="en"] label{letter-spacing:.01em}
