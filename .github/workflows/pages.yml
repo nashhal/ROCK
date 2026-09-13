@@ -31,21 +31,10 @@ jobs:
         with:
           enablement: true
 
-      - name: Normalize ROCK logo for Pages
+      - name: Verify requested ROCK logo
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path("index.html")
-          s = p.read_text(encoding="utf-8")
-          old = "https://raw.githubusercontent.com/nashhal/ROCK/f0d715990ae10873a3eef2a871280afc299f9bc2/rock_logo_transparent.png"
-          s = s.replace(old, "assets/rock-wordmark.svg?v=20260913-8")
-          p.write_text(s, encoding="utf-8")
-          PY
-
-      - name: Verify ROCK logo asset
-        run: |
-          test -s assets/rock-wordmark.svg
-          grep -q 'assets/rock-wordmark.svg?v=20260913-8' index.html
+          test -s "rock_logo (1).svg"
+          grep -q 'rock_logo%20(1).svg' index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
