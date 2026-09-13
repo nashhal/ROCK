@@ -1,10 +1,10 @@
 (() => {
   'use strict';
 
-  const RAW_BASE = 'https://raw.githubusercontent.com/nashhal/ROCK/main/';
-  const VERSION = '20260913-24';
-  const objects = new Map();
-  let raf = 0;
+  const VERSION = '20260913-transparent-1';
+  const processed = new WeakSet();
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   function normalize(src) {
     if (!src) return null;
@@ -13,245 +13,202 @@
   }
 
   function assetUrl(path) {
-    const u = new URL(path, document.baseURI);
-    u.search = `v=${VERSION}`;
-    return u.href;
+    const url = new URL(path, document.baseURI);
+    url.search = `v=${VERSION}`;
+    return url.href;
   }
 
   function injectStyles() {
-    if (document.getElementById('rock-true-3d-system')) return;
+    if (document.getElementById('rock-product-surface')) return;
     const style = document.createElement('style');
-    style.id = 'rock-true-3d-system';
+    style.id = 'rock-product-surface';
     style.textContent = `
+      .product-card {
+        background: #ecece9 !important;
+        border: 1px solid #d8d8d3 !important;
+      }
       .product-visual {
-        background: var(--paper, #f3f3f1) !important;
-        perspective: 1400px !important;
-        perspective-origin: 50% 48% !important;
-      }
-      .product-art.has-catalog-image {
-        position: relative !important;
-        background: transparent !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        transform-style: preserve-3d !important;
-        perspective: 1400px !important;
-        overflow: visible !important;
-      }
-      .rock-3d-stage {
-        position: relative !important;
-        width: 100% !important;
-        height: 100% !important;
-        display: grid !important;
-        place-items: center !important;
-        perspective: 1400px !important;
-        perspective-origin: 50% 50% !important;
+        background: #e7e7e3 !important;
         isolation: isolate !important;
       }
-      .rock-3d-model {
+      .product-visual::after {
+        width: 150px !important;
+        height: 150px !important;
+        background: rgba(120,120,114,.08) !important;
+        filter: blur(34px) !important;
+        z-index: 0 !important;
+      }
+      .product-art.has-catalog-image {
+        width: min(100%, 230px) !important;
+        height: 230px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        transform: none !important;
+        overflow: visible !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         position: relative !important;
-        width: min(82%, 330px) !important;
-        height: min(82%, 330px) !important;
-        transform-style: preserve-3d !important;
-        will-change: transform !important;
-        touch-action: pan-y !important;
-        user-select: none !important;
-        -webkit-user-select: none !important;
-        cursor: grab !important;
+        z-index: 2 !important;
       }
-      .rock-3d-model:active { cursor: grabbing !important; }
-      .rock-3d-face {
-        position: absolute !important;
-        inset: 0 !important;
-        display: grid !important;
-        place-items: center !important;
-        border-radius: 18px !important;
-        overflow: hidden !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
-      }
-      .rock-3d-front {
-        transform: translateZ(18px) !important;
-        background: #fff !important;
-        box-shadow: 0 24px 40px rgba(16,16,16,.15), inset 0 0 0 1px rgba(16,16,16,.04) !important;
-      }
-      .rock-3d-back {
-        transform: rotateY(180deg) translateZ(18px) !important;
-        background: linear-gradient(145deg, #e9e9e6, #c9c9c4) !important;
-        box-shadow: inset 0 0 0 1px rgba(16,16,16,.08) !important;
-      }
-      .rock-3d-side {
-        position: absolute !important;
-        background: linear-gradient(180deg, #d8d8d4, #9b9b95) !important;
-        border-radius: 8px !important;
-        box-shadow: inset 0 0 0 1px rgba(16,16,16,.06) !important;
-      }
-      .rock-3d-side.left  { width: 36px !important; height: 100% !important; left: 50% !important; top: 0 !important; transform: translateX(-100%) rotateY(-90deg) !important; transform-origin: right center !important; }
-      .rock-3d-side.right { width: 36px !important; height: 100% !important; left: 50% !important; top: 0 !important; transform: translateX(0) rotateY(90deg) !important; transform-origin: left center !important; }
-      .rock-3d-side.top   { width: 100% !important; height: 36px !important; left: 0 !important; top: 50% !important; transform: translateY(-100%) rotateX(90deg) !important; transform-origin: center bottom !important; }
-      .rock-3d-side.bottom{ width: 100% !important; height: 36px !important; left: 0 !important; top: 50% !important; transform: translateY(0) rotateX(-90deg) !important; transform-origin: center top !important; }
-      .rock-3d-face img {
+      .product-art.has-catalog-image::before,
+      .product-art.has-catalog-image::after { content: none !important; display: none !important; }
+      .product-art.has-catalog-image .product-image {
         width: 100% !important;
         height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        padding: 12px !important;
+        box-sizing: border-box !important;
         object-fit: contain !important;
         object-position: center !important;
         display: block !important;
-        border-radius: 16px !important;
-        pointer-events: none !important;
-        user-select: none !important;
-        -webkit-user-drag: none !important;
-        filter: saturate(.98) contrast(1.01) !important;
+        position: relative !important;
+        z-index: 2 !important;
+        transform: none !important;
+        filter: drop-shadow(0 18px 20px rgba(16,16,16,.10)) !important;
+        mix-blend-mode: normal !important;
       }
-      .rock-3d-badge {
-        position: absolute !important;
-        bottom: 12px !important;
-        left: 12px !important;
-        z-index: 5 !important;
-        padding: 5px 8px !important;
-        border-radius: 999px !important;
-        background: rgba(16,16,16,.72) !important;
-        color: #fff !important;
-        font: 700 8px/1 Montserrat, sans-serif !important;
-        letter-spacing: .12em !important;
-        pointer-events: none !important;
+      .rock-transparent-source { background: transparent !important; }
+      @media (max-width: 900px) {
+        .product-art.has-catalog-image { height: 200px !important; }
       }
-      .rock-3d-ground {
-        position: absolute !important;
-        width: 58% !important;
-        height: 14% !important;
-        bottom: 9% !important;
-        left: 21% !important;
-        border-radius: 50% !important;
-        background: rgba(16,16,16,.14) !important;
-        filter: blur(14px) !important;
-        transform: rotateX(70deg) translateZ(-12px) !important;
-        pointer-events: none !important;
-      }
-      .product-card:hover .rock-3d-model { filter: drop-shadow(0 30px 24px rgba(16,16,16,.12)); }
       @media (max-width: 560px) {
-        .rock-3d-model { width: min(86%, 280px) !important; height: min(86%, 280px) !important; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .rock-3d-model { transition: none !important; }
+        .product-art.has-catalog-image { height: 165px !important; max-width: 190px !important; }
+        .product-art.has-catalog-image .product-image { padding: 8px !important; }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function repair(img) {
-    const path = normalize(img.getAttribute('src')) || normalize(img.dataset.rockImage);
-    if (!path) return;
-    img.dataset.rockImage = path;
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    const url = assetUrl(path);
-    const raw = `${RAW_BASE}${path}?v=${VERSION}`;
-    if (!img.src || !img.src.includes(`v=${VERSION}`)) img.src = url;
-    if (!img.dataset.rockFallbackBound) {
-      img.dataset.rockFallbackBound = '1';
-      img.addEventListener('error', () => {
-        if (img.dataset.rockFallbackUsed === '1') return;
-        img.dataset.rockFallbackUsed = '1';
-        img.src = raw;
-      });
-    }
+  function sourcePath(img) {
+    return normalize(img.dataset.rockImage) || normalize(img.getAttribute('src'));
   }
 
-  function build(img) {
+  function isNearWhite(r, g, b) {
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    return max >= 245 && (max - min) <= 12;
+  }
+
+  function processImage(img) {
+    if (processed.has(img)) return;
     const art = img.closest('.product-art.has-catalog-image');
-    if (!art || art.dataset.rock3dBuilt === '1') return;
-    repair(img);
+    if (!art) return;
+    const path = sourcePath(img);
+    if (!path) return;
+    processed.add(img);
+    img.dataset.rockImage = path;
+    img.classList.add('rock-transparent-source');
 
-    const stage = document.createElement('div');
-    stage.className = 'rock-3d-stage';
-    const model = document.createElement('div');
-    model.className = 'rock-3d-model';
-    const front = document.createElement('div');
-    front.className = 'rock-3d-face rock-3d-front';
-    const back = document.createElement('div');
-    back.className = 'rock-3d-face rock-3d-back';
-    const backImg = img.cloneNode(false);
-    backImg.src = assetUrl(img.dataset.rockImage);
-    backImg.dataset.rockMirror = '1';
-    back.appendChild(backImg);
-    front.appendChild(img);
-    model.append(front, back);
-    ['left','right','top','bottom'].forEach(side => {
-      const el = document.createElement('div');
-      el.className = `rock-3d-side ${side}`;
-      model.appendChild(el);
-    });
-    const badge = document.createElement('span');
-    badge.className = 'rock-3d-badge';
-    badge.textContent = '360° 3D';
-    const ground = document.createElement('div');
-    ground.className = 'rock-3d-ground';
-    model.appendChild(badge);
-    stage.append(ground, model);
-    art.replaceChildren(stage);
-    art.dataset.rock3dBuilt = '1';
-    objects.set(model, { angle: 0, pitch: 0, target: 0, targetPitch: 0, dragging: false, x: 0 });
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.decoding = 'async';
+    image.onload = () => {
+      try {
+        const maxSide = 900;
+        const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+        const w = Math.max(1, Math.round(image.naturalWidth * scale));
+        const h = Math.max(1, Math.round(image.naturalHeight * scale));
+        const source = document.createElement('canvas');
+        source.width = w;
+        source.height = h;
+        const ctx = source.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(image, 0, 0, w, h);
+        const frame = ctx.getImageData(0, 0, w, h);
+        const pixels = frame.data;
+        const visited = new Uint8Array(w * h);
+        const queue = new Int32Array(w * h);
+        let head = 0;
+        let tail = 0;
 
-    let startX = 0, startY = 0, startAngle = 0, startPitch = 0;
-    const down = ev => {
-      const p = ev.touches ? ev.touches[0] : ev;
-      state.dragging = true;
-      state.x = p.clientX;
-      startX = p.clientX;
-      startY = p.clientY;
-      startAngle = state.target;
-      startPitch = state.targetPitch;
-      model.setPointerCapture?.(ev.pointerId);
-    };
-    const move = ev => {
-      if (!state.dragging) return;
-      const p = ev.touches ? ev.touches[0] : ev;
-      state.target = startAngle + (p.clientX - startX) * 0.55;
-      state.targetPitch = Math.max(-14, Math.min(14, startPitch - (p.clientY - startY) * 0.16));
-      if (ev.cancelable) ev.preventDefault();
-    };
-    const up = () => { state.dragging = false; };
-    const state = objects.get(model);
-    model.addEventListener('pointerdown', down);
-    window.addEventListener('pointermove', move, { passive: false });
-    window.addEventListener('pointerup', up, { passive: true });
-    model.addEventListener('touchstart', down, { passive: true });
-    window.addEventListener('touchmove', move, { passive: false });
-    window.addEventListener('touchend', up, { passive: true });
-  }
+        const push = (x, y) => {
+          if (x < 0 || y < 0 || x >= w || y >= h) return;
+          const p = y * w + x;
+          if (visited[p]) return;
+          const i = p * 4;
+          if (!isNearWhite(pixels[i], pixels[i + 1], pixels[i + 2])) return;
+          visited[p] = 1;
+          queue[tail++] = p;
+        };
 
-  function process() {
-    injectStyles();
-    document.querySelectorAll('img.product-image').forEach(img => {
-      repair(img);
-      build(img);
-    });
-    if (!raf) raf = requestAnimationFrame(tick);
-  }
+        for (let x = 0; x < w; x++) {
+          push(x, 0);
+          push(x, h - 1);
+        }
+        for (let y = 0; y < h; y++) {
+          push(0, y);
+          push(w - 1, y);
+        }
 
-  function tick() {
-    objects.forEach((state, model) => {
-      if (!model.isConnected) {
-        objects.delete(model);
-        return;
+        while (head < tail) {
+          const p = queue[head++];
+          const x = p % w;
+          const y = (p / w) | 0;
+          pixels[p * 4 + 3] = 0;
+          push(x - 1, y);
+          push(x + 1, y);
+          push(x, y - 1);
+          push(x, y + 1);
+        }
+
+        // Softly remove near-white pixels just inside the detected edge.
+        for (let i = 0; i < w * h; i++) {
+          const di = i * 4;
+          if (visited[i]) continue;
+          const r = pixels[di], g = pixels[di + 1], b = pixels[di + 2];
+          if (isNearWhite(r, g, b)) {
+            let adjacent = false;
+            const x = i % w;
+            const y = (i / w) | 0;
+            if (x > 0 && visited[i - 1]) adjacent = true;
+            else if (x + 1 < w && visited[i + 1]) adjacent = true;
+            else if (y > 0 && visited[i - w]) adjacent = true;
+            else if (y + 1 < h && visited[i + w]) adjacent = true;
+            if (adjacent) pixels[di + 3] = Math.min(pixels[di + 3], 35);
+          }
+        }
+
+        ctx.putImageData(frame, 0, 0);
+        img.src = source.toDataURL('image/webp', 0.92);
+        img.dataset.rockProcessed = VERSION;
+        img.dataset.rockOriginal = assetUrl(path);
+      } catch (error) {
+        processed.delete(img);
+        console.warn('[ROCK images] transparent processing failed', error);
       }
-      if (!state.dragging) state.target += 0.16;
-      state.angle += (state.target - state.angle) * 0.12;
-      state.pitch += (state.targetPitch - state.pitch) * 0.12;
-      model.style.transform = `rotateX(${state.pitch}deg) rotateY(${state.angle}deg) translateZ(0)`;
-    });
-    raf = requestAnimationFrame(tick);
+    };
+    image.onerror = () => {
+      processed.delete(img);
+      console.warn('[ROCK images] failed to load', path);
+    };
+    image.src = assetUrl(path);
+  }
+
+  function processAll() {
+    injectStyles();
+    document.querySelectorAll('img.product-image').forEach(processImage);
   }
 
   function observe() {
     const grid = document.getElementById('productGrid');
-    if (!grid || grid.dataset.rock3dObserver) return;
-    grid.dataset.rock3dObserver = '1';
-    new MutationObserver(process).observe(grid, { childList: true, subtree: true });
+    if (!grid || grid.dataset.rockImageObserver === '1') return;
+    grid.dataset.rockImageObserver = '1';
+    new MutationObserver(processAll).observe(grid, { childList: true, subtree: true });
   }
 
-  const start = () => { process(); observe(); };
-  document.addEventListener('DOMContentLoaded', start);
-  window.addEventListener('load', start);
-  setTimeout(start, 400);
-  setTimeout(start, 1200);
+  function start() {
+    processAll();
+    observe();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
+  window.addEventListener('load', start, { once: true });
+  setTimeout(start, 300);
+  setTimeout(start, 1000);
 })();
