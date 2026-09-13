@@ -29,6 +29,10 @@ jobs:
         with:
           enablement: true
 
+      - name: Fix ROCK logo asset path
+        run: |
+          sed -i 's#https://raw.githubusercontent.com/nashhal/ROCK/f0d715990ae10873a3eef2a871280afc299f9bc2/rock_logo_transparent.png#rock_logo_black_sharp.png?v=20260913-6#g' index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
