@@ -1,4 +1,4 @@
-@import url("liquid-glass.css?v=20260913-5");
+@import url("liquid-glass.css?v=20260913-6");
 /* ROCK — bilingual typography calibration */
 :root{--tracking-ar:0;--tracking-ar-display:-.008em;--tracking-en:.035em;--tracking-en-display:-.055em}
 html[lang="ar"] body{letter-spacing:var(--tracking-ar)}
