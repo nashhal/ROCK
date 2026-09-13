@@ -54,15 +54,18 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
           p = Path("index.html")
           s = p.read_text(encoding="utf-8")
           tag = '  <script src="i18n.js?v=20260913-1"></script>'
           if tag not in s:
-              marker = re.search(r'  <script src="script\\.js(?:\\?[^\"]*)?"></script>', s)
-              if not marker:
+              start = s.find('  <script src="script.js')
+              if start < 0:
                   raise SystemExit("main script tag not found")
-              s = s[:marker.end()] + '\n' + tag + s[marker.end():]
+              end = s.find('</script>', start)
+              if end < 0:
+                  raise SystemExit("main script closing tag not found")
+              end += len('</script>')
+              s = s[:end] + '\n' + tag + s[end:]
           p.write_text(s, encoding="utf-8")
           PY
 
@@ -70,7 +73,6 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
           p = Path("index.html")
           s = p.read_text(encoding="utf-8")
 
@@ -82,17 +84,25 @@ jobs:
               s = s.replace(marker, replacement, 1)
 
           if 'data-rock-mobile-bindings' not in s:
-              marker = re.search(r'  <script src="script\\.js(?:\\?[^\"]*)?"></script>', s)
-              if not marker:
+              start = s.find('  <script src="script.js')
+              if start < 0:
                   raise SystemExit("main script tag not found")
-              patch = '''  <script data-rock-mobile-bindings>\n  (()=>{\n    document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{\n      const target=document.querySelector(btn.dataset.jump);\n      if(target) target.scrollIntoView({behavior:'smooth',block:'start'});\n    }));\n    const mobileCart=document.getElementById('mobileCart');\n    const cartBtn=document.getElementById('cartBtn');\n    if(mobileCart&&cartBtn) mobileCart.addEventListener('click',()=>cartBtn.click());\n    const mobileSearch=document.getElementById('mobileSearch');\n    const searchBtn=document.getElementById('searchBtn');\n    if(mobileSearch&&searchBtn) mobileSearch.addEventListener('click',()=>searchBtn.click());\n  })();\n  </script>\n'''
-              s = s[:marker.start()] + patch + s[marker.start():]
+              end = s.find('</script>', start)
+              if end < 0:
+                  raise SystemExit("main script closing tag not found")
+              end += len('</script>')
+              patch = '''\n  <script data-rock-mobile-bindings>\n  (()=>{\n    document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{\n      const target=document.querySelector(btn.dataset.jump);\n      if(target) target.scrollIntoView({behavior:'smooth',block:'start'});\n    }));\n    const mobileCart=document.getElementById('mobileCart');\n    const cartBtn=document.getElementById('cartBtn');\n    if(mobileCart&&cartBtn) mobileCart.addEventListener('click',()=>cartBtn.click());\n    const mobileSearch=document.getElementById('mobileSearch');\n    const searchBtn=document.getElementById('searchBtn');\n    if(mobileSearch&&searchBtn) mobileSearch.addEventListener('click',()=>searchBtn.click());\n  })();\n  </script>'''
+              s = s[:end] + patch + s[end:]
 
           if 'image-fix.js?' not in s:
-              marker = re.search(r'  <script src="script\\.js(?:\\?[^\"]*)?"></script>', s)
-              if not marker:
+              start = s.find('  <script src="script.js')
+              if start < 0:
                   raise SystemExit("main script tag not found")
-              s = s[:marker.end()] + '\n  <script src="image-fix.js?v=20260913-12"></script>' + s[marker.end():]
+              end = s.find('</script>', start)
+              if end < 0:
+                  raise SystemExit("main script closing tag not found")
+              end += len('</script>')
+              s = s[:end] + '\n  <script src="image-fix.js?v=20260913-12"></script>' + s[end:]
 
           p.write_text(s, encoding="utf-8")
           PY
@@ -136,7 +146,7 @@ jobs:
           from pathlib import Path
           html = Path('index.html').read_text(encoding='utf-8')
           js = Path('script.js').read_text(encoding='utf-8')
-          refs = set(re.findall(r'assets/products/[A-Za-z0-9._-]+\\.webp', js))
+          refs = set(re.findall(r'assets/products/[A-Za-z0-9._-]+\.webp', js))
           missing = sorted(p for p in refs if not Path(p).is_file())
           print(f'Product image references: {len(refs)}')
           print(f'Product image files present: {len(refs)-len(missing)}')
