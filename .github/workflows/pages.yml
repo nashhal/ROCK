@@ -48,6 +48,21 @@ jobs:
           p.write_text(s, encoding="utf-8")
           PY
 
+      - name: Install complete bilingual interface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          marker = '  <script src="script.js?v=20260913-6"></script>'
+          tag = '  <script src="i18n.js?v=20260913-1"></script>'
+          if tag not in s:
+              if marker not in s:
+                  raise SystemExit("main script marker not found")
+              s = s.replace(marker, marker + '\n' + tag, 1)
+          p.write_text(s, encoding="utf-8")
+          PY
+
       - name: Repair critical UI bindings before deploy
         run: |
           python - <<'PY'
@@ -55,7 +70,6 @@ jobs:
           p = Path("index.html")
           s = p.read_text(encoding="utf-8")
 
-          # Cart drawer needs a real backdrop because script.js controls #overlay.
           if 'id="overlay"' not in s:
               marker = '  <div class="search-overlay" id="searchOverlay"'
               replacement = '  <div class="overlay" id="overlay"></div>\n' + marker
@@ -63,15 +77,10 @@ jobs:
                   raise SystemExit("search overlay marker not found")
               s = s.replace(marker, replacement, 1)
 
-          # Mobile navigation was rendered but its controls were not wired.
           if 'data-rock-mobile-bindings' not in s:
-              marker = '  <script src="script.js?v=20260913-5"></script>'
-              if marker not in s:
-                  marker = '  <script src="script.js?v=20260913-6"></script>'
+              marker = '  <script src="script.js?v=20260913-6"></script>'
               patch = '''  <script data-rock-mobile-bindings>
           (()=>{
-            document.documentElement.classList.remove('motion-ready');
-            document.documentElement.classList.add('motion-active');
             document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{
               const target=document.querySelector(btn.dataset.jump);
               if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
@@ -96,8 +105,10 @@ jobs:
         run: |
           test -s "rock_logo (1).svg"
           test -s "calm-motion.css"
+          test -s "i18n.js"
           grep -q 'rock_logo%20(1).svg' index.html
           grep -q 'calm-motion.css?v=20260913-1' index.html
+          grep -q 'i18n.js?v=20260913-1' index.html
           grep -q 'id="overlay"' index.html
           grep -q 'data-rock-mobile-bindings' index.html
           grep -q 'id="mobileCart"' index.html
@@ -108,6 +119,7 @@ jobs:
           grep -q 'id="productGrid"' index.html
           grep -q 'id="finderModal"' index.html
           node --check script.js
+          node --check i18n.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
