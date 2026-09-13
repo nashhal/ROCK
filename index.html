@@ -18,36 +18,9 @@
   <link rel="stylesheet" href="enhancements.css?v=20260913-4">
   <link rel="stylesheet" href="brand-overrides.css?v=20260913-4">
   <link rel="stylesheet" href="typography.css?v=20260913-4">
-  <link rel="stylesheet" href="logo-motion.css?v=20260913-1">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ROCK","description":"Everyday technology accessories"}</script>
 </head>
 <body>
-  <div class="logo-assemble" id="rockLogoIntro" aria-hidden="true">
-    <div class="logo-assembly-stage">
-      <div class="logo-assembly-glow"></div>
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <img class="logo-particle" src="rock_logo_black_sharp.png" alt="">
-      <div class="logo-assembly-scan"></div>
-    </div>
-  </div>
-  <script>
-    (function(){
-      var intro=document.getElementById('rockLogoIntro');
-      if(!intro) return;
-      var seen=false;
-      try{seen=sessionStorage.getItem('rock-logo-intro-seen')==='1';}catch(e){}
-      if(seen){intro.classList.add('is-hidden');return;}
-      try{sessionStorage.setItem('rock-logo-intro-seen','1');}catch(e){}
-      document.body.classList.add('rock-intro-active');
-      setTimeout(function(){document.body.classList.remove('rock-intro-active');},3800);
-    })();
-  </script>
   <div class="announcement"><span>شحن سريع داخل السعودية</span><span>ضمان موثوق</span><span>دفع آمن</span><span class="announcement-en">POWER YOUR EVERYDAY</span></div>
   <header class="nav" id="nav"><a class="brand" href="#top" aria-label="ROCK home"><img class="rock-wordmark" src="rock_logo_black_sharp.png" alt="ROCK"><i></i></a><nav class="desktop-nav"><a href="#shop">المتجر</a><a href="#collections">التصنيفات</a><a href="#featured">الأكثر طلبًا</a><a href="#why">لماذا ROCK</a></nav><div class="nav-actions"><button class="icon-btn" id="searchBtn" aria-label="Search">⌕</button><button class="icon-btn" id="langBtn">EN</button><button class="icon-btn cart-btn" id="cartBtn">سلة <span id="cartCount">0</span></button><button class="menu-btn" id="menuBtn"><span></span><span></span></button></div></header>
   <div class="mobile-menu" id="mobileMenu"><a href="#shop">المتجر</a><a href="#collections">التصنيفات</a><a href="#featured">الأكثر طلبًا</a><a href="#why">لماذا ROCK</a></div>
