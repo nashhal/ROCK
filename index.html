@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20260913-6">
-  <link rel="stylesheet" href="enhancements.css?v=20260913-7">
+  <link rel="stylesheet" href="enhancements.css?v=20260913-8">
   <link rel="stylesheet" href="logo-system.css?v=20260913-1">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ROCK","description":"Everyday technology accessories"}</script>
 </head>
@@ -42,14 +42,9 @@
   <div class="modal-backdrop" id="finderModal" aria-hidden="true"></div>
   <div class="mobile-bottom-nav"><button data-jump="#shop">المتجر</button><button data-jump="#collections">التصنيفات</button><button id="mobileSearch">بحث</button><button id="mobileCart">السلة <span id="mobileCartCount">0</span></button></div>
   <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart"><div class="cart-head"><strong>السلة</strong><button id="closeCart">×</button></div><div class="cart-items" id="cartItems"><div class="empty-cart">السلة فارغة<br><span>أضف منتجًا لتبدأ</span></div></div><div class="cart-foot"><div><span>المجموع</span><strong id="cartTotal">0 ر.س</strong></div><button class="btn btn-primary" id="checkoutBtn">إتمام الطلب</button></div></aside>
-  <script src="script.js?v=20260913-7"></script>
-  <script src="image-fix.js?v=20260913-1"></script>
-  <script data-rock-mobile-bindings>
-  (()=>{
-    document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>{const target=document.querySelector(btn.dataset.jump);if(target)target.scrollIntoView({behavior:'smooth',block:'start'})}));
-    const mobileCart=document.getElementById('mobileCart'),cartBtn=document.getElementById('cartBtn');if(mobileCart&&cartBtn)mobileCart.addEventListener('click',()=>cartBtn.click());
-    const mobileSearch=document.getElementById('mobileSearch'),searchBtn=document.getElementById('searchBtn');if(mobileSearch&&searchBtn)mobileSearch.addEventListener('click',()=>searchBtn.click());
-  })();
-  </script>
+  <script src="script.js?v=20260913-8"></script>
+  <script src="image-fix.js?v=20260913-22"></script>
+  <script src="interactions.js?v=20260913-4"></script>
+  <script src="mobile.js?v=20260913-2"></script>
 </body>
 </html>
