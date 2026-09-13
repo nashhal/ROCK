@@ -1,0 +1,68 @@
+/* ROCK — Calm Motion System
+   Premium, restrained motion. GPU-friendly transforms/opacity only. */
+:root{--motion-ease:cubic-bezier(.22,.61,.36,1);--motion-soft:cubic-bezier(.16,1,.3,1)}
+
+/* Page-load entrance: quiet, short, and never blocks interaction. */
+.motion-ready .hero-copy,.motion-ready .hero-product,.motion-ready .hero-scroll{opacity:0;transform:translate3d(0,14px,0)}
+.motion-ready .hero-copy{animation:rockHeroIn .9s var(--motion-soft) .08s forwards}
+.motion-ready .hero-product{animation:rockHeroProduct 1.15s var(--motion-soft) .16s forwards}
+.motion-ready .hero-scroll{animation:rockHeroIn .8s var(--motion-ease) .55s forwards}
+
+/* Hero atmosphere: very low-amplitude movement. */
+.hero-grid{transform:translate3d(0,0,0);animation:rockGridDrift 18s ease-in-out infinite alternate}
+.orb-a{animation:rockOrbA 16s ease-in-out infinite alternate}
+.orb-b{animation:rockOrbB 13s ease-in-out infinite alternate}
+.product-stage{transform:rotate(-7deg) translate3d(0,0,0);animation:rockProductFloat 9s ease-in-out 1s infinite alternate}
+.floating-spec{transition:transform .6s var(--motion-ease),opacity .6s var(--motion-ease)}
+.spec-a{animation:rockSpecA 7s ease-in-out 1.2s infinite alternate}
+.spec-b{animation:rockSpecB 8s ease-in-out 1.4s infinite alternate}
+
+/* Scroll reveal: preserve the existing .visible hook in script.js. */
+.reveal{will-change:opacity,transform;transition:opacity .72s var(--motion-ease),transform .72s var(--motion-ease)}
+.reveal:nth-child(2){transition-delay:.06s}.reveal:nth-child(3){transition-delay:.1s}.reveal:nth-child(4){transition-delay:.14s}
+
+/* Refined hover motion: no bounce, spin, or large scale. */
+.btn,.icon-btn,.menu-btn,.finder-trigger,.filter-pills button,.product-add,.favorite-btn{transition:transform .32s var(--motion-ease),background-color .32s var(--motion-ease),color .32s var(--motion-ease),box-shadow .32s var(--motion-ease),border-color .32s var(--motion-ease)}
+.btn:hover{transform:translate3d(0,-2px,0)}
+.category-card,.product-card{will-change:transform;transition:transform .48s var(--motion-ease),box-shadow .48s var(--motion-ease),border-color .48s var(--motion-ease)}
+.category-card:hover,.product-card:hover{transform:translate3d(0,-4px,0)}
+.product-art{transition:transform .7s var(--motion-ease)}
+.product-card:hover .product-art{transform:rotate(-8deg) translate3d(0,-3px,0) scale(1.015)}
+.product-add:hover{transform:translate3d(0,-1px,0) scale(1.03)}
+.favorite-btn:hover{transform:translate3d(0,-1px,0) scale(1.03)}
+
+/* Showcase: barely perceptible lens movement. */
+.showcase-visual{isolation:isolate}
+.lens-1{animation:rockLens 18s ease-in-out infinite alternate}
+.lens-2{animation:rockLens 14s ease-in-out 1s infinite alternate-reverse}
+.lens-3{animation:rockLensCore 12s ease-in-out infinite alternate}
+
+/* Quiet UI transitions. */
+.nav{transition:background-color .45s var(--motion-ease),backdrop-filter .45s var(--motion-ease),top .45s var(--motion-ease),box-shadow .45s var(--motion-ease)}
+.cart-drawer{transition:transform .5s var(--motion-soft),box-shadow .5s var(--motion-ease)}
+.overlay{transition:opacity .42s var(--motion-ease)}
+.search-overlay{transition:opacity .35s var(--motion-ease)}
+
+@keyframes rockHeroIn{to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes rockHeroProduct{0%{opacity:0;transform:translate3d(18px,10px,0) scale(.985)}100%{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+@keyframes rockProductFloat{0%{transform:rotate(-7deg) translate3d(0,0,0)}100%{transform:rotate(-6deg) translate3d(0,-7px,0)}}
+@keyframes rockGridDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-10px,7px,0)}}
+@keyframes rockOrbA{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-18px,10px,0) scale(1.025)}}
+@keyframes rockOrbB{from{transform:translate3d(0,0,0)}to{transform:translate3d(14px,-12px,0)}}
+@keyframes rockSpecA{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-4px,0)}}
+@keyframes rockSpecB{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,4px,0)}}
+@keyframes rockLens{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(calc(-50% + 9px),calc(-50% - 6px)) scale(1.012)}}
+@keyframes rockLensCore{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(calc(-50% - 7px),calc(-50% + 5px)) scale(1.018)}}
+
+@media(max-width:900px){
+  .product-stage{animation-duration:10s}
+  .hero-grid{animation-duration:22s}
+  .lens-1{animation-duration:22s}
+  .lens-2{animation-duration:18s}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .motion-ready .hero-copy,.motion-ready .hero-product,.motion-ready .hero-scroll{opacity:1!important;transform:none!important}
+}
