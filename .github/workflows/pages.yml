@@ -35,11 +35,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f index.html
-          # Remove stale script references that do not exist in the repository.
-          sed -i '/interactions\.js/d; /mobile\.js/d' index.html
-          # Force the browser/CDN to fetch the current product-motion engine.
-          sed -i 's/image-fix\.js?v=[^"'"']*/image-fix.js?v=20260913-23/g' index.html
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          lines = text.splitlines()
+          lines = [line for line in lines if 'interactions.js' not in line and 'mobile.js' not in line]
+          text = '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
+          text = text.replace('image-fix.js?v=20260913-22', 'image-fix.js?v=20260913-23')
+          text = text.replace('image-fix.js?v=20260913-21', 'image-fix.js?v=20260913-23')
+          path.write_text(text, encoding='utf-8')
+          print('Deployment HTML sanitized and cache-busted.')
+          PY
 
       - name: Validate local asset references
         shell: bash
@@ -47,7 +54,6 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from html.parser import HTMLParser
-          from urllib.parse import urlparse
           from pathlib import Path
 
           class Parser(HTMLParser):
@@ -55,20 +61,18 @@ jobs:
                   super().__init__()
                   self.refs=[]
               def handle_starttag(self, tag, attrs):
-                  a=dict(attrs)
+                  attrs = dict(attrs)
                   for key in ('src','href'):
-                      value=a.get(key)
-                      if value and not value.startswith(('http://','https://','data:','#','mailto:','javascript:')):
-                          self.refs.append(value.split('?',1)[0].split('#',1)[0])
+                      value = attrs.get(key)
+                      if not value:
+                          continue
+                      if value.startswith(('http://','https://','data:','#','mailto:','javascript:')):
+                          continue
+                      self.refs.append(value.split('?',1)[0].split('#',1)[0])
 
           p=Parser()
           p.feed(Path('index.html').read_text(encoding='utf-8'))
-          missing=[]
-          for ref in sorted(set(p.refs)):
-              if ref.startswith('//'):
-                  continue
-              if not Path(ref).is_file():
-                  missing.append(ref)
+          missing=sorted({ref for ref in p.refs if not Path(ref).is_file()})
           if missing:
               print('Missing local HTML assets:')
               print('\n'.join(missing))
@@ -81,6 +85,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f script.js
+          test -f image-fix.js
           test -d assets/products
           refs=$(grep -oE "assets/products/[A-Za-z0-9._-]+\.webp" script.js | sort -u)
           count=0
@@ -102,8 +107,8 @@ jobs:
       - name: Validate JavaScript syntax
         run: |
           node --check script.js
+          node --check image-fix.js
           if [ -f i18n.js ]; then node --check i18n.js; fi
-          if [ -f image-fix.js ]; then node --check image-fix.js; fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
