@@ -26,6 +26,75 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Prepare transparent product photography
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --quiet pillow
+          python - <<'PY'
+          from collections import deque
+          from pathlib import Path
+          from PIL import Image
+
+          root = Path('assets/products')
+          files = sorted(root.glob('*.webp'))
+          if not files:
+              raise SystemExit('No product WebP files found')
+
+          def is_background(r, g, b, a):
+              if a == 0:
+                  return False
+              mx = max(r, g, b)
+              mn = min(r, g, b)
+              # Remove neutral/near-white pixels only when they are connected to the image edge.
+              return mx >= 242 and (mx - mn) <= 18
+
+          processed = 0
+          for path in files:
+              image = Image.open(path).convert('RGBA')
+              w, h = image.size
+              pixels = list(image.getdata())
+              seen = bytearray(w * h)
+              queue = deque()
+
+              def seed(x, y):
+                  p = y * w + x
+                  if seen[p]:
+                      return
+                  r, g, b, a = pixels[p]
+                  if is_background(r, g, b, a):
+                      seen[p] = 1
+                      queue.append(p)
+
+              for x in range(w):
+                  seed(x, 0)
+                  seed(x, h - 1)
+              for y in range(h):
+                  seed(0, y)
+                  seed(w - 1, y)
+
+              while queue:
+                  p = queue.popleft()
+                  x = p % w
+                  y = p // w
+                  r, g, b, a = pixels[p]
+                  pixels[p] = (r, g, b, 0)
+                  if x:
+                      seed(x - 1, y)
+                  if x + 1 < w:
+                      seed(x + 1, y)
+                  if y:
+                      seed(x, y - 1)
+                  if y + 1 < h:
+                      seed(x, y + 1)
+
+              image.putdata(pixels)
+              image.save(path, 'WEBP', lossless=True, method=6)
+              processed += 1
+
+          print(f'Normalized product photography: {processed} files')
+          PY
+
       - name: Sanitize deployment HTML and load ROCK brand layer
         shell: bash
         run: |
@@ -36,8 +105,8 @@ jobs:
           text = path.read_text(encoding='utf-8')
           lines = [line for line in text.splitlines() if 'interactions.js' not in line and 'mobile.js' not in line]
           text = '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
-          for version in ('20260913-21', '20260913-22', '20260913-23', '20260913-30', '20260913-31'):
-              text = text.replace(f'image-fix.js?v={version}', 'image-fix.js?v=20260913-32')
+          for version in ('20260913-21', '20260913-22', '20260913-23', '20260913-30', '20260913-31', '20260913-32'):
+              text = text.replace(f'image-fix.js?v={version}', 'image-fix.js?v=20260913-33')
           if 'rock-brand.css?v=20260913-1' not in text:
               text = text.replace('</head>', '  <link rel="stylesheet" href="rock-brand.css?v=20260913-1">\n</head>')
           path.write_text(text, encoding='utf-8')
