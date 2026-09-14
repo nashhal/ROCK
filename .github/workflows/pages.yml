@@ -26,20 +26,7 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Cache product segmentation model
-        uses: actions/cache@v4
-        with:
-          path: ~/.u2net
-          key: rock-u2net-${{ runner.os }}-v1
-
-      - name: Prepare safe transparent product cutouts
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -m pip install --disable-pip-version-check --quiet 'rembg[cpu]==2.0.84' Pillow
-          python scripts/prepare_product_media.py
-
-      - name: Preserve storefront source exactly
+      - name: Validate committed storefront
         shell: bash
         run: |
           set -euo pipefail
@@ -50,8 +37,9 @@ jobs:
           test -f rock-brand.css
           test -f script.js
           test -f image-fix.js
-          echo "Deploying the committed ROCK storefront without HTML/CSS version rewriting."
+          echo "Deploying the committed ROCK storefront exactly as stored in main."
           grep -q 'enhancements.css' index.html
+          grep -q 'logo-system.css' index.html
           grep -q 'script.js' index.html
 
       - name: Validate local asset references
@@ -86,7 +74,6 @@ jobs:
           PY
 
       - name: Validate ROCK product images
-        shell: bash
         run: |
           set -euo pipefail
           refs=$(grep -oE "assets/products/[A-Za-z0-9._-]+\.webp" script.js | sort -u)
@@ -102,9 +89,7 @@ jobs:
           done <<< "$refs"
           echo "Verified product image references: $count"
           echo "Missing product images: $missing"
-          if [ "$missing" -ne 0 ]; then
-            exit 1
-          fi
+          if [ "$missing" -ne 0 ]; then exit 1; fi
 
       - name: Validate JavaScript syntax
         run: |
@@ -113,7 +98,7 @@ jobs:
           if [ -f i18n.js ]; then node --check i18n.js; fi
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: .
 
