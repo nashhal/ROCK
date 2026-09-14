@@ -1,10 +1,50 @@
 (() => {
   'use strict';
 
+  const IMAGE_STYLE_ID = 'rock-product-image-style';
+
+  function installImageSurfaceStyle() {
+    if (document.getElementById(IMAGE_STYLE_ID)) return;
+    const style = document.createElement('style');
+    style.id = IMAGE_STYLE_ID;
+    style.textContent = `
+      .product-media{
+        background:#ecece8!important;
+        isolation:isolate!important;
+        overflow:hidden!important;
+      }
+      .product-media::before{
+        content:""!important;
+        position:absolute!important;
+        inset:0!important;
+        background:#ecece8!important;
+        z-index:0!important;
+        pointer-events:none!important;
+      }
+      .product-image{
+        position:relative!important;
+        z-index:1!important;
+        display:block!important;
+        width:auto!important;
+        height:auto!important;
+        max-width:74%!important;
+        max-height:74%!important;
+        object-fit:contain!important;
+        object-position:center center!important;
+        margin:0 auto!important;
+        background:transparent!important;
+        mix-blend-mode:normal!important;
+      }
+      .product-media.image-missing::before{display:none!important}
+    `;
+    document.head.appendChild(style);
+  }
+
   function applyProductSurface() {
+    installImageSurfaceStyle();
     document.querySelectorAll('img.product-image').forEach((img) => {
       img.style.background = 'transparent';
-      img.style.mixBlendMode = 'multiply';
+      img.style.mixBlendMode = 'normal';
       img.style.objectFit = 'contain';
       img.style.objectPosition = 'center center';
       img.style.width = 'auto';
@@ -227,6 +267,7 @@
   }
 
   function start() {
+    installImageSurfaceStyle();
     applyProductSurface();
     wireMobileNavigation();
     wireModalDismissal();
