@@ -1,0 +1,34 @@
+/* ROCK responsive polish — desktop, tablet and mobile usability */
+:root{--rock-green:#1f7a45;--rock-focus:#111}
+html{overflow-x:hidden}body{overflow-x:hidden}
+button,a,input,select{min-height:44px}
+.product-add,.favorite-btn,.icon-btn,.menu-btn{min-height:44px;min-width:44px}
+.product-card{isolation:isolate}
+.product-info h3{overflow-wrap:anywhere}
+@media(max-width:760px){
+  body{padding-bottom:76px}
+  .desktop-nav{display:none!important}
+  .mobile-bottom-nav{display:grid!important;position:fixed;z-index:1000;left:10px;right:10px;bottom:10px;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px;border:1px solid rgba(0,0,0,.1);border-radius:22px;background:rgba(255,255,255,.94);box-shadow:0 14px 40px rgba(0,0,0,.18);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+  .mobile-bottom-nav button{border:0;background:transparent;border-radius:16px;padding:7px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:700 9px/1.2 Cairo,sans-serif;color:#252525;min-height:58px}
+  .mobile-bottom-nav button:active{transform:scale(.96)}
+  .mobile-bottom-nav svg{width:20px;height:20px}
+  .mobile-bottom-nav .count{position:absolute;top:6px;right:calc(25% + 7px);min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:#111;color:#fff;font:700 8px/16px Arial;text-align:center}
+  .nav{position:absolute;width:100%;z-index:900}
+  .nav.scrolled{position:fixed}
+  .hero-actions .btn{min-height:48px}
+  .search-box{min-height:52px}
+  .store-tools select{min-height:48px}
+  .filter-pills button{min-height:44px}
+  .product-media{padding:15px}
+  .product-modal-card{max-height:88svh;overflow:auto}
+  .modal-backdrop{padding:12px}
+}
+@media(max-width:420px){
+  .mobile-bottom-nav{left:7px;right:7px;bottom:7px}
+  .mobile-bottom-nav button{font-size:8px}
+  .product-info{padding:12px}
+  .product-info>p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .product-bottom{gap:7px}
+}
+@media(min-width:761px){.mobile-bottom-nav{display:none!important}}
+@media(prefers-reduced-motion:reduce){.mobile-bottom-nav button{transition:none!important}}
