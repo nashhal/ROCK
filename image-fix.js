@@ -1,8 +1,6 @@
 (() => {
   'use strict';
 
-  // Product surfaces and mobile controls are kept here so catalog rendering
-  // remains isolated from the visual/interaction fixes.
   function applyProductSurface() {
     document.querySelectorAll('img.product-image').forEach((img) => {
       img.style.background = 'transparent';
@@ -38,11 +36,8 @@
     const mobileCart = document.getElementById('mobileCart');
     if (mobileCart && !mobileCart.dataset.rockNavWired) {
       mobileCart.dataset.rockNavWired = '1';
-      mobileCart.addEventListener('click', () => {
-        document.getElementById('cartBtn')?.click();
-      });
+      mobileCart.addEventListener('click', () => document.getElementById('cartBtn')?.click());
     }
-
     syncMobileCartCount();
   }
 
@@ -55,12 +50,8 @@
   function repairFeaturedProduct() {
     const button = document.querySelector('.add-demo[data-product="ROCK Power 20K"]');
     if (!button || typeof findProduct !== 'function' || typeof addToCart !== 'function') return;
-
-    const featured = findProduct('y18') || products?.find((p) =>
-      p.category === 'power' && p.specs?.some(([k, v]) => k === 'Capacity' && /20000/.test(v))
-    );
+    const featured = findProduct('y18') || products?.find((p) => p.category === 'power' && p.specs?.some(([k, v]) => k === 'Capacity' && /20000/.test(v)));
     if (!featured) return;
-
     button.dataset.product = featured.id;
     if (button.dataset.rockFeaturedWired) return;
     button.dataset.rockFeaturedWired = '1';
@@ -81,12 +72,25 @@
     });
   }
 
-  function loadCatalogPricing() {
-    if (document.querySelector('script[data-rock-catalog-pricing]')) return;
-    const script = document.createElement('script');
-    script.src = 'catalog-pricing.js?v=20260914-1';
-    script.dataset.rockCatalogPricing = '1';
-    document.head.appendChild(script);
+  function loadScriptOnce(src, marker) {
+    if (document.querySelector(`script[data-rock-script="${marker}"]`)) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.dataset.rockScript = marker;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  async function loadCatalog() {
+    try {
+      await loadScriptOnce('catalog-pricing.js?v=20260914-2', 'catalog-pricing');
+      await loadScriptOnce('excel-catalog-only.js?v=20260914-1', 'excel-catalog-only');
+    } catch (error) {
+      console.error('ROCK catalog load failed:', error);
+    }
   }
 
   function start() {
@@ -94,7 +98,7 @@
     wireMobileNavigation();
     repairFeaturedProduct();
     wireModalDismissal();
-    loadCatalogPricing();
+    loadCatalog();
 
     const grid = document.getElementById('productGrid');
     if (grid && !grid.dataset.rockSurfaceObserver) {
@@ -108,17 +112,10 @@
     const count = document.getElementById('cartCount');
     if (count && !count.dataset.rockCountObserver) {
       count.dataset.rockCountObserver = '1';
-      new MutationObserver(syncMobileCartCount).observe(count, {
-        childList: true,
-        characterData: true,
-        subtree: true
-      });
+      new MutationObserver(syncMobileCartCount).observe(count, { childList: true, characterData: true, subtree: true });
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start, { once: true });
-  } else {
-    start();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
 })();
