@@ -4,9 +4,14 @@
   function applyProductSurface() {
     document.querySelectorAll('img.product-image').forEach((img) => {
       img.style.background = 'transparent';
-      img.style.mixBlendMode = 'normal';
+      img.style.mixBlendMode = 'multiply';
       img.style.objectFit = 'contain';
       img.style.objectPosition = 'center center';
+      img.style.width = 'auto';
+      img.style.height = 'auto';
+      img.style.maxWidth = '74%';
+      img.style.maxHeight = '74%';
+      img.style.margin = '0 auto';
       img.decoding = 'async';
       img.addEventListener('error', () => {
         img.closest('.product-media')?.classList.add('image-missing');
