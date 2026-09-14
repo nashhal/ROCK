@@ -38,11 +38,13 @@ jobs:
           test -f enhancements.css
           test -f logo-system.css
           test -f rock-brand.css
+          test -f rock-cards.css
           test -f script.js
           test -f image-fix.js
           echo "Deploying the committed ROCK storefront exactly as stored in main."
           grep -q 'enhancements.css' index.html
           grep -q 'logo-system.css' index.html
+          grep -q 'rock-cards.css' index.html
           grep -q 'script.js' index.html
 
       - name: Validate local asset references
