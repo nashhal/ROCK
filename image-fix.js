@@ -56,8 +56,6 @@
     const button = document.querySelector('.add-demo[data-product="ROCK Power 20K"]');
     if (!button || typeof findProduct !== 'function' || typeof addToCart !== 'function') return;
 
-    // The feature copy describes a 20,000mAh / 22.5W bank. Use the matching
-    // catalog item instead of the old demo-only name that did not exist.
     const featured = findProduct('y18') || products?.find((p) =>
       p.category === 'power' && p.specs?.some(([k, v]) => k === 'Capacity' && /20000/.test(v))
     );
@@ -83,11 +81,20 @@
     });
   }
 
+  function loadCatalogPricing() {
+    if (document.querySelector('script[data-rock-catalog-pricing]')) return;
+    const script = document.createElement('script');
+    script.src = 'catalog-pricing.js?v=20260914-1';
+    script.dataset.rockCatalogPricing = '1';
+    document.head.appendChild(script);
+  }
+
   function start() {
     applyProductSurface();
     wireMobileNavigation();
     repairFeaturedProduct();
     wireModalDismissal();
+    loadCatalogPricing();
 
     const grid = document.getElementById('productGrid');
     if (grid && !grid.dataset.rockSurfaceObserver) {
