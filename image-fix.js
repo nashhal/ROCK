@@ -8,33 +8,9 @@
     const style = document.createElement('style');
     style.id = IMAGE_STYLE_ID;
     style.textContent = `
-      .product-media{
-        background:#ecece8!important;
-        isolation:isolate!important;
-        overflow:hidden!important;
-      }
-      .product-media::before{
-        content:""!important;
-        position:absolute!important;
-        inset:0!important;
-        background:#ecece8!important;
-        z-index:0!important;
-        pointer-events:none!important;
-      }
-      .product-image{
-        position:relative!important;
-        z-index:1!important;
-        display:block!important;
-        width:auto!important;
-        height:auto!important;
-        max-width:74%!important;
-        max-height:74%!important;
-        object-fit:contain!important;
-        object-position:center center!important;
-        margin:0 auto!important;
-        background:transparent!important;
-        mix-blend-mode:normal!important;
-      }
+      .product-media{background:#ecece8!important;isolation:isolate!important;overflow:hidden!important}
+      .product-media::before{content:""!important;position:absolute!important;inset:0!important;background:#ecece8!important;z-index:0!important;pointer-events:none!important}
+      .product-image{position:relative!important;z-index:1!important;display:block!important;width:auto!important;height:auto!important;max-width:74%!important;max-height:74%!important;object-fit:contain!important;object-position:center center!important;margin:0 auto!important;background:transparent!important;mix-blend-mode:normal!important}
       .product-media.image-missing::before{display:none!important}
     `;
     document.head.appendChild(style);
@@ -53,9 +29,10 @@
       img.style.maxHeight = '74%';
       img.style.margin = '0 auto';
       img.decoding = 'async';
-      img.addEventListener('error', () => {
-        img.closest('.product-media')?.classList.add('image-missing');
-      }, { once: true });
+      if (!img.dataset.rockImageError) {
+        img.dataset.rockImageError = '1';
+        img.addEventListener('error', () => img.closest('.product-media')?.classList.add('image-missing'), { once: true });
+      }
     });
   }
 
@@ -68,7 +45,6 @@
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
-
     const mobileSearch = document.getElementById('mobileSearch');
     if (mobileSearch && !mobileSearch.dataset.rockNavWired) {
       mobileSearch.dataset.rockNavWired = '1';
@@ -79,38 +55,29 @@
         input?.focus();
       });
     }
-
     const mobileCart = document.getElementById('mobileCart');
     if (mobileCart && !mobileCart.dataset.rockNavWired) {
       mobileCart.dataset.rockNavWired = '1';
       mobileCart.addEventListener('click', () => document.getElementById('cartBtn')?.click());
     }
-    syncMobileCartCount();
-  }
-
-  function syncMobileCartCount() {
-    const source = document.getElementById('cartCount');
-    const target = document.getElementById('mobileCartCount');
-    if (source && target) target.textContent = source.textContent || '0';
   }
 
   function repairExcelCategories() {
-    const card = document.querySelector('.category-card[data-filter-link="protection"]');
-    if (!card) return;
-    card.dataset.filterLink = 'car';
-    const title = card.querySelector('h3');
-    const desc = card.querySelector('p');
-    const number = card.querySelector('span');
-    if (number) number.textContent = '02';
-    if (title) title.textContent = 'السيارة';
-    if (desc) desc.textContent = 'شواحن وملحقات السيارة';
+    document.querySelectorAll('.category-card[data-filter-link="protection"]').forEach((card) => {
+      card.dataset.filterLink = 'car';
+      const title = card.querySelector('h3');
+      const desc = card.querySelector('p');
+      const number = card.querySelector('span');
+      if (number) number.textContent = '02';
+      if (title) title.textContent = 'السيارة';
+      if (desc) desc.textContent = 'شواحن وملحقات السيارة';
+    });
   }
 
   function repairFeaturedProduct() {
     const button = document.querySelector('.add-demo');
     const featured = typeof findProduct === 'function' ? findProduct('rkch765') : null;
     if (!button || !featured || typeof addToCart !== 'function') return;
-
     const section = document.getElementById('featured');
     const heading = section?.querySelector('.feature-copy h2');
     const copy = section?.querySelector('.feature-copy > p:not(.eyebrow)');
@@ -118,40 +85,25 @@
     const labels = section?.querySelectorAll('.feature-specs span');
     const screen = section?.querySelector('.pb-screen');
     const brand = section?.querySelector('.pb-brand');
-
     if (heading) heading.innerHTML = 'القوة<br><em>65W في جيبك</em>';
     if (copy) copy.textContent = 'شاحن ROCK RKCH765 GaN بقدرة 65W وثلاثة مخارج للشحن السريع في المنزل والسفر.';
-    if (specs?.length >= 3) {
-      specs[0].textContent = '65';
-      specs[1].textContent = '3';
-      specs[2].textContent = 'GaN';
-    }
-    if (labels?.length >= 3) {
-      labels[0].textContent = 'W MAX';
-      labels[1].textContent = 'OUTPUTS';
-      labels[2].textContent = 'FAST CHARGE';
-    }
+    if (specs?.length >= 3) { specs[0].textContent = '65'; specs[1].textContent = '3'; specs[2].textContent = 'GaN'; }
+    if (labels?.length >= 3) { labels[0].textContent = 'W MAX'; labels[1].textContent = 'OUTPUTS'; labels[2].textContent = 'FAST CHARGE'; }
     if (screen) screen.textContent = '65W';
     if (brand) brand.textContent = 'ROCK';
-
     button.dataset.product = featured.id;
     button.innerHTML = 'أضف إلى السلة <span>+</span>';
-    if (button.dataset.rockFeaturedWired) return;
-    button.dataset.rockFeaturedWired = '1';
-    button.addEventListener('click', (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      addToCart(featured.id);
-    }, true);
+    if (!button.dataset.rockFeaturedWired) {
+      button.dataset.rockFeaturedWired = '1';
+      button.addEventListener('click', (event) => { event.preventDefault(); event.stopImmediatePropagation(); addToCart(featured.id); }, true);
+    }
   }
 
   function wireModalDismissal() {
     document.querySelectorAll('.modal-backdrop').forEach((modal) => {
       if (modal.dataset.rockDismissWired) return;
       modal.dataset.rockDismissWired = '1';
-      modal.addEventListener('click', (event) => {
-        if (event.target === modal) modal.classList.remove('open');
-      });
+      modal.addEventListener('click', (event) => { if (event.target === modal) modal.classList.remove('open'); });
     });
   }
 
@@ -174,20 +126,14 @@
       `;
       document.head.appendChild(style);
     }
-
     const shopTools = document.querySelector('.store-tools');
     if (shopTools && !document.getElementById('rockTrustStrip')) {
       const strip = document.createElement('div');
       strip.id = 'rockTrustStrip';
       strip.className = 'rock-trust-strip';
-      strip.innerHTML = `
-        <div class="rock-trust-item"><div class="rock-trust-icon">✓</div><div><strong>دفع آمن</strong><span>بيانات طلبك محمية</span></div></div>
-        <div class="rock-trust-item"><div class="rock-trust-icon">↗</div><div><strong>شحن داخل السعودية</strong><span>تجهيز سريع للطلب</span></div></div>
-        <div class="rock-trust-item"><div class="rock-trust-icon">R</div><div><strong>ضمان موثوق</strong><span>دعم بعد الشراء</span></div></div>
-        <div class="rock-trust-item"><div class="rock-trust-icon">?</div><div><strong>اختيار أسهل</strong><span>مواصفات واضحة</span></div></div>`;
+      strip.innerHTML = `<div class="rock-trust-item"><div class="rock-trust-icon">✓</div><div><strong>دفع آمن</strong><span>بيانات طلبك محمية</span></div></div><div class="rock-trust-item"><div class="rock-trust-icon">↗</div><div><strong>شحن داخل السعودية</strong><span>تجهيز سريع للطلب</span></div></div><div class="rock-trust-item"><div class="rock-trust-icon">R</div><div><strong>دعم ROCK</strong><span>خدمة واضحة بعد الشراء</span></div></div><div class="rock-trust-item"><div class="rock-trust-icon">?</div><div><strong>اختيار أسهل</strong><span>مواصفات واضحة</span></div></div>`;
       shopTools.after(strip);
     }
-
     document.querySelectorAll('.product-card').forEach(card => {
       if (card.dataset.rockSalesDecorated) return;
       card.dataset.rockSalesDecorated = '1';
@@ -197,72 +143,14 @@
       const info = card.querySelector('.product-info');
       if (!info) return;
       if (product?.distributionPrice != null || product?.price != null) {
-        const availability = document.createElement('div');
-        availability.className = 'rock-availability';
-        availability.innerHTML = '<i></i><span>متوفر للطلب</span>';
-        info.appendChild(availability);
+        const availability = document.createElement('div'); availability.className = 'rock-availability'; availability.innerHTML = '<i></i><span>متوفر للطلب</span>'; info.appendChild(availability);
       }
-      if (product?.model) {
-        const model = document.createElement('div');
-        model.className = 'rock-model';
-        model.textContent = `MODEL ${product.model}`;
-        info.appendChild(model);
-      }
+      if (product?.model) { const model = document.createElement('div'); model.className = 'rock-model'; model.textContent = `MODEL ${product.model}`; info.appendChild(model); }
     });
-
     const checkout = document.getElementById('checkoutBtn');
     if (checkout && !checkout.dataset.rockCheckoutWired) {
-      checkout.dataset.rockCheckoutWired = '1';
-      checkout.classList.add('rock-checkout-btn');
-      checkout.title = 'إرسال تفاصيل الطلب';
-      const note = document.createElement('div');
-      note.className = 'rock-checkout-note';
-      note.textContent = 'بعد الضغط، سيتم فتح رسالة طلب جاهزة إلى بريد ROCK لتأكيد المنتجات والمجموع.';
-      checkout.parentElement?.appendChild(note);
-      checkout.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        const total = document.getElementById('cartTotal')?.textContent || '0 ر.س';
-        const rows = [...document.querySelectorAll('#cartItems .cart-row')];
-        if (!rows.length) {
-          alert('السلة فارغة. أضف منتجًا أولًا.');
-          return;
-        }
-        const lines = rows.map((row, index) => {
-          const text = row.innerText.replace(/\n+/g, ' | ').trim();
-          return `${index + 1}. ${text}`;
-        });
-        const subject = encodeURIComponent('طلب جديد من متجر ROCK');
-        const body = encodeURIComponent(`السلام عليكم،\n\nأرغب بإتمام الطلب التالي:\n${lines.join('\n')}\n\nالمجموع: ${total}\n\nالاسم:\nرقم الجوال:\nالمدينة:\nالعنوان:\nملاحظات:`);
-        window.location.href = `mailto:hello@rock.sa?subject=${subject}&body=${body}`;
-      }, true);
-    }
-  }
-
-  function loadScriptOnce(src, marker) {
-    if (document.querySelector(`script[data-rock-script="${marker}"]`)) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = src;
-      script.dataset.rockScript = marker;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
-  async function loadCatalog() {
-    try {
-      await loadScriptOnce('catalog-pricing.js?v=20260914-4', 'catalog-pricing');
-      await loadScriptOnce('excel-catalog-only.js?v=20260914-3', 'excel-catalog-only');
-      repairExcelCategories();
-      repairFeaturedProduct();
-      applyProductSurface();
-      renderProducts?.();
-      renderCart?.();
-      addSalesPolish();
-    } catch (error) {
-      console.error('ROCK catalog load failed:', error);
+      checkout.dataset.rockCheckoutWired = '1'; checkout.classList.add('rock-checkout-btn'); checkout.title = 'إرسال تفاصيل الطلب';
+      const note = document.createElement('div'); note.className = 'rock-checkout-note'; note.textContent = 'بعد الضغط، سيتم فتح رسالة طلب جاهزة إلى بريد ROCK لتأكيد المنتجات والمجموع.'; checkout.parentElement?.appendChild(note);
     }
   }
 
@@ -271,25 +159,15 @@
     applyProductSurface();
     wireMobileNavigation();
     wireModalDismissal();
-    loadCatalog();
-
+    repairExcelCategories();
+    repairFeaturedProduct();
+    addSalesPolish();
     const grid = document.getElementById('productGrid');
     if (grid && !grid.dataset.rockSurfaceObserver) {
       grid.dataset.rockSurfaceObserver = '1';
-      new MutationObserver(() => {
-        applyProductSurface();
-        wireMobileNavigation();
-        addSalesPolish();
-      }).observe(grid, { childList: true, subtree: true });
-    }
-
-    const count = document.getElementById('cartCount');
-    if (count && !count.dataset.rockCountObserver) {
-      count.dataset.rockCountObserver = '1';
-      new MutationObserver(syncMobileCartCount).observe(count, { childList: true, characterData: true, subtree: true });
+      new MutationObserver(() => { applyProductSurface(); wireMobileNavigation(); repairExcelCategories(); repairFeaturedProduct(); addSalesPolish(); }).observe(grid, { childList: true, subtree: true });
     }
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
-  else start();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true }); else start();
 })();
