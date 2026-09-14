@@ -5,7 +5,6 @@ button,a,input,select{min-height:44px}
 .product-add,.favorite-btn,.icon-btn,.menu-btn{min-height:44px;min-width:44px}
 .product-card{isolation:isolate}
 .product-info h3{overflow-wrap:anywhere}
-/* Consistent product image stage: fixed square surface and restrained product scale. */
 .product-visual{aspect-ratio:1/1;overflow:hidden}
 .product-media{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:26px;background:#f0f0ec}
 .product-image{width:68%!important;height:68%!important;max-width:68%!important;max-height:68%!important;object-fit:contain!important;object-position:center center!important;display:block;margin:auto;transform:none}
@@ -14,8 +13,6 @@ button,a,input,select{min-height:44px}
 .product-modal-card .product-image{width:78%!important;height:78%!important;max-width:78%!important;max-height:78%!important;object-fit:contain!important}
 .image-missing{display:flex;align-items:center;justify-content:center;background:#ededE9}
 .image-missing img{visibility:hidden}
-
-/* Premium ROCK product architecture */
 .product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
 .product-card{background:#fff;border:1px solid #dfdfda;border-radius:26px;box-shadow:0 8px 28px rgba(0,0,0,.035);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s,border-color .3s}
 .product-card:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(0,0,0,.10);border-color:#cfcfc8}
@@ -36,11 +33,13 @@ button,a,input,select{min-height:44px}
 .product-add{width:44px;height:44px;border-radius:50%;background:#111;color:#fff;font:500 20px/1 Montserrat;display:inline-flex;align-items:center;justify-content:center;transition:.25s}
 .product-add:hover{background:#2a2a28;transform:translateY(-2px)}
 
-/* Original ROCK catalog art direction: different products need different visual scale. */
-.rock-art-charger .product-image{width:76%!important;height:76%!important;max-width:76%!important;max-height:76%!important}
-.rock-art-earbuds .product-image{width:66%!important;height:66%!important;max-width:66%!important;max-height:66%!important}
-.rock-art-cable .product-image{width:82%!important;height:82%!important;max-width:82%!important;max-height:82%!important}
-.rock-art-catalog .product-image{width:62%!important;height:62%!important;max-width:62%!important;max-height:62%!important}
+/* Optical image normalization: use the source image itself to size each product family. */
+.product-card .product-image{width:auto!important;height:auto!important;max-width:78%!important;max-height:78%!important}
+.product-card:has(img.product-image[src*="/rkch"]) .product-image{max-width:84%!important;max-height:84%!important}
+.product-card:has(img.product-image[src*="/car30"],img.product-image[src*="/sd017"],img.product-image[src*="/nc20"],img.product-image[src*="/w31"]) .product-image{max-width:84%!important;max-height:84%!important}
+.product-card:has(img.product-image[src*="/retract"],img.product-image[src*="/rkcb"],img.product-image[src*="/rcb"],img.product-image[src*="/es09"],img.product-image[src*="/ro0546"],img.product-image[src*="/aux139"]) .product-image{max-width:92%!important;max-height:88%!important}
+.product-card:has(img.product-image[src*="/eb"],img.product-image[src*="/s1"],img.product-image[src*="/pods"],img.product-image[src*="/a5pro"],img.product-image[src*="/retro"],img.product-image[src*="/ultra"],img.product-image[src*="/pro-ow"],img.product-image[src*="/hp85"],img.product-image[src*="/h2"],img.product-image[src*="/h3"],img.product-image[src*="/y6"]) .product-image{max-width:78%!important;max-height:78%!important}
+.product-card:has(img.product-image[src*="catalog-placeholder"]) .product-image{max-width:72%!important;max-height:72%!important}
 
 @media(max-width:1100px){.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){
@@ -60,11 +59,10 @@ button,a,input,select{min-height:44px}
   .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .product-card{border-radius:20px}
   .product-media{padding:18px}
-  .product-card .product-image{width:70%!important;height:70%!important;max-width:70%!important;max-height:70%!important}
-  .rock-art-charger .product-image{width:74%!important;height:74%!important;max-width:74%!important;max-height:74%!important}
-  .rock-art-earbuds .product-image{width:64%!important;height:64%!important;max-width:64%!important;max-height:64%!important}
-  .rock-art-cable .product-image{width:78%!important;height:78%!important;max-width:78%!important;max-height:78%!important}
-  .rock-art-catalog .product-image{width:60%!important;height:60%!important;max-width:60%!important;max-height:60%!important}
+  .product-card .product-image{max-width:82%!important;max-height:78%!important}
+  .product-card:has(img.product-image[src*="/rkch"]) .product-image{max-width:86%!important;max-height:84%!important}
+  .product-card:has(img.product-image[src*="/retract"],img.product-image[src*="/rkcb"],img.product-image[src*="/rcb"],img.product-image[src*="/es09"],img.product-image[src*="/ro0546"],img.product-image[src*="/aux139"]) .product-image{max-width:96%!important;max-height:88%!important}
+  .product-card:has(img.product-image[src*="/eb"],img.product-image[src*="/s1"],img.product-image[src*="/pods"],img.product-image[src*="/a5pro"],img.product-image[src*="/retro"],img.product-image[src*="/ultra"],img.product-image[src*="/pro-ow"],img.product-image[src*="/hp85"],img.product-image[src*="/h2"],img.product-image[src*="/h3"],img.product-image[src*="/y6"]) .product-image{max-width:82%!important;max-height:80%!important}
   .product-card .product-image{transform:none}
   .product-info{padding:15px 15px 14px;min-height:178px}
   .product-info h3{font-size:14px;line-height:1.45;min-height:41px}
@@ -83,7 +81,7 @@ button,a,input,select{min-height:44px}
   .product-info>p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .product-bottom{gap:7px}
   .product-media{padding:20px}
-  .product-card .product-image{width:68%!important;height:68%!important;max-width:68%!important;max-height:68%!important}
+  .product-card .product-image{max-width:80%!important;max-height:76%!important}
 }
 @media(min-width:761px){.mobile-bottom-nav{display:none!important}}
 @media(prefers-reduced-motion:reduce){.mobile-bottom-nav button{transition:none!important}.product-card:hover .product-image{transform:none}.product-card,.product-image,.product-add{transition:none!important}}
