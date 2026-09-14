@@ -176,6 +176,7 @@
       checkout.parentElement?.appendChild(note);
       checkout.addEventListener('click', (event) => {
         event.preventDefault();
+        event.stopImmediatePropagation();
         const total = document.getElementById('cartTotal')?.textContent || '0 ر.س';
         const rows = [...document.querySelectorAll('#cartItems .cart-row')];
         if (!rows.length) {
@@ -189,7 +190,7 @@
         const subject = encodeURIComponent('طلب جديد من متجر ROCK');
         const body = encodeURIComponent(`السلام عليكم،\n\nأرغب بإتمام الطلب التالي:\n${lines.join('\n')}\n\nالمجموع: ${total}\n\nالاسم:\nرقم الجوال:\nالمدينة:\nالعنوان:\nملاحظات:`);
         window.location.href = `mailto:hello@rock.sa?subject=${subject}&body=${body}`;
-      });
+      }, true);
     }
   }
 
