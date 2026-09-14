@@ -1,7 +1,6 @@
-/* ROCK logo system — requested SVG only */
-.rock-wordmark{display:block;width:148px;height:auto;max-height:42px;object-fit:contain;flex:0 0 auto}
-.nav .rock-wordmark{filter:invert(1);}
-.footer .rock-wordmark{filter:invert(1);width:148px}
+/* ROCK logo system — preserve the supplied logo exactly */
+.rock-wordmark{display:block;width:148px;height:auto;max-height:42px;object-fit:contain;flex:0 0 auto;filter:none!important}
+.nav .rock-wordmark,.footer .rock-wordmark{filter:none!important}
 .brand{display:flex;align-items:center;gap:0}
 .brand i{display:none!important}
 @media(max-width:900px){.rock-wordmark,.footer .rock-wordmark{width:126px;max-height:36px}}
