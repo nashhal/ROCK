@@ -1,4 +1,4 @@
-/* ROCK catalog gate: show ONLY products whose barcode exists in the 2026 Excel price list. */
+/* ROCK catalog gate: show ONLY products whose barcode exists in the 2026 price list and has a real product image. */
 (() => {
   const wanted = new Set([
     '850079508156','850079508002','850079508170','850079508163','850079508149','6942433009752',
@@ -12,7 +12,8 @@
   const unique = new Map();
   products.forEach(p => {
     const barcode = p?.barcode == null ? '' : String(p.barcode).trim();
-    if (wanted.has(barcode) && !unique.has(barcode)) unique.set(barcode, p);
+    const hasRealImage = typeof p?.image === 'string' && !p.image.includes('catalog-placeholder.svg');
+    if (wanted.has(barcode) && hasRealImage && !unique.has(barcode)) unique.set(barcode, p);
   });
 
   products.length = 0;
