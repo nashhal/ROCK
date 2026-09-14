@@ -36,6 +36,12 @@ button,a,input,select{min-height:44px}
 .product-add{width:44px;height:44px;border-radius:50%;background:#111;color:#fff;font:500 20px/1 Montserrat;display:inline-flex;align-items:center;justify-content:center;transition:.25s}
 .product-add:hover{background:#2a2a28;transform:translateY(-2px)}
 
+/* Original ROCK catalog art direction: different products need different visual scale. */
+.rock-art-charger .product-image{width:76%!important;height:76%!important;max-width:76%!important;max-height:76%!important}
+.rock-art-earbuds .product-image{width:66%!important;height:66%!important;max-width:66%!important;max-height:66%!important}
+.rock-art-cable .product-image{width:82%!important;height:82%!important;max-width:82%!important;max-height:82%!important}
+.rock-art-catalog .product-image{width:62%!important;height:62%!important;max-width:62%!important;max-height:62%!important}
+
 @media(max-width:1100px){.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){
   body{padding-bottom:76px}
@@ -55,6 +61,10 @@ button,a,input,select{min-height:44px}
   .product-card{border-radius:20px}
   .product-media{padding:18px}
   .product-card .product-image{width:70%!important;height:70%!important;max-width:70%!important;max-height:70%!important}
+  .rock-art-charger .product-image{width:74%!important;height:74%!important;max-width:74%!important;max-height:74%!important}
+  .rock-art-earbuds .product-image{width:64%!important;height:64%!important;max-width:64%!important;max-height:64%!important}
+  .rock-art-cable .product-image{width:78%!important;height:78%!important;max-width:78%!important;max-height:78%!important}
+  .rock-art-catalog .product-image{width:60%!important;height:60%!important;max-width:60%!important;max-height:60%!important}
   .product-card .product-image{transform:none}
   .product-info{padding:15px 15px 14px;min-height:178px}
   .product-info h3{font-size:14px;line-height:1.45;min-height:41px}
