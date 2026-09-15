@@ -1,9 +1,9 @@
 (() => {
   'use strict';
 
-  const STYLE_ID = 'rock-product-image-surface-v4';
+  const STYLE_ID = 'rock-product-image-surface-v5';
   const wired = new WeakSet();
-  const IMAGE_VERSION = '20260915-4';
+  const IMAGE_VERSION = '20260915-5';
 
   function installStyles() {
     if (document.getElementById(STYLE_ID)) return;
@@ -91,18 +91,29 @@
     visual.classList.add('image-missing');
   }
 
+  function findCardProductId(card) {
+    return card.getAttribute('data-product')
+      || card.getAttribute('data-id')
+      || card.querySelector('[data-product]')?.getAttribute('data-product')
+      || card.querySelector('[data-id]')?.getAttribute('data-id')
+      || '';
+  }
+
   function ensureImage(card) {
     if (!card || card.nodeType !== 1) return;
 
     let img = card.querySelector('img.product-image, img[data-product-image], .product-image img, img');
-    let productId = card.getAttribute('data-product') || card.querySelector('[data-product]')?.getAttribute('data-product') || '';
+    const productId = findCardProductId(card);
     let product = null;
 
     if (productId && typeof findProduct === 'function') {
       try { product = findProduct(productId); } catch (_) {}
     }
 
-    const declaredImage = product?.image || img?.getAttribute('data-src') || img?.getAttribute('data-product-image') || img?.getAttribute('src');
+    const declaredImage = product?.image
+      || img?.getAttribute('data-src')
+      || img?.getAttribute('data-product-image')
+      || img?.getAttribute('src');
     const imagePath = normalizeProductPath(declaredImage);
 
     if (!img && imagePath) {
@@ -116,29 +127,34 @@
     }
 
     if (!img || !imagePath) return;
-    if (img.dataset.rockImageWired === '1' && img.src) return;
-    img.dataset.rockImageWired = '1';
+
     img.classList.add('product-image');
-    img.loading = 'lazy';
+    if (productId) img.dataset.productId = productId;
+    if (product?.name && !img.alt) img.alt = product.name;
+    img.loading = 'eager';
     img.decoding = 'async';
-    img.fetchPriority = 'auto';
+    img.fetchPriority = 'high';
     img.draggable = false;
 
     const finalSrc = cacheBust(imagePath);
     const current = img.getAttribute('src') || '';
     if (current !== finalSrc) img.setAttribute('src', finalSrc);
 
-    img.addEventListener('load', () => markReady(img), { once: true });
+    if (wired.has(img)) {
+      if (img.complete && img.naturalWidth > 0) markReady(img);
+      return;
+    }
+    wired.add(img);
+
+    img.addEventListener('load', () => markReady(img));
     img.addEventListener('error', () => {
-      // Retry once without the cache parameter. This avoids stale/broken cached
-      // references after a GitHub Pages deployment while keeping the image local.
       if (!img.dataset.rockRetried) {
         img.dataset.rockRetried = '1';
         img.setAttribute('src', imagePath);
         return;
       }
       markMissing(img);
-    }, { once: false });
+    });
 
     if (img.complete) {
       if (img.naturalWidth > 0) markReady(img);
@@ -199,8 +215,7 @@
       observer.observe(grid, { childList: true, subtree: true });
     }
 
-    // A second pass catches cards rendered by catalog/pricing scripts after load.
-    [100, 500, 1200].forEach((delay) => setTimeout(() => scan(), delay));
+    [100, 500, 1200, 2500].forEach((delay) => setTimeout(() => scan(), delay));
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
