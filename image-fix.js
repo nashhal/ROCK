@@ -1,29 +1,36 @@
 (() => {
   'use strict';
 
-  const STYLE_ID = 'rock-product-image-surface-v3';
+  const STYLE_ID = 'rock-product-image-surface-v4';
   const wired = new WeakSet();
-  const IMAGE_VERSION = '20260915-3';
+  const IMAGE_VERSION = '20260915-4';
 
   function installStyles() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      /* The storefront cards use .product-visual, not .product-media. */
-      .product-card .product-visual{
+      /* ROCK catalog image surface: one neutral paper tone, no blue cast. */
+      .product-card .product-visual,
+      .product-card .product-media{
         position:relative!important;
         display:grid!important;
         place-items:center!important;
         overflow:hidden!important;
         isolation:isolate!important;
+        background:var(--paper,#f3f3f1)!important;
+        border:0!important;
       }
-      .product-card .product-visual::before{
-        z-index:0!important;
+      .product-card .product-visual::before,
+      .product-card .product-media::before{
+        content:none!important;
+        display:none!important;
       }
-      .product-card .product-visual::after{
-        z-index:0!important;
+      .product-card .product-visual::after,
+      .product-card .product-media::after{
         pointer-events:none!important;
+        z-index:0!important;
+        opacity:.18!important;
       }
       .product-card .product-image{
         position:relative!important;
@@ -38,28 +45,46 @@
         object-fit:contain!important;
         object-position:center!important;
         margin:0!important;
-        padding:0!important;
+        padding:10px!important;
+        box-sizing:border-box!important;
         background:transparent!important;
         mix-blend-mode:normal!important;
         filter:none!important;
+        image-rendering:auto!important;
       }
-      .product-card .product-visual .product-art{
+      .product-card .product-visual .product-art,
+      .product-card .product-media .product-art{
         z-index:1!important;
       }
-      .product-card .product-visual.image-ready .product-art{
+      .product-card .product-visual.image-ready .product-art,
+      .product-card .product-media.image-ready .product-art{
         opacity:0!important;
         visibility:hidden!important;
         pointer-events:none!important;
       }
-      .product-card .product-visual.image-ready::after{
-        opacity:.18!important;
-      }
-      .product-card .product-visual.image-missing .product-image{
+      .product-card .product-visual.image-missing .product-image,
+      .product-card .product-media.image-missing .product-image{
         display:none!important;
       }
-      .product-card .product-visual.image-missing .product-art{
+      .product-card .product-visual.image-missing .product-art,
+      .product-card .product-media.image-missing .product-art{
         opacity:1!important;
         visibility:visible!important;
+      }
+      .product-card .product-art.has-catalog-image{
+        background:transparent!important;
+        box-shadow:none!important;
+        border:0!important;
+      }
+      .product-card .product-art.has-catalog-image .product-image{
+        width:100%!important;
+        height:100%!important;
+        padding:10px!important;
+        object-fit:contain!important;
+        filter:none!important;
+      }
+      .product-card .product-info{
+        background:var(--paper,#f3f3f1)!important;
       }
     `;
     document.head.appendChild(style);
