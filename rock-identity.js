@@ -1,4 +1,4 @@
-/* ROCK Identity Experience — turns the catalog into a focused brand journey. */
+/* ROCK Identity Experience — brand journey + world-class commerce layer. */
 (() => {
   'use strict';
 
@@ -6,25 +6,30 @@
     if(document.getElementById('rock-performance-script')) return;
     const script=document.createElement('script');
     script.id='rock-performance-script';
-    script.src='rock-performance.js?v=20260915-1';
+    script.src='rock-performance.js?v=20260915-2';
     script.async=false;
     document.body.appendChild(script);
   }
-
+  function addWorldClassLayer(){
+    if(document.getElementById('rock-world-class-script')) return;
+    const script=document.createElement('script');
+    script.id='rock-world-class-script';
+    script.src='world-class.js?v=20260915-1';
+    script.async=false;
+    document.body.appendChild(script);
+  }
   function addShopByNeed(){
     if(document.getElementById('rockShopByNeed')) return;
     const collections=document.getElementById('collections');
     if(!collections) return;
     const section=document.createElement('section');
-    section.id='rockShopByNeed';
-    section.className='section rock-needs';
+    section.id='rockShopByNeed'; section.className='section rock-needs';
     section.innerHTML=`<div class="section-head"><div><p class="eyebrow">ROCK / SHOP BY NEED</p><h2>اختر حسب<br><em>يومك</em></h2></div><p>بدل البحث عن المواصفات أولًا، ابدأ بما تحتاجه — وسنقربك من الفئة المناسبة.</p></div><div class="rock-needs-grid"><button data-need="power">أحتاج شحنًا أسرع <span>→</span></button><button data-need="travel">أحتاج طاقة للسفر <span>→</span></button><button data-need="car">أحتاج تجهيز السيارة <span>→</span></button><button data-need="audio">أحتاج صوتًا أفضل <span>→</span></button></div>`;
     collections.after(section);
     section.querySelectorAll('[data-need]').forEach(btn=>btn.addEventListener('click',()=>{
       const filter=btn.dataset.need;
       const target=document.querySelector(`#filterPills [data-filter="${filter}"]`);
-      target?.click();
-      document.getElementById('shop')?.scrollIntoView({behavior:'smooth',block:'start'});
+      target?.click(); document.getElementById('shop')?.scrollIntoView({behavior:'smooth',block:'start'});
     }));
   }
   function addBrandNote(){
@@ -34,10 +39,6 @@
     note.innerHTML='<strong>Technology should feel simple.</strong><p>ROCK تجمع الشحن والطاقة والسيارة والصوت تحت تجربة واحدة واضحة — منتجات يومية، مواصفات مفهومة، وهوية واحدة.</p>';
     why.querySelector('.why-grid')?.after(note);
   }
-  function boot(){
-    addPerformanceLayer();
-    addShopByNeed();
-    addBrandNote();
-  }
+  function boot(){ addPerformanceLayer(); addWorldClassLayer(); addShopByNeed(); addBrandNote(); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
 })();
