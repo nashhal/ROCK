@@ -1,0 +1,45 @@
+/* ROCK Navy Brand Palette — replaces neutral gray accents with deep navy while preserving black/white identity. */
+:root{--rock-navy:#0B1F3A;--rock-navy-2:#102B50;--rock-navy-soft:#E8EEF5;--rock-navy-line:#CBD6E3;--rock-navy-muted:#5D6F86;--rock-navy-bright:#183F70}
+
+/* Core surfaces */
+.service-band{background:var(--rock-navy)!important;color:#fff!important}
+.service-band span,.service-band a{color:#C9D8E8!important;border-color:#6F87A5!important}
+.category-card:not(.tall){background:#EEF2F6!important;border-color:#D7E0EA!important}
+.category-card:not(.tall):hover{background:#E5EBF2!important;border-color:#B9C8D8!important}
+
+/* Controls */
+.filter-pills button{border-color:var(--rock-navy-line)!important;color:var(--rock-navy-muted)!important}
+.filter-pills button.active,.filter-pills button:hover{background:var(--rock-navy)!important;border-color:var(--rock-navy)!important;color:#fff!important}
+.filter-toggle{background:var(--rock-navy)!important;color:#fff!important}
+.product-add:hover{background:var(--rock-navy)!important;color:#fff!important}
+.search-box{border-color:var(--rock-navy-line)!important}
+#sortProducts{border-color:var(--rock-navy-line)!important;color:var(--rock-navy)!important}
+
+/* Cards and info accents */
+.product-category{color:var(--rock-navy-muted)!important}
+.product-bottom{border-top-color:#E1E7EE!important}
+.product-price{color:var(--rock-navy)!important}
+.rock-availability{color:#2F5278!important}
+.rock-availability i{background:var(--rock-navy-bright)!important}
+.rock-model{color:#74859A!important}
+
+/* Identity highlights */
+.hero h1 em,.section-head h2 em,.feature-copy h2 em,.story-title h2 em,.showcase-copy h2 em,.shop-strip-inner h2 em{color:#AFC4DC!important}
+.cart-btn span{background:#AFC4DC!important;color:#0B1F3A!important}
+.eyebrow{color:#AFC4DC!important}
+.rock-trust-icon{background:var(--rock-navy-soft)!important;color:var(--rock-navy)!important}
+.rock-trust-item{border-color:#D6DEE8!important}
+
+/* Global market selector */
+.rock-market-btn{border-color:rgba(175,196,220,.35)!important}
+.rock-market-btn b{color:#D7E4F1!important}
+.rock-market-panel select{border-color:#C9D5E2!important}
+.rock-market-panel small{color:#64758B!important}
+
+/* Brand identity note */
+.rock-identity-note{border-top-color:#D5DEE8!important}
+.rock-identity-note p{color:var(--rock-navy-muted)!important}
+
+/* Keep black as the main ROCK anchor */
+.btn-primary{background:#080909!important;color:#fff!important}
+.btn-primary:hover{background:var(--rock-navy)!important}
