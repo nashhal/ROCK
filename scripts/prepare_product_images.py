@@ -10,11 +10,10 @@ if not MAGICK:
     raise SystemExit('ImageMagick is required (magick or convert).')
 
 # Product images remain source assets in git. During Pages build this prepares
-# the working copy used by the deployed artifact:
-# 1) removes connected near-white background from the image corners only
-# 2) trims transparent/empty margins
-# 3) centers the product on a transparent 1000x1000 canvas
-# 4) keeps a consistent visual scale across product cards
+# the working copy used by the deployed artifact.
+# The catalog exports contain the product plus a printed spec column and a
+# colored footer. We crop the upper-left product area first, then remove the
+# connected near-white background so the card shows the product only.
 
 def run(cmd):
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -24,6 +23,10 @@ for src in files:
     cmd = [
         MAGICK, str(src),
         '-alpha', 'on',
+        # Keep the product area; remove the catalog spec column and footer.
+        '-gravity', 'northwest',
+        '-crop', '72%x66%+0+0',
+        '+repage',
         '-bordercolor', 'white', '-border', '2',
         '-fuzz', '8%',
         '-fill', 'none', '-draw', 'color 0,0 floodfill',
