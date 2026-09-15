@@ -101,6 +101,27 @@ jobs:
           echo "Missing product images: $missing"
           if [ "$missing" -ne 0 ]; then exit 1; fi
 
+      - name: Validate all catalog image references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          refs = set()
+          for file in (Path('script.js'), Path('catalog-pricing.js'), Path('excel-catalog-only.js')):
+              text = file.read_text(encoding='utf-8')
+              refs.update(re.findall(r"assets/products/[A-Za-z0-9._-]+\.webp", text))
+
+          missing = sorted(ref for ref in refs if not Path(ref).is_file())
+          print(f'Validated catalog image references: {len(refs)}')
+          if missing:
+              print('Missing catalog images:')
+              print('\n'.join(missing))
+              raise SystemExit(1)
+          PY
+
       - name: Validate JavaScript syntax
         shell: bash
         run: |
@@ -110,15 +131,13 @@ jobs:
           done
           if [ -f i18n.js ]; then node --check i18n.js; fi
 
-      - name: Prepare product images for cards
+      - name: Preserve original catalog product images
         shell: bash
         run: |
           set -euo pipefail
-          if ! command -v magick >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq imagemagick
-          fi
-          python scripts/prepare_product_images.py
+          echo "Original catalog images are deployed unchanged."
+          echo "No background removal, trim, flood-fill, resize, or canvas conversion is performed during Pages deployment."
+          find assets/products -type f -name '*.webp' | sort | sed -n '1,12p'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
