@@ -2,6 +2,10 @@
 (() => {
   'use strict';
 
+  function removeLegacyFeatured(){
+    document.getElementById('featured')?.remove();
+    document.querySelectorAll('a[href="#featured"]').forEach((el) => el.remove());
+  }
   function addPerformanceLayer(){
     if(document.getElementById('rock-performance-script')) return;
     const script=document.createElement('script');
@@ -39,6 +43,6 @@
     note.innerHTML='<strong>Technology should feel simple.</strong><p>ROCK تجمع الشحن والطاقة والسيارة والصوت تحت تجربة واحدة واضحة — منتجات يومية، مواصفات مفهومة، وهوية واحدة.</p>';
     why.querySelector('.why-grid')?.after(note);
   }
-  function boot(){ addPerformanceLayer(); addWorldClassLayer(); addShopByNeed(); addBrandNote(); }
+  function boot(){ removeLegacyFeatured(); addPerformanceLayer(); addWorldClassLayer(); addShopByNeed(); addBrandNote(); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
 })();
