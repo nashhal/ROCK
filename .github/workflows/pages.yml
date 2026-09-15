@@ -21,7 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html product.html styles.css enhancements.css logo-system.css rock-brand.css rock-cards.css rock-vnext.css brand-system.css navy-brand.css global-commerce.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js config/store.config.js global-commerce.js product-page.js product-page.css product-linker.js seo-layer.js rock-identity.js rock-performance.js; do
+          for file in index.html product.html styles.css enhancements.css logo-system.css rock-brand.css rock-cards.css rock-vnext.css brand-system.css navy-brand.css global-commerce.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js rock-performance.js rock-i18n.js config/store.config.js global-commerce.js product-page.js product-page.css product-linker.js seo-layer.js rock-identity.js scripts/prepare_product_images.py; do
             test -f "$file"
           done
           echo "Validated ROCK storefront files."
@@ -41,6 +41,7 @@ jobs:
           grep -q 'ROCK_CONFIG' config/store.config.js
           grep -q 'application/ld+json' product-page.js
           grep -q 'navy-brand.css' index.html
+          grep -q 'rock-i18n.js' index.html
 
       - name: Validate local HTML assets
         shell: bash
@@ -104,10 +105,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in script.js catalog-pricing.js excel-catalog-only.js image-fix.js global-commerce.js product-page.js product-linker.js seo-layer.js rock-identity.js rock-performance.js; do
+          for file in script.js catalog-pricing.js excel-catalog-only.js image-fix.js global-commerce.js rock-performance.js rock-i18n.js product-page.js product-linker.js seo-layer.js rock-identity.js; do
             node --check "$file"
           done
           if [ -f i18n.js ]; then node --check i18n.js; fi
+
+      - name: Prepare product images for cards
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v magick >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq imagemagick
+          fi
+          python scripts/prepare_product_images.py
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
