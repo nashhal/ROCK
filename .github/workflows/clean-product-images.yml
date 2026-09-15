@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   clean:
-    if: ${{ !hashFiles('.rock-product-images-cleaned') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -20,13 +19,27 @@ jobs:
           fetch-depth: 1
           persist-credentials: true
 
+      - name: Check cleanup marker
+        id: guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f .rock-product-images-cleaned ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Product images were already cleaned. Nothing to do."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up Python
+        if: steps.guard.outputs.run == 'true'
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
           python-version: "3.12"
           cache: pip
 
       - name: Install image cleanup dependencies
+        if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -34,12 +47,14 @@ jobs:
           python -m pip install "Pillow>=10" "rembg[cpu]>=2.0.50"
 
       - name: Clean original catalog images
+        if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
           python scripts/prepare_product_media.py
 
       - name: Validate cleaned images
+        if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -66,6 +81,7 @@ jobs:
           PY
 
       - name: Commit cleaned originals
+        if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
