@@ -1,6 +1,16 @@
 (() => {
   'use strict';
 
+  function loadGlobalCommerce() {
+    if (window.ROCK_CONFIG) return;
+    const load = (src) => new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+      const s = document.createElement('script'); s.src = src; s.async = false; s.onload = resolve; s.onerror = reject; document.head.appendChild(s);
+    });
+    const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = 'global-commerce.css'; document.head.appendChild(link);
+    load('config/store.config.js').then(() => load('global-commerce.js')).catch(() => {});
+  }
+
   const IMAGE_STYLE_ID = 'rock-product-image-style';
   const KEY_FILTER_ID = 'rock-bg-key';
 
@@ -159,6 +169,7 @@
   }
 
   function start() {
+    loadGlobalCommerce();
     installBackgroundKey();
     installImageSurfaceStyle();
     applyProductSurface();
