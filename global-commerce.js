@@ -63,7 +63,7 @@
 
   function refreshPrices() {
     document.querySelectorAll('.product-price').forEach(convertPriceText);
-    document.querySelectorAll('[data-rock-sar]').forEach(el => convertPriceText(el));
+    document.querySelectorAll('[data-rock-sar]').forEach(convertPriceText);
     const total = document.getElementById('cartTotal');
     if (total && !/request|طلب/.test(total.textContent.toLowerCase())) convertPriceText(total);
     document.querySelectorAll('.cart-row small').forEach(el => {
@@ -127,8 +127,22 @@
     hookLanguageButton();
     expose();
     syncShell();
-    const observer = new MutationObserver(() => refreshPrices());
-    observer.observe(document.body, { childList: true, subtree: true });
+
+    /* Observe storefront additions without creating a mutation feedback loop. */
+    let refreshQueued = false;
+    const scheduleRefresh = () => {
+      if (refreshQueued) return;
+      refreshQueued = true;
+      requestAnimationFrame(() => {
+        refreshQueued = false;
+        refreshPrices();
+      });
+    };
+    const observer = new MutationObserver(mutations => {
+      const relevant = mutations.some(m => m.type === 'childList' && (m.addedNodes.length || m.removedNodes.length));
+      if (relevant) scheduleRefresh();
+    });
+    observer.observe(document.getElementById('productGrid') || document.body, { childList: true, subtree: true });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true }); else boot();
