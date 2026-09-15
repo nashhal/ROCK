@@ -1,0 +1,81 @@
+name: One-time clean ROCK product images
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    if: ${{ !hashFiles('.rock-product-images-cleaned') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install image cleanup dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install "Pillow>=10" "rembg[cpu]>=2.0.50"
+
+      - name: Clean original catalog images
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/prepare_product_media.py
+
+      - name: Validate cleaned images
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          files = sorted(Path('assets/products').glob('*.webp'))
+          if not files:
+              raise SystemExit('No product images found')
+          checked = 0
+          for path in files:
+              with Image.open(path) as image:
+                  image = image.convert('RGBA')
+                  alpha = image.getchannel('A')
+                  if alpha.getbbox() is None:
+                      raise SystemExit(f'Empty product image after cleanup: {path}')
+                  transparent = sum(1 for value in alpha.getdata() if value == 0)
+                  ratio = transparent / (image.width * image.height)
+                  if ratio < 0.05:
+                      raise SystemExit(f'Insufficient transparent background: {path} ({ratio:.1%})')
+                  checked += 1
+          print(f'Validated cleaned product images: {checked}')
+          PY
+
+      - name: Commit cleaned originals
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          printf 'ROCK product catalog images cleaned with background removal and product-bound cropping.\\n' > .rock-product-images-cleaned
+          git add assets/products/*.webp .rock-product-images-cleaned
+          if git diff --cached --quiet; then
+            echo "No image changes detected."
+            exit 0
+          fi
+          git commit -m "feat: clean original ROCK product catalog images"
+          git push origin HEAD:main
