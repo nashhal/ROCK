@@ -43,7 +43,6 @@ jobs:
           grep -q 'application/ld+json' product-page.js
           grep -q 'navy-brand.css' index.html
           grep -q 'rock-i18n.js' index.html
-          grep -q 'preserve original' .github/workflows/pages.yml || true
 
       - name: Validate local HTML assets
         shell: bash
@@ -53,25 +52,20 @@ jobs:
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote
-
           files = [Path('index.html'), Path('product.html'), Path('checkout.html'), Path('policies.html'), Path('support.html')]
-
           class Parser(HTMLParser):
               def __init__(self):
-                  super().__init__()
-                  self.refs = []
+                  super().__init__(); self.refs=[]
               def handle_starttag(self, tag, attrs):
-                  attrs = dict(attrs)
-                  for key in ('src', 'href'):
-                      value = attrs.get(key)
-                      if not value or value.startswith(('http://', 'https://', 'data:', '#', 'mailto:', 'javascript:')):
-                          continue
-                      self.refs.append(unquote(value.split('?', 1)[0].split('#', 1)[0]))
-
-          refs = []
+                  attrs=dict(attrs)
+                  for key in ('src','href'):
+                      value=attrs.get(key)
+                      if not value or value.startswith(('http://','https://','data:','#','mailto:','javascript:')): continue
+                      self.refs.append(unquote(value.split('?',1)[0].split('#',1)[0]))
+          refs=[]
           for file in files:
-              parser = Parser(); parser.feed(file.read_text(encoding='utf-8')); refs += parser.refs
-          missing = sorted({ref for ref in refs if ref and not Path(ref).is_file()})
+              parser=Parser(); parser.feed(file.read_text(encoding='utf-8')); refs += parser.refs
+          missing=sorted({ref for ref in refs if ref and not Path(ref).is_file()})
           if missing:
               print('Missing local HTML assets:'); print('\n'.join(missing)); raise SystemExit(1)
           print(f'Validated local HTML assets: {len(set(refs))}')
@@ -84,10 +78,10 @@ jobs:
           python - <<'PY'
           import re
           from pathlib import Path
-          refs = set()
-          for file in (Path('script.js'), Path('catalog-pricing.js'), Path('excel-catalog-only.js')):
-              refs.update(re.findall(r"assets/products/[A-Za-z0-9._-]+\.webp", file.read_text(encoding='utf-8')))
-          missing = sorted(ref for ref in refs if not Path(ref).is_file())
+          refs=set()
+          for file in (Path('script.js'),Path('catalog-pricing.js'),Path('excel-catalog-only.js')):
+              refs.update(re.findall(r"assets/products/[A-Za-z0-9._-]+\.webp",file.read_text(encoding='utf-8')))
+          missing=sorted(ref for ref in refs if not Path(ref).is_file())
           print(f'Verified product image references: {len(refs)}')
           if missing:
               print('Missing product images:'); print('\n'.join(missing)); raise SystemExit(1)
@@ -101,10 +95,10 @@ jobs:
           python - <<'PY'
           import re
           from pathlib import Path
-          refs = set()
-          for file in (Path('script.js'), Path('catalog-pricing.js'), Path('excel-catalog-only.js'), Path('product-page.js')):
-              refs.update(re.findall(r"assets/products/[A-Za-z0-9._-]+\.webp", file.read_text(encoding='utf-8')))
-          missing = sorted(ref for ref in refs if not Path(ref).is_file())
+          refs=set()
+          for file in (Path('script.js'),Path('catalog-pricing.js'),Path('excel-catalog-only.js'),Path('product-page.js')):
+              refs.update(re.findall(r"assets/products/[A-Za-z0-9._-]+\.webp",file.read_text(encoding='utf-8')))
+          missing=sorted(ref for ref in refs if not Path(ref).is_file())
           print(f'Validated catalog image references: {len(refs)}')
           if missing:
               print('Missing catalog images:'); print('\n'.join(missing)); raise SystemExit(1)
@@ -127,7 +121,7 @@ jobs:
           import re
           from pathlib import Path
           text = Path('script.js').read_text(encoding='utf-8')
-          ids = re.findall(r"id:'([^']+)'[^\n]*?image:'assets/products/([^']+\\.webp)'", text)
+          ids = re.findall(r"\bid:'[^']+'\s*,image:'assets/products/[^']+\.webp'", text)
           print(f'Base catalog products with local images: {len(ids)}')
           if len(ids) < 10:
               raise SystemExit('Unexpectedly small base catalog image set')
