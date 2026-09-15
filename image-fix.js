@@ -1,8 +1,8 @@
 (() => {
   'use strict';
-  const STYLE_ID='rock-product-image-surface-v6';
+  const STYLE_ID='rock-product-image-surface-v7';
   const wired=new WeakSet();
-  const IMAGE_VERSION='20260915-card-clean-3';
+  const IMAGE_VERSION='20260915-original-canvas-1';
 
   function installStyles(){
     if(document.getElementById(STYLE_ID)) return;
@@ -10,7 +10,7 @@
     style.id=STYLE_ID;
     style.textContent=`
       .product-card .product-visual,.product-card .product-media{position:relative!important;display:grid!important;place-items:center!important;overflow:hidden!important;isolation:isolate!important}
-      .product-card .product-image{position:relative!important;z-index:4!important;display:block!important;visibility:visible!important;opacity:1!important;width:auto!important;height:auto!important;max-width:82%!important;max-height:82%!important;object-fit:contain!important;object-position:center!important;margin:0!important;padding:0!important;background:transparent!important;mix-blend-mode:normal!important;filter:none!important;transform:scale(1.12)!important;transform-origin:center!important}
+      .product-card .product-image{position:relative!important;z-index:4!important;display:block!important;visibility:visible!important;opacity:1!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;padding:0!important;background:transparent!important;mix-blend-mode:normal!important;filter:none!important;transform:none!important;}
       .product-card .product-visual .product-art{z-index:1!important}.product-card .product-visual.image-ready .product-art{opacity:0!important;visibility:hidden!important;pointer-events:none!important}.product-card .product-visual.image-missing .product-image{display:none!important}.product-card .product-visual.image-missing .product-art{opacity:1!important;visibility:visible!important}
     `;
     document.head.appendChild(style);
