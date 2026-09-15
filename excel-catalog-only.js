@@ -11,10 +11,14 @@
 
     const price = typeof p.price === 'string' ? p.price.trim() : p.price;
     const numericPrice = Number(price);
-    return Number.isFinite(numericPrice) && numericPrice > 0;
+    if (!Number.isFinite(numericPrice) || numericPrice <= 0) return false;
+
+    // The 65W charger should not be shown in the customer-facing catalog.
+    if (p.id === 'rkch765' || /\b65W\b/i.test(String(p.name || ''))) return false;
+
+    return true;
   });
 
-  /* Do not show catalog-only products until a real selling price exists. */
   catalog.length = 0;
   kept.forEach((product) => catalog.push(product));
 
