@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0d1412">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="ROCK product details">
+  <title>ROCK Product</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="rock-vnext.css?v=20260914-1">
+  <link rel="stylesheet" href="global-commerce.css">
+  <link rel="stylesheet" href="product-page.css">
+  <script src="config/store.config.js"></script>
+</head>
+<body class="rock-product-page">
+  <header class="product-topbar">
+    <a class="brand" href="index.html" aria-label="ROCK home"><span>ROCK</span><i></i></a>
+    <nav><a href="index.html#shop">المتجر</a><a href="index.html#collections">التصنيفات</a><a href="index.html#contact">الدعم</a></nav>
+    <div class="product-top-actions"><button id="productLang" type="button">EN</button><a href="index.html#shop">سلة</a></div>
+  </header>
+
+  <main>
+    <div class="product-breadcrumb" id="productBreadcrumb"><a href="index.html">ROCK</a><span>›</span><span>Product</span></div>
+    <section class="pdp" id="productRoot" aria-live="polite">
+      <div class="pdp-gallery">
+        <div class="pdp-badge" id="productBadge">ROCK</div>
+        <div class="pdp-media"><img id="productImage" src="assets/products/catalog-placeholder.svg" alt="ROCK product"></div>
+        <div class="pdp-gallery-note">ROCK / PRODUCT DETAIL</div>
+      </div>
+      <div class="pdp-copy">
+        <p class="eyebrow" id="productCategory">ROCK</p>
+        <h1 id="productName">جاري تحميل المنتج</h1>
+        <p class="pdp-model" id="productModel"></p>
+        <div class="pdp-price" id="productPrice">السعر عند الطلب</div>
+        <div class="pdp-status" id="productStatus"><i></i><span>معلومات المنتج من كتالوج ROCK</span></div>
+        <p class="pdp-description" id="productDescription"></p>
+        <div class="pdp-actions"><button class="pdp-add" id="addToCart" type="button">أضف إلى السلة <span>+</span></button><a class="pdp-contact" href="mailto:hello@rock.sa">اسأل عن المنتج ↗</a></div>
+        <div class="pdp-specs" id="productSpecs"></div>
+      </div>
+    </section>
+
+    <section class="pdp-info-grid">
+      <article><span>01</span><h2>التوافق والاستخدام</h2><div id="productBestFor"></div></article>
+      <article><span>02</span><h2>الشراء</h2><p>السعر والتوفر النهائيان يعتمدان على السوق المحدد والبيانات التجارية المنشورة للمنتج.</p></article>
+      <article><span>03</span><h2>ROCK CARE</h2><p><a href="index.html#contact">تواصل مع ROCK</a> للاستفسار عن الضمان والطلب والشحن.</p></article>
+    </section>
+
+    <section class="related-section"><div class="section-head"><div><p class="eyebrow">ROCK / YOU MAY ALSO LIKE</p><h2>منتجات<br><em>ذات صلة</em></h2></div></div><div id="relatedProducts" class="related-grid"></div></section>
+  </main>
+
+  <footer class="footer"><div class="footer-top"><a class="brand" href="index.html"><span>ROCK</span><i></i></a><p>POWER YOUR EVERYDAY.</p><div class="footer-links"><a href="index.html#shop">المتجر</a><a href="index.html#collections">التصنيفات</a><a href="index.html#story">قصتنا</a><a href="index.html#contact">تواصل</a></div></div><div class="footer-bottom"><span>© <span id="year">2026</span> ROCK. All rights reserved.</span><span>RIYADH • SAUDI ARABIA</span></div></footer>
+
+  <div class="pdp-data-runtime" aria-hidden="true">
+    <span id="yearRuntime"></span><input id="productSearch" value=""><select id="sortProducts"><option value="featured">Featured</option></select><div id="filterPills"></div><div id="productGrid"></div><div id="emptyProducts"></div><button id="menuBtn"></button><div id="mobileMenu"></div><button id="cartBtn"></button><button id="closeCart"></button><div id="cartDrawer"></div><div id="overlay"></div><div id="cartItems"></div><span id="cartCount"></span><span id="cartTotal"></span><button id="langBtn"></button><button id="searchBtn"></button><button id="closeSearch"></button><div id="searchOverlay"></div><input id="overlaySearch"><button id="filterToggle"></button>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="catalog-pricing.js?v=20260914-6"></script>
+  <script src="excel-catalog-only.js?v=20260914-6"></script>
+  <script src="global-commerce.js"></script>
+  <script src="product-page.js"></script>
+</body>
+</html>
