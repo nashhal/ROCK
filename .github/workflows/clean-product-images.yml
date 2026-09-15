@@ -11,7 +11,7 @@ permissions:
 jobs:
   clean:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - name: Checkout
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          required="ROCK product catalog images cleaned v4 from original sources."
+          required="ROCK product catalog images cleaned v5 from original sources."
           if [ -f .rock-product-images-cleaned ] && grep -Fxq "$required" .rock-product-images-cleaned; then
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
@@ -50,58 +50,34 @@ jobs:
           git fetch --no-tags --depth=1 origin "$ORIGINAL_SHA"
           git restore --source="$ORIGINAL_SHA" -- assets/products/*.webp
 
-      - name: Smoke-test charger cutouts
+      - name: Smoke-test charger silhouettes
         if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          from collections import deque
-          from math import hypot
           from pathlib import Path
-          from PIL import Image, ImageChops, ImageFilter
+          from PIL import Image
           from rembg import new_session, remove
 
           ROOT = Path('assets/products')
           TEST = [ROOT/'rkch720.webp', ROOT/'rkch735.webp', ROOT/'rkch765.webp']
-          TH = 24
+          session = new_session('isnet-general-use')
 
-          def components(alpha):
-              w,h=alpha.size; px=alpha.load(); seen=bytearray(w*h)
-              for y in range(h):
-                  for x in range(w):
-                      i=y*w+x
-                      if seen[i] or px[x,y]<TH: continue
-                      q=deque([(x,y)]); seen[i]=1; pts=[]; x1=x2=x; y1=y2=y
-                      while q:
-                          cx,cy=q.popleft(); pts.append((cx,cy)); x1=min(x1,cx); x2=max(x2,cx); y1=min(y1,cy); y2=max(y2,cy)
-                          for nx,ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
-                              if 0<=nx<w and 0<=ny<h:
-                                  ni=ny*w+nx
-                                  if not seen[ni] and px[nx,ny]>=TH: seen[ni]=1; q.append((nx,ny))
-                      yield {'area':len(pts),'bbox':(x1,y1,x2+1,y2+1),'center':((x1+x2)/2,(y1+y2)/2),'points':pts}
-
-          def mask(alpha):
-              w,h=alpha.size; binary=alpha.point(lambda v:255 if v>=TH else 0)
-              core=binary.filter(ImageFilter.MinFilter(9)).filter(ImageFilter.MaxFilter(7))
-              comps=list(components(core))
-              if not comps: return binary
-              cx,cy=w/2,h/2; diag=hypot(w,h)
-              central=[c for c in comps if hypot(c['center'][0]-cx,c['center'][1]-cy)<=diag*.42] or comps
-              anchor=max(central,key=lambda c:c['area'])
-              x1,y1,x2,y2=anchor['bbox']; dx=max(18,int((x2-x1)*.16)); dy=max(18,int((y2-y1)*.16))
-              x1=max(0,x1-dx); y1=max(0,y1-dy); x2=min(w,x2+dx); y2=min(h,y2+dy)
-              region=Image.new('L',(w,h),0); region.paste(255,(x1,y1,x2,y2))
-              kept=ImageChops.multiply(binary,region).filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
-              return kept
-
-          session=new_session('isnet-general-use')
           for path in TEST:
-              image=remove(Image.open(path).convert('RGB'),session=session,alpha_matting=False,post_process_mask=True).convert('RGBA')
-              image.putalpha(mask(image.getchannel('A')))
-              if image.getchannel('A').getbbox() is None: raise SystemExit(f'Empty smoke-test result: {path}')
-              image.save('/tmp/'+path.name,'WEBP',lossless=True)
-              print('SMOKE OK',path)
+              with Image.open(path) as original:
+                  original = original.convert('RGB')
+                  src_size = original.size
+                  result = remove(original, session=session, alpha_matting=False, post_process_mask=True).convert('RGBA')
+                  if result.size != src_size:
+                      raise SystemExit(f'Dimension mismatch for {path}: source={src_size} result={result.size}')
+                  alpha = result.getchannel('A')
+                  if alpha.getbbox() is None:
+                      raise SystemExit(f'Empty smoke-test result: {path}')
+                  transparent = sum(v == 0 for v in alpha.getdata()) / (result.width * result.height)
+                  if transparent < 0.05:
+                      raise SystemExit(f'Insufficient transparency for {path}: {transparent:.1%}')
+                  print(f'SMOKE OK {path} source={src_size} output={result.size} transparent={transparent:.1%}')
           PY
 
       - name: Rebuild clean product images
@@ -110,73 +86,96 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          from collections import deque
-          from math import hypot
           from pathlib import Path
-          from PIL import Image, ImageChops, ImageFilter
+          from PIL import Image, ImageEnhance
           from rembg import new_session, remove
 
-          ROOT=Path('assets/products'); TH=24; PADDING=24
+          ROOT = Path('assets/products')
+          THRESHOLD = 8
+          files = sorted(ROOT.glob('*.webp'))
+          if len(files) < 60:
+              raise SystemExit(f'Unexpected product image count: {len(files)}')
 
-          def components(alpha):
-              w,h=alpha.size; px=alpha.load(); seen=bytearray(w*h)
-              for y in range(h):
-                  for x in range(w):
-                      i=y*w+x
-                      if seen[i] or px[x,y]<TH: continue
-                      q=deque([(x,y)]); seen[i]=1; pts=[]; x1=x2=x; y1=y2=y
-                      while q:
-                          cx,cy=q.popleft(); pts.append((cx,cy)); x1=min(x1,cx); x2=max(x2,cx); y1=min(y1,cy); y2=max(y2,cy)
-                          for nx,ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
-                              if 0<=nx<w and 0<=ny<h:
-                                  ni=ny*w+nx
-                                  if not seen[ni] and px[nx,ny]>=TH: seen[ni]=1; q.append((nx,ny))
-                      yield {'area':len(pts),'bbox':(x1,y1,x2+1,y2+1),'center':((x1+x2)/2,(y1+y2)/2),'points':pts}
+          session = new_session('isnet-general-use')
 
-          def clean(alpha):
-              w,h=alpha.size; binary=alpha.point(lambda v:255 if v>=TH else 0)
-              core=binary.filter(ImageFilter.MinFilter(9)).filter(ImageFilter.MaxFilter(7))
-              comps=list(components(core))
-              if not comps: return binary
-              cx,cy=w/2,h/2; diag=hypot(w,h)
-              central=[c for c in comps if hypot(c['center'][0]-cx,c['center'][1]-cy)<=diag*.42] or comps
-              anchor=max(central,key=lambda c:c['area'])
-              x1,y1,x2,y2=anchor['bbox']; dx=max(18,int((x2-x1)*.16)); dy=max(18,int((y2-y1)*.16))
-              region=Image.new('L',(w,h),0); region.paste(255,(max(0,x1-dx),max(0,y1-dy),min(w,x2+dx),min(h,y2+dy)))
-              kept=ImageChops.multiply(binary,region).filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
-              return kept
+          for i, path in enumerate(files, 1):
+              with Image.open(path) as original:
+                  original = original.convert('RGB')
+                  src_size = original.size
+                  result = remove(original, session=session, alpha_matting=False, post_process_mask=True).convert('RGBA')
 
-          def fit(image):
-              bbox=image.getchannel('A').getbbox()
-              if not bbox: raise RuntimeError('No product foreground')
-              l,t,r,b=bbox; l=max(0,l-PADDING); t=max(0,t-PADDING); r=min(image.width,r+PADDING); b=min(image.height,b+PADDING)
-              crop=image.crop((l,t,r,b)); side=max(crop.size); out=Image.new('RGBA',(side,side),(0,0,0,0)); out.alpha_composite(crop,((side-crop.width)//2,(side-crop.height)//2)); out.thumbnail((1200,1200),Image.Resampling.LANCZOS); return out
+              if result.size != src_size:
+                  raise RuntimeError(f'Dimension mismatch {path}: source={src_size} result={result.size}')
 
-          files=sorted(ROOT.glob('*.webp'))
-          if len(files)<60: raise SystemExit(f'Unexpected product image count: {len(files)}')
-          session=new_session('isnet-general-use')
-          for i,path in enumerate(files,1):
-              image=remove(Image.open(path).convert('RGB'),session=session,alpha_matting=False,post_process_mask=True).convert('RGBA')
-              image.putalpha(clean(image.getchannel('A'))); image=fit(image); image.save(path,'WEBP',lossless=True,method=6)
-              alpha=image.getchannel('A'); transparent=sum(v==0 for v in alpha.getdata())/(image.width*image.height)
-              if alpha.getbbox() is None or transparent<.05: raise RuntimeError(f'Validation failed: {path} transparent={transparent:.1%}')
-              print(f'REBUILT {i}/{len(files)} {path} transparent={transparent:.1%}')
+              alpha = result.getchannel('A')
+              # Keep the complete rembg silhouette on the original canvas.
+              # Only clear extremely faint edge noise; never crop to a component bounding box.
+              alpha = alpha.point(lambda v: 0 if v < THRESHOLD else v)
+              result.putalpha(alpha)
+
+              bbox = alpha.getbbox()
+              if bbox is None:
+                  raise RuntimeError(f'No product foreground: {path}')
+
+              transparent = sum(v == 0 for v in alpha.getdata()) / (result.width * result.height)
+              if transparent < 0.05:
+                  raise RuntimeError(f'Insufficient transparency {path}: {transparent:.1%}')
+
+              result.save(path, 'WEBP', lossless=True, method=6)
+              print(f'REBUILT {i}/{len(files)} {path} source={src_size} output={result.size} bbox={bbox} transparent={transparent:.1%}')
+
           print(f'REBUILT ALL {len(files)}')
           PY
 
-      - name: Validate rebuilt images
+      - name: Build visual inspection sheet
         if: steps.guard.outputs.run == 'true'
+        shell: bash
         run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw
+
+          files = sorted(Path('assets/products').glob('*.webp'))
+          tile_w, tile_h = 220, 180
+          cols = 5
+          rows = (len(files) + cols - 1) // cols
+          sheet = Image.new('RGB', (cols * tile_w, rows * tile_h), 'white')
+
+          for i, path in enumerate(files):
+              with Image.open(path).convert('RGBA') as im:
+                  card = Image.new('RGB', (tile_w, tile_h), 'white')
+                  thumb = im.copy()
+                  thumb.thumbnail((200, 140), Image.Resampling.LANCZOS)
+                  x = (tile_w - thumb.width) // 2
+                  y = 8 + (140 - thumb.height) // 2
+                  card.paste(thumb, (x, y), thumb)
+                  ImageDraw.Draw(card).text((6, 156), path.stem, fill='black')
+                  sheet.paste(card, ((i % cols) * tile_w, (i // cols) * tile_h))
+
+          Path('/tmp').mkdir(parents=True, exist_ok=True)
+          sheet.save('/tmp/rock-product-images-v5-contact.jpg', quality=92)
+          PY
+
+      - name: Validate rebuilt images and dimensions
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
           from PIL import Image
-          files=sorted(Path('assets/products').glob('*.webp'))
-          assert len(files)>=60, len(files)
+
+          files = sorted(Path('assets/products').glob('*.webp'))
+          assert len(files) >= 60, len(files)
           for path in files:
               with Image.open(path) as im:
-                  im=im.convert('RGBA'); a=im.getchannel('A'); ratio=sum(v==0 for v in a.getdata())/(im.width*im.height)
-                  if not a.getbbox() or ratio<.05: raise SystemExit(f'Bad image {path}: transparent={ratio:.1%}')
-          print(f'Validated rebuilt product images: {len(files)}')
+                  im = im.convert('RGBA')
+                  alpha = im.getchannel('A')
+                  ratio = sum(v == 0 for v in alpha.getdata()) / (im.width * im.height)
+                  if not alpha.getbbox() or ratio < 0.05:
+                      raise SystemExit(f'Bad image {path}: size={im.size} transparent={ratio:.1%}')
+          print(f'Validated rebuilt product images: {len(files)} with original source canvas dimensions preserved')
           PY
 
       - name: Commit rebuilt product images
@@ -186,8 +185,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          printf 'ROCK product catalog images cleaned v4 from original sources.\n' > .rock-product-images-cleaned
+          printf 'ROCK product catalog images cleaned v5 from original sources.\n' > .rock-product-images-cleaned
           git add assets/products/*.webp .rock-product-images-cleaned
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "fix: rebuild ROCK product images cleanly from original sources"
+          git commit -m "fix: rebuild ROCK product images without silhouette cropping"
           git push origin HEAD:main
