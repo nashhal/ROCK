@@ -1,0 +1,29 @@
+/* ROCK Identity Experience — turns the catalog into a focused brand journey. */
+(() => {
+  'use strict';
+  function addShopByNeed(){
+    if(document.getElementById('rockShopByNeed')) return;
+    const collections=document.getElementById('collections');
+    if(!collections) return;
+    const section=document.createElement('section');
+    section.id='rockShopByNeed';
+    section.className='section rock-needs';
+    section.innerHTML=`<div class="section-head"><div><p class="eyebrow">ROCK / SHOP BY NEED</p><h2>اختر حسب<br><em>يومك</em></h2></div><p>بدل البحث عن المواصفات أولًا، ابدأ بما تحتاجه — وسنقربك من الفئة المناسبة.</p></div><div class="rock-needs-grid"><button data-need="power">أحتاج شحنًا أسرع <span>→</span></button><button data-need="travel">أحتاج طاقة للسفر <span>→</span></button><button data-need="car">أحتاج تجهيز السيارة <span>→</span></button><button data-need="audio">أحتاج صوتًا أفضل <span>→</span></button></div>`;
+    collections.after(section);
+    section.querySelectorAll('[data-need]').forEach(btn=>btn.addEventListener('click',()=>{
+      const filter=btn.dataset.need;
+      const target=document.querySelector(`#filterPills [data-filter="${filter}"]`);
+      target?.click();
+      document.getElementById('shop')?.scrollIntoView({behavior:'smooth',block:'start'});
+    }));
+  }
+  function addBrandNote(){
+    const why=document.getElementById('why');
+    if(!why || document.getElementById('rockBrandNote')) return;
+    const note=document.createElement('div'); note.id='rockBrandNote'; note.className='rock-identity-note';
+    note.innerHTML='<strong>Technology should feel simple.</strong><p>ROCK تجمع الشحن والطاقة والسيارة والصوت تحت تجربة واحدة واضحة — منتجات يومية، مواصفات مفهومة، وهوية واحدة.</p>';
+    why.querySelector('.why-grid')?.after(note);
+  }
+  function boot(){addShopByNeed();addBrandNote();}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
+})();
