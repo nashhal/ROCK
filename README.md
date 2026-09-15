@@ -1,18 +1,26 @@
-# ROCK
+# ROCK — Power your everyday
 
-Premium interactive storefront concept for ROCK mobile accessories.
+ROCK storefront for everyday technology accessories across charging, power, car and audio.
 
-## Live locally
-Open `index.html` directly in a browser, or serve the folder with any static web server.
+## Live site
+https://nashhal.github.io/ROCK/
 
-## Included
-- Arabic RTL homepage with English toggle
-- Premium dark/green visual system aligned with the Rehab Ajyad family
-- Responsive mobile layout
-- Interactive shopping cart drawer
-- Scroll reveal animations
-- Parallax hero product
-- Product/category sections ready for real catalog integration
+## Local
+Open `index.html` directly or serve the folder with any static web server.
 
-## Brand direction
+## Current storefront
+- Arabic RTL storefront with English toggle
+- Responsive desktop and mobile layout
+- Product catalog with verified prices where provided
+- Product detail pages and shareable product URLs
+- Search, category filters, sorting and cart drawer
+- Market and currency selector with preview conversion rates
+- Black / navy / white ROCK visual system
+- GitHub Pages deployment with HTML, asset, image and JavaScript validation
+- JSON-LD, canonical and SEO layers
+
+## Production commerce boundary
+The current public site is a frontend/MVP. Checkout, payment, inventory, customer accounts, tax, international shipping and order APIs remain integration points and are not represented as live backend services.
+
+## Brand
 POWER YOUR EVERYDAY.
