@@ -2,7 +2,7 @@
   'use strict';
   const STYLE_ID='rock-product-image-surface-v6';
   const wired=new WeakSet();
-  const IMAGE_VERSION='20260915-card-clean-2';
+  const IMAGE_VERSION='20260915-card-clean-3';
 
   function installStyles(){
     if(document.getElementById(STYLE_ID)) return;
