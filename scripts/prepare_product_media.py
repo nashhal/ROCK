@@ -4,7 +4,7 @@ from collections import deque
 from math import hypot
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 from rembg import new_session, remove
 
 ROOT = Path("assets/products")
@@ -54,7 +54,6 @@ def overlaps(a, b, pad):
 
 
 def clean_alpha(image: Image.Image) -> Image.Image:
-    """Keep the actual product cluster and discard detached catalog text/artwork."""
     alpha = image.getchannel("A").filter(ImageFilter.MedianFilter(3))
     w, h = alpha.size
     comps = list(components(alpha))
