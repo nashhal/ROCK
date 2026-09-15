@@ -1,6 +1,18 @@
-/* ROCK Identity Experience — turns the catalog into a focused brand journey. */
+/* ROCK Identity Experience — focused brand journey + v2 design system. */
 (() => {
   'use strict';
+
+  function addDesignSystem(){
+    if(document.getElementById('rock-v2-styles')) return;
+    const link=document.createElement('link');
+    link.id='rock-v2-styles';
+    link.rel='stylesheet';
+    link.href='rock-v2.css?v=20260915-1';
+    document.head.appendChild(link);
+    document.documentElement.style.setProperty('color-scheme','light');
+    const theme=document.querySelector('meta[name="theme-color"]');
+    if(theme) theme.setAttribute('content','#0B0C0D');
+  }
 
   function addPerformanceLayer(){
     if(document.getElementById('rock-performance-script')) return;
@@ -35,6 +47,7 @@
     why.querySelector('.why-grid')?.after(note);
   }
   function boot(){
+    addDesignSystem();
     addPerformanceLayer();
     addShopByNeed();
     addBrandNote();
