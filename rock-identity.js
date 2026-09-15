@@ -1,6 +1,16 @@
 /* ROCK Identity Experience — turns the catalog into a focused brand journey. */
 (() => {
   'use strict';
+
+  function addPerformanceLayer(){
+    if(document.getElementById('rock-performance-script')) return;
+    const script=document.createElement('script');
+    script.id='rock-performance-script';
+    script.src='rock-performance.js?v=20260915-1';
+    script.async=false;
+    document.body.appendChild(script);
+  }
+
   function addShopByNeed(){
     if(document.getElementById('rockShopByNeed')) return;
     const collections=document.getElementById('collections');
@@ -24,6 +34,10 @@
     note.innerHTML='<strong>Technology should feel simple.</strong><p>ROCK تجمع الشحن والطاقة والسيارة والصوت تحت تجربة واحدة واضحة — منتجات يومية، مواصفات مفهومة، وهوية واحدة.</p>';
     why.querySelector('.why-grid')?.after(note);
   }
-  function boot(){addShopByNeed();addBrandNote();}
+  function boot(){
+    addPerformanceLayer();
+    addShopByNeed();
+    addBrandNote();
+  }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
 })();
