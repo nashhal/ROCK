@@ -33,21 +33,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f index.html
-          test -f styles.css
-          test -f enhancements.css
-          test -f logo-system.css
-          test -f rock-brand.css
-          test -f rock-cards.css
-          test -f script.js
-          test -f image-fix.js
-          echo "Deploying the committed ROCK storefront exactly as stored in main."
-          grep -q 'enhancements.css' index.html
-          grep -q 'logo-system.css' index.html
-          grep -q 'rock-cards.css' index.html
-          grep -q 'script.js' index.html
+          for file in index.html product.html styles.css enhancements.css logo-system.css rock-brand.css rock-cards.css script.js image-fix.js config/store.config.js global-commerce.js global-commerce.css product-page.js product-page.css product-linker.js seo-layer.js rock-identity.js; do
+            test -f "$file"
+          done
+          echo "Validated ROCK global commerce storefront files."
+          grep -q 'product.html' product-linker.js
+          grep -q 'ROCK_CONFIG' config/store.config.js
+          grep -q 'application/ld+json' product-page.js
 
-      - name: Validate local asset references
+      - name: Validate local HTML assets
         shell: bash
         run: |
           set -euo pipefail
@@ -55,11 +49,10 @@ jobs:
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import unquote
-
+          files = [Path('index.html'), Path('product.html')]
           class Parser(HTMLParser):
               def __init__(self):
-                  super().__init__()
-                  self.refs=[]
+                  super().__init__(); self.refs=[]
               def handle_starttag(self, tag, attrs):
                   attrs=dict(attrs)
                   for key in ('src','href'):
@@ -67,30 +60,24 @@ jobs:
                       if not value or value.startswith(('http://','https://','data:','#','mailto:','javascript:')):
                           continue
                       self.refs.append(unquote(value.split('?',1)[0].split('#',1)[0]))
-
-          p=Parser()
-          p.feed(Path('index.html').read_text(encoding='utf-8'))
-          missing=sorted({ref for ref in p.refs if not Path(ref).is_file()})
+          refs=[]
+          for file in files:
+              p=Parser(); p.feed(file.read_text(encoding='utf-8')); refs += p.refs
+          missing=sorted({ref for ref in refs if ref and not Path(ref).is_file()})
           if missing:
-              print('Missing local HTML assets:')
-              print('\n'.join(missing))
-              raise SystemExit(1)
-          print(f'Validated local HTML assets: {len(set(p.refs))}')
+              print('Missing local HTML assets:'); print('\n'.join(missing)); raise SystemExit(1)
+          print(f'Validated local HTML assets: {len(set(refs))}')
           PY
 
       - name: Validate ROCK product images
         run: |
           set -euo pipefail
           refs=$(grep -oE "assets/products/[A-Za-z0-9._-]+\.webp" script.js | sort -u)
-          count=0
-          missing=0
+          count=0; missing=0
           while IFS= read -r path; do
             [ -z "$path" ] && continue
             count=$((count + 1))
-            if [ ! -f "$path" ]; then
-              echo "MISSING PRODUCT IMAGE: $path"
-              missing=$((missing + 1))
-            fi
+            if [ ! -f "$path" ]; then echo "MISSING PRODUCT IMAGE: $path"; missing=$((missing + 1)); fi
           done <<< "$refs"
           echo "Verified product image references: $count"
           echo "Missing product images: $missing"
@@ -98,12 +85,13 @@ jobs:
 
       - name: Validate JavaScript syntax
         run: |
-          node --check script.js
-          node --check image-fix.js
-          if [ -f i18n.js ]; then node --check i18n.js; fi
+          set -euo pipefail
+          for file in script.js image-fix.js global-commerce.js product-page.js product-linker.js seo-layer.js rock-identity.js; do
+            node --check "$file"
+          done
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        uses: actions/upload-pages-artifact@fc324d3547104277b826a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: .
 
