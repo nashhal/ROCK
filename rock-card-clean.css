@@ -1,0 +1,32 @@
+/* ROCK product card cleanup: keep catalog product imagery, remove decorative text. */
+.product-card .product-art::before,
+.product-card .product-art::after{
+  content:none!important;
+  display:none!important;
+}
+.product-card .product-art,
+.product-card .product-art *{
+  text-shadow:none!important;
+}
+.product-card .product-art{
+  font-size:0!important;
+  line-height:0!important;
+}
+.product-card .product-art > *:not(.product-image):not(svg):not(picture){
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+}
+.product-card .product-art span,
+.product-card .product-art b,
+.product-card .product-art strong,
+.product-card .product-art small,
+.product-card .product-art label{
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+}
+.product-card .product-art .product-image{
+  color:initial!important;
+  -webkit-text-fill-color:initial!important;
+  font-size:initial!important;
+  line-height:initial!important;
+}
