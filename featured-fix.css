@@ -1,0 +1,7 @@
+/* ROCK Featured 65W — clean catalog-led treatment. */
+#featured .power-device{min-height:520px;height:auto;display:grid;place-items:center;position:relative;isolation:isolate}
+#featured .featured-product-frame{width:min(100%,520px);min-height:440px;display:grid;place-items:center;padding:32px;border:1px solid rgba(255,255,255,.10);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.02));box-shadow:0 35px 90px rgba(0,0,0,.28);overflow:hidden}
+#featured .featured-product-image{display:block;width:100%;height:auto;max-width:470px;max-height:500px;object-fit:contain;object-position:center;margin:0;transform:none!important;filter:drop-shadow(0 24px 30px rgba(0,0,0,.28));background:transparent}
+#featured .featured-product-caption{position:absolute;right:24px;bottom:24px;padding:10px 14px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(8,8,8,.62);backdrop-filter:blur(12px);font:700 10px/1 Montserrat,sans-serif;letter-spacing:.12em;color:#d9dad7}
+@media(max-width:900px){#featured .power-device{min-height:450px;margin-top:20px}#featured .featured-product-frame{min-height:380px;padding:22px}}
+@media(max-width:560px){#featured .power-device{min-height:360px}#featured .featured-product-frame{min-height:310px;padding:16px;border-radius:22px}#featured .featured-product-caption{right:14px;bottom:14px;font-size:9px}}
