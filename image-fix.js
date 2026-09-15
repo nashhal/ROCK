@@ -1,33 +1,26 @@
 (() => {
   'use strict';
 
-  const STYLE_ID = 'rock-product-image-surface-v3';
+  const STYLE_ID = 'rock-product-image-surface-v4';
   const wired = new WeakSet();
-  const IMAGE_VERSION = '20260915-3';
+  const IMAGE_VERSION = '20260915-4';
 
   function installStyles() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      /* The storefront cards use .product-visual, not .product-media. */
-      .product-card .product-visual{
+      .product-card .product-visual,
+      .product-card .product-media{
         position:relative!important;
         display:grid!important;
         place-items:center!important;
         overflow:hidden!important;
         isolation:isolate!important;
       }
-      .product-card .product-visual::before{
-        z-index:0!important;
-      }
-      .product-card .product-visual::after{
-        z-index:0!important;
-        pointer-events:none!important;
-      }
       .product-card .product-image{
         position:relative!important;
-        z-index:3!important;
+        z-index:4!important;
         display:block!important;
         visibility:visible!important;
         opacity:1!important;
@@ -43,20 +36,13 @@
         mix-blend-mode:normal!important;
         filter:none!important;
       }
-      .product-card .product-visual .product-art{
-        z-index:1!important;
-      }
+      .product-card .product-visual .product-art{z-index:1!important}
       .product-card .product-visual.image-ready .product-art{
         opacity:0!important;
         visibility:hidden!important;
         pointer-events:none!important;
       }
-      .product-card .product-visual.image-ready::after{
-        opacity:.18!important;
-      }
-      .product-card .product-visual.image-missing .product-image{
-        display:none!important;
-      }
+      .product-card .product-visual.image-missing .product-image{display:none!important}
       .product-card .product-visual.image-missing .product-art{
         opacity:1!important;
         visibility:visible!important;
@@ -65,60 +51,105 @@
     document.head.appendChild(style);
   }
 
-  function withCacheBust(src) {
-    const value = String(src || '');
-    if (!value || /^data:/i.test(value)) return value;
+  function cacheBust(src) {
+    if (!src || /^data:/i.test(src)) return src;
     try {
-      const url = new URL(value, document.baseURI);
+      const url = new URL(src, document.baseURI);
       url.searchParams.set('rock', IMAGE_VERSION);
       return url.href;
     } catch (_) {
-      return value.includes('?') ? `${value}&rock=${IMAGE_VERSION}` : `${value}?rock=${IMAGE_VERSION}`;
+      return src.includes('?') ? `${src}&rock=${IMAGE_VERSION}` : `${src}?rock=${IMAGE_VERSION}`;
     }
   }
 
+  function normalizeProductPath(src) {
+    const value = String(src || '').trim();
+    if (!value) return '';
+    if (/^(https?:|data:|blob:)/i.test(value)) return value;
+    const clean = value.replace(/^\.\//, '').replace(/^\//, '');
+    if (clean.startsWith('assets/products/')) return clean;
+    const filename = clean.split('/').pop();
+    if (/^[A-Za-z0-9._-]+\.webp$/i.test(filename)) return `assets/products/${filename}`;
+    return value;
+  }
+
+  function visualFor(img) {
+    return img.closest('.product-visual, .product-media, .product-art') || img.parentElement;
+  }
+
   function markReady(img) {
-    const visual = img.closest('.product-visual, .product-media');
+    const visual = visualFor(img);
     if (!visual) return;
     visual.classList.remove('image-missing');
     visual.classList.add('image-ready');
   }
 
   function markMissing(img) {
-    const visual = img.closest('.product-visual, .product-media');
+    const visual = visualFor(img);
     if (!visual) return;
     visual.classList.remove('image-ready');
     visual.classList.add('image-missing');
   }
 
-  function applyProductImages(root = document) {
-    installStyles();
-    root.querySelectorAll?.('img.product-image').forEach((img) => {
-      if (wired.has(img)) return;
-      wired.add(img);
+  function ensureImage(card) {
+    if (!card || card.nodeType !== 1) return;
 
-      const original = img.getAttribute('src') || img.src;
-      const busted = withCacheBust(original);
-      if (busted && busted !== img.src) img.src = busted;
+    let img = card.querySelector('img.product-image, img[data-product-image], .product-image img, img');
+    let productId = card.getAttribute('data-product') || card.querySelector('[data-product]')?.getAttribute('data-product') || '';
+    let product = null;
 
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      img.fetchPriority = 'auto';
-      img.setAttribute('draggable', 'false');
+    if (productId && typeof findProduct === 'function') {
+      try { product = findProduct(productId); } catch (_) {}
+    }
 
-      const visual = img.closest('.product-visual, .product-media');
-      if (visual) visual.classList.remove('image-ready', 'image-missing');
+    const declaredImage = product?.image || img?.getAttribute('data-src') || img?.getAttribute('data-product-image') || img?.getAttribute('src');
+    const imagePath = normalizeProductPath(declaredImage);
 
-      const ready = () => markReady(img);
-      const failed = () => markMissing(img);
-      img.addEventListener('load', ready, { once: true });
-      img.addEventListener('error', failed, { once: true });
-
-      if (img.complete) {
-        if (img.naturalWidth > 0) ready();
-        else failed();
+    if (!img && imagePath) {
+      const visual = card.querySelector('.product-visual, .product-media, .product-art');
+      if (visual) {
+        img = document.createElement('img');
+        img.className = 'product-image';
+        img.alt = product?.name || 'ROCK product';
+        visual.prepend(img);
       }
-    });
+    }
+
+    if (!img || !imagePath) return;
+    if (img.dataset.rockImageWired === '1' && img.src) return;
+    img.dataset.rockImageWired = '1';
+    img.classList.add('product-image');
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.fetchPriority = 'auto';
+    img.draggable = false;
+
+    const finalSrc = cacheBust(imagePath);
+    const current = img.getAttribute('src') || '';
+    if (current !== finalSrc) img.setAttribute('src', finalSrc);
+
+    img.addEventListener('load', () => markReady(img), { once: true });
+    img.addEventListener('error', () => {
+      // Retry once without the cache parameter. This avoids stale/broken cached
+      // references after a GitHub Pages deployment while keeping the image local.
+      if (!img.dataset.rockRetried) {
+        img.dataset.rockRetried = '1';
+        img.setAttribute('src', imagePath);
+        return;
+      }
+      markMissing(img);
+    }, { once: false });
+
+    if (img.complete) {
+      if (img.naturalWidth > 0) markReady(img);
+      else markMissing(img);
+    }
+  }
+
+  function scan(root = document) {
+    installStyles();
+    const cards = root.querySelectorAll?.('.product-card') || [];
+    cards.forEach(ensureImage);
   }
 
   function repairFeaturedProduct() {
@@ -157,22 +188,19 @@
 
   function start() {
     installStyles();
-    applyProductImages();
+    scan();
     wireMobileNavigation();
     repairFeaturedProduct();
 
     const grid = document.getElementById('productGrid');
     if (grid && !grid.dataset.rockImageObserver) {
       grid.dataset.rockImageObserver = '1';
-      const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-          mutation.addedNodes?.forEach((node) => {
-            if (node.nodeType === 1) applyProductImages(node);
-          });
-        }
-      });
+      const observer = new MutationObserver(() => scan(grid));
       observer.observe(grid, { childList: true, subtree: true });
     }
+
+    // A second pass catches cards rendered by catalog/pricing scripts after load.
+    [100, 500, 1200].forEach((delay) => setTimeout(() => scan(), delay));
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
