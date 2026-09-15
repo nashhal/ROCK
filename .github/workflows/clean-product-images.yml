@@ -11,7 +11,7 @@ permissions:
 jobs:
   clean:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
@@ -25,10 +25,10 @@ jobs:
         run: |
           set -euo pipefail
           marker=".rock-product-images-cleaned"
-          required="ROCK product catalog images cleaned v2 with product-cluster isolation."
+          required="ROCK product catalog images cleaned v3 from original sources."
           if [ -f "$marker" ] && grep -Fxq "$required" "$marker"; then
             echo "run=false" >> "$GITHUB_OUTPUT"
-            echo "Product images were already cleaned with the current algorithm."
+            echo "Product images were already rebuilt with the current algorithm."
           else
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
@@ -47,7 +47,17 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install "Pillow>=10" "rembg[cpu]>=2.0.50"
 
-      - name: Clean original catalog images
+      - name: Restore original catalog images
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ORIGINAL_SHA="4077755e3579d58270f89fb4c183a7708aebd767"
+          git fetch --no-tags --depth=1 origin "$ORIGINAL_SHA"
+          git restore --source="$ORIGINAL_SHA" -- assets/products/*.webp
+          echo "Restored original catalog product sources from $ORIGINAL_SHA"
+
+      - name: Rebuild clean product images
         if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
@@ -57,14 +67,17 @@ jobs:
           from collections import deque
           from math import hypot
           from pathlib import Path
-          from PIL import Image, ImageFilter
+          from PIL import Image, ImageFilter, ImageOps
           from rembg import new_session, remove
 
           ROOT = Path('assets/products')
-          PADDING = 28
           ALPHA_THRESHOLD = 24
-          MIN_COMPONENT_RATIO = 0.0002
-          OVERLAP_PADDING_RATIO = 0.10
+          PADDING = 24
+          CORE_OPEN = 9
+          CORE_CLOSE = 7
+          MIN_COMPONENT_RATIO = 0.00012
+          ANCHOR_EXPANSION_X = 0.16
+          ANCHOR_EXPANSION_Y = 0.16
 
           def components(alpha: Image.Image):
               w, h = alpha.size
@@ -98,59 +111,51 @@ jobs:
                           'center': ((min_x + max_x) / 2, (min_y + max_y) / 2),
                       }
 
-          def overlaps(a, b, pad):
-              ax1, ay1, ax2, ay2 = a
-              bx1, by1, bx2, by2 = b
-              return not (ax2 + pad <= bx1 or bx2 + pad <= ax1 or ay2 + pad <= by1 or by2 + pad <= ay1)
-
-          def clean_alpha(image: Image.Image) -> Image.Image:
-              alpha = image.getchannel('A').filter(ImageFilter.MedianFilter(3))
+          def build_anchor_mask(alpha: Image.Image) -> Image.Image:
               w, h = alpha.size
-              comps = list(components(alpha))
+              binary = alpha.point(lambda value: 255 if value >= ALPHA_THRESHOLD else 0)
+              core = binary.filter(ImageFilter.MinFilter(CORE_OPEN)).filter(ImageFilter.MaxFilter(CORE_CLOSE))
+              comps = list(components(core))
               if not comps:
-                  return image
+                  return binary
 
               cx, cy = w / 2, h / 2
-              central = [c for c in comps if hypot(c['center'][0] - cx, c['center'][1] - cy) <= hypot(w, h) * 0.46] or comps
-              anchor = max(central, key=lambda c: c['area'])
-              anchor_box = anchor['bbox']
-              ax, ay = anchor['center']
               diagonal = hypot(w, h)
-              anchor_radius = max(anchor_box[2] - anchor_box[0], anchor_box[3] - anchor_box[1]) * 0.75
-              min_area = max(32, int(w * h * MIN_COMPONENT_RATIO))
+              central = [c for c in comps if hypot(c['center'][0] - cx, c['center'][1] - cy) <= diagonal * 0.42] or comps
+              anchor = max(central, key=lambda c: c['area'])
+              x1, y1, x2, y2 = anchor['bbox']
 
-              keep = {id(anchor)}
-              for c in comps:
-                  if c is anchor or c['area'] < min_area:
-                      continue
-                  x1, y1, x2, y2 = c['bbox']
-                  center_distance = hypot(c['center'][0] - ax, c['center'][1] - ay)
-                  box_pad = max(8, int(min(w, h) * OVERLAP_PADDING_RATIO))
-                  near_anchor = center_distance <= max(diagonal * 0.20, anchor_radius * 1.65)
-                  touches_anchor = overlaps(c['bbox'], anchor_box, box_pad)
-                  width = max(1, x2 - x1)
-                  height = max(1, y2 - y1)
-                  aspect = max(width / height, height / width)
-                  area_ratio = c['area'] / (w * h)
-                  likely_text = aspect >= 6.0 and area_ratio < 0.015
-                  if (touches_anchor or near_anchor) and not likely_text:
-                      keep.add(id(c))
+              # Expand only around the product core. This keeps disconnected product parts
+              # that belong to the same physical item, while excluding catalog text/artwork.
+              dx = max(18, int((x2 - x1) * ANCHOR_EXPANSION_X))
+              dy = max(18, int((y2 - y1) * ANCHOR_EXPANSION_Y))
+              x1 = max(0, x1 - dx)
+              y1 = max(0, y1 - dy)
+              x2 = min(w, x2 + dx)
+              y2 = min(h, y2 + dy)
 
-              out = Image.new('L', (w, h), 0)
-              out_px = out.load()
-              for c in comps:
-                  if id(c) in keep:
-                      for x, y in c['points']:
-                          out_px[x, y] = 255
+              region = Image.new('L', (w, h), 0)
+              region.paste(255, (x1, y1, x2, y2))
 
-              out = out.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
-              image.putalpha(out)
-              return image
+              # Start from the original alpha inside the product region, then smooth edges.
+              kept = ImageOps.multiply(binary, region)
+              kept = kept.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
+
+              # Remove any stray pixels that touch the outside border when they are not part
+              # of the central product region.
+              keep_px = kept.load()
+              for x in range(w):
+                  keep_px[x, 0] = 0
+                  keep_px[x, h - 1] = 0
+              for y in range(h):
+                  keep_px[0, y] = 0
+                  keep_px[w - 1, y] = 0
+              return kept
 
           def fit_product(image: Image.Image) -> Image.Image:
               bbox = image.getchannel('A').getbbox()
               if not bbox:
-                  raise RuntimeError('Background removal produced no foreground')
+                  raise RuntimeError('No visible product remains after cleanup')
               left, top, right, bottom = bbox
               left = max(0, left - PADDING)
               top = max(0, top - PADDING)
@@ -166,26 +171,28 @@ jobs:
           files = sorted(ROOT.glob('*.webp'))
           if not files:
               raise SystemExit('No product WebP files found')
-          session = new_session('u2net')
+
+          session = new_session('isnet-general-use')
           for index, path in enumerate(files, 1):
               source = Image.open(path).convert('RGB')
               result = remove(source, session=session, alpha_matting=False, post_process_mask=True)
               image = result.convert('RGBA') if isinstance(result, Image.Image) else Image.open(result).convert('RGBA')
-              image = clean_alpha(image)
+              image.putalpha(build_anchor_mask(image.getchannel('A')))
               image = fit_product(image)
               image.save(path, 'WEBP', lossless=True, method=6)
               alpha = image.getchannel('A')
               if alpha.getbbox() is None:
-                  raise RuntimeError(f'No visible product remains after processing: {path}')
+                  raise RuntimeError(f'No visible product remains: {path}')
               transparent = sum(1 for value in alpha.getdata() if value == 0)
               ratio = transparent / (image.width * image.height)
               if ratio < 0.05:
                   raise RuntimeError(f'Insufficient transparent background: {path} ({ratio:.1%})')
-              print(f'Processed product cutout {index}/{len(files)}: {path} ({ratio:.1%} transparent)')
-          print(f'Prepared improved transparent product cutouts: {len(files)} files')
+              print(f'REBUILT {index}/{len(files)} {path} transparent={ratio:.1%}')
+
+          print(f'Rebuilt clean product cutouts from original sources: {len(files)} files')
           PY
 
-      - name: Validate cleaned images
+      - name: Validate rebuilt images
         if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
@@ -194,33 +201,33 @@ jobs:
           from pathlib import Path
           from PIL import Image
           files = sorted(Path('assets/products').glob('*.webp'))
-          if not files:
-              raise SystemExit('No product images found')
+          if len(files) < 60:
+              raise SystemExit(f'Unexpected product image count: {len(files)}')
           for path in files:
               with Image.open(path) as image:
                   image = image.convert('RGBA')
                   alpha = image.getchannel('A')
                   if alpha.getbbox() is None:
-                      raise SystemExit(f'Empty product image after cleanup: {path}')
+                      raise SystemExit(f'Empty product image: {path}')
                   transparent = sum(1 for value in alpha.getdata() if value == 0)
                   ratio = transparent / (image.width * image.height)
                   if ratio < 0.05:
-                      raise SystemExit(f'Insufficient transparent background: {path} ({ratio:.1%})')
-          print(f'Validated cleaned product images: {len(files)}')
+                      raise SystemExit(f'Insufficient transparency: {path} ({ratio:.1%})')
+          print(f'Validated rebuilt product images: {len(files)}')
           PY
 
-      - name: Commit cleaned originals
+      - name: Commit rebuilt product images
         if: steps.guard.outputs.run == 'true'
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          printf 'ROCK product catalog images cleaned v2 with product-cluster isolation.\n' > .rock-product-images-cleaned
+          printf 'ROCK product catalog images cleaned v3 from original sources.\n' > .rock-product-images-cleaned
           git add assets/products/*.webp .rock-product-images-cleaned
           if git diff --cached --quiet; then
             echo "No image changes detected."
             exit 0
           fi
-          git commit -m "fix: isolate ROCK product images from catalog artwork"
+          git commit -m "fix: rebuild ROCK product images from original catalog sources"
           git push origin HEAD:main
