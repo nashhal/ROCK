@@ -32,6 +32,15 @@
     document.body.appendChild(script);
   }
 
+  function addCardCleanup(){
+    if(document.getElementById('rock-card-cleanup-styles')) return;
+    const link=document.createElement('link');
+    link.id='rock-card-cleanup-styles';
+    link.rel='stylesheet';
+    link.href='rock-card-clean.css?v=20260915-1';
+    document.head.appendChild(link);
+  }
+
   function addShopByNeed(){
     if(document.getElementById('rockShopByNeed')) return;
     const collections=document.getElementById('collections');
@@ -59,6 +68,7 @@
     addDesignSystem();
     addCommerceLayer();
     addPerformanceLayer();
+    addCardCleanup();
     addShopByNeed();
     addBrandNote();
   }
