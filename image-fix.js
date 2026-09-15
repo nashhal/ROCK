@@ -168,30 +168,6 @@
     cards.forEach(ensureImage);
   }
 
-  function repairFeaturedProduct() {
-    const button = document.querySelector('.add-demo');
-    const featured = typeof findProduct === 'function' ? findProduct('rkch765') : null;
-    if (!button || !featured || typeof addToCart !== 'function') return;
-    const section = document.getElementById('featured');
-    const heading = section?.querySelector('.feature-copy h2');
-    const copy = section?.querySelector('.feature-copy > p:not(.eyebrow)');
-    const specs = section?.querySelectorAll('.feature-specs strong');
-    const labels = section?.querySelectorAll('.feature-specs span');
-    if (heading) heading.innerHTML = 'القوة<br><em>65W في جيبك</em>';
-    if (copy) copy.textContent = 'شاحن ROCK RKCH765 GaN بقدرة 65W وثلاثة مخارج للشحن السريع في المنزل والسفر.';
-    if (specs?.length >= 3) { specs[0].textContent = '65'; specs[1].textContent = '3'; specs[2].textContent = 'GaN'; }
-    if (labels?.length >= 3) { labels[0].textContent = 'W MAX'; labels[1].textContent = 'OUTPUTS'; labels[2].textContent = 'FAST CHARGE'; }
-    button.dataset.product = featured.id;
-    if (!button.dataset.rockFeaturedWired) {
-      button.dataset.rockFeaturedWired = '1';
-      button.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        addToCart(featured.id);
-      }, true);
-    }
-  }
-
   function wireMobileNavigation() {
     document.querySelectorAll('.mobile-bottom-nav [data-jump]').forEach((button) => {
       if (button.dataset.rockNavWired) return;
@@ -206,7 +182,6 @@
     installStyles();
     scan();
     wireMobileNavigation();
-    repairFeaturedProduct();
 
     const grid = document.getElementById('productGrid');
     if (grid && !grid.dataset.rockImageObserver) {
