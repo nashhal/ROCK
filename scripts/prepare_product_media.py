@@ -8,11 +8,10 @@ from PIL import Image, ImageFilter
 from rembg import new_session, remove
 
 ROOT = Path("assets/products")
-PADDING = 32
-ALPHA_THRESHOLD = 18
-MIN_COMPONENT_RATIO = 0.00035
-KEEP_COMPONENT_RATIO = 0.0020
-MAX_ANCHOR_DISTANCE = 0.34
+PADDING = 28
+ALPHA_THRESHOLD = 24
+MIN_COMPONENT_RATIO = 0.0002
+OVERLAP_PADDING_RATIO = 0.10
 
 
 def components(alpha: Image.Image):
@@ -48,38 +47,50 @@ def components(alpha: Image.Image):
             }
 
 
+def overlaps(a, b, pad):
+    ax1, ay1, ax2, ay2 = a
+    bx1, by1, bx2, by2 = b
+    return not (ax2 + pad <= bx1 or bx2 + pad <= ax1 or ay2 + pad <= by1 or by2 + pad <= ay1)
+
+
 def clean_alpha(image: Image.Image) -> Image.Image:
-    """Keep the actual product cluster and discard detached catalog text/artifacts."""
+    """Keep the actual product cluster and discard detached catalog text/artwork."""
     alpha = image.getchannel("A").filter(ImageFilter.MedianFilter(3))
     w, h = alpha.size
-    area = w * h
     comps = list(components(alpha))
     if not comps:
         return image
 
     cx, cy = w / 2, h / 2
-    central = [
-        c for c in comps
-        if hypot(c["center"][0] - cx, c["center"][1] - cy) <= hypot(w, h) * 0.45
-    ] or comps
+    central = [c for c in comps if hypot(c["center"][0] - cx, c["center"][1] - cy) <= hypot(w, h) * 0.46] or comps
     anchor = max(central, key=lambda c: c["area"])
+    anchor_box = anchor["bbox"]
     ax, ay = anchor["center"]
-    min_area = max(48, int(area * MIN_COMPONENT_RATIO))
-    keep_area = max(256, int(area * KEEP_COMPONENT_RATIO))
-    max_distance = hypot(w, h) * MAX_ANCHOR_DISTANCE
+    diagonal = hypot(w, h)
+    anchor_radius = max(anchor_box[2] - anchor_box[0], anchor_box[3] - anchor_box[1]) * 0.75
+    min_area = max(32, int(w * h * MIN_COMPONENT_RATIO))
+
+    keep = {id(anchor)}
+    for c in comps:
+        if c is anchor or c["area"] < min_area:
+            continue
+        x1, y1, x2, y2 = c["bbox"]
+        center_distance = hypot(c["center"][0] - ax, c["center"][1] - ay)
+        box_pad = max(8, int(min(w, h) * OVERLAP_PADDING_RATIO))
+        near_anchor = center_distance <= max(diagonal * 0.20, anchor_radius * 1.65)
+        touches_anchor = overlaps(c["bbox"], anchor_box, box_pad)
+        width = max(1, x2 - x1)
+        height = max(1, y2 - y1)
+        aspect = max(width / height, height / width)
+        area_ratio = c["area"] / (w * h)
+        likely_text = aspect >= 6.0 and area_ratio < 0.015
+        if (touches_anchor or near_anchor) and not likely_text:
+            keep.add(id(c))
 
     out = Image.new("L", (w, h), 0)
     out_px = out.load()
     for c in comps:
-        dx = c["center"][0] - ax
-        dy = c["center"][1] - ay
-        distance = hypot(dx, dy)
-        keep = c["area"] >= keep_area or (c["area"] >= min_area and distance <= max_distance)
-        x1, y1, x2, y2 = c["bbox"]
-        touches_edge = x1 <= 2 or y1 <= 2 or x2 >= w - 2 or y2 >= h - 2
-        if touches_edge and c["area"] < keep_area * 2:
-            keep = False
-        if keep:
+        if id(c) in keep:
             for x, y in c["points"]:
                 out_px[x, y] = 255
 
@@ -128,6 +139,6 @@ if not files:
 session = new_session("u2net")
 for index, path in enumerate(files, 1):
     process(path, session)
-    print(f"Processed safe product cutout {index}/{len(files)}: {path}")
+    print(f"Processed product cutout {index}/{len(files)}: {path}")
 
-print(f"Prepared safe transparent product cutouts: {len(files)} files")
+print(f"Prepared improved transparent product cutouts: {len(files)} files")
