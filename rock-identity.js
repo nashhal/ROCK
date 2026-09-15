@@ -7,7 +7,7 @@
     const link=document.createElement('link');
     link.id='rock-v2-styles';
     link.rel='stylesheet';
-    link.href='rock-v2.css?v=20260915-1';
+    link.href='rock-v2.css?v=20260915-2';
     document.head.appendChild(link);
     document.documentElement.style.setProperty('color-scheme','light');
     const theme=document.querySelector('meta[name="theme-color"]');
@@ -33,7 +33,7 @@
     section.innerHTML=`<div class="section-head"><div><p class="eyebrow">ROCK / SHOP BY NEED</p><h2>اختر حسب<br><em>يومك</em></h2></div><p>بدل البحث عن المواصفات أولًا، ابدأ بما تحتاجه — وسنقربك من الفئة المناسبة.</p></div><div class="rock-needs-grid"><button data-need="power">أحتاج شحنًا أسرع <span>→</span></button><button data-need="travel">أحتاج طاقة للسفر <span>→</span></button><button data-need="car">أحتاج تجهيز السيارة <span>→</span></button><button data-need="audio">أحتاج صوتًا أفضل <span>→</span></button></div>`;
     collections.after(section);
     section.querySelectorAll('[data-need]').forEach(btn=>btn.addEventListener('click',()=>{
-      const filter=btn.dataset.need;
+      const filter=btn.dataset.need==='travel'?'power':btn.dataset.need;
       const target=document.querySelector(`#filterPills [data-filter="${filter}"]`);
       target?.click();
       document.getElementById('shop')?.scrollIntoView({behavior:'smooth',block:'start'});
