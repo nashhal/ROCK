@@ -29,4 +29,17 @@
   -webkit-text-fill-color:initial!important;
   font-size:initial!important;
   line-height:initial!important;
+  transform:scale(1.65)!important;
+  transform-origin:center center!important;
+}
+.product-card:hover .product-art .product-image{
+  transform:scale(1.72)!important;
+}
+@media(max-width:760px){
+  .product-card .product-art .product-image{transform:scale(1.48)!important}
+  .product-card:hover .product-art .product-image{transform:scale(1.54)!important}
+}
+@media(max-width:480px){
+  .product-card .product-art .product-image{transform:scale(1.42)!important}
+  .product-card:hover .product-art .product-image{transform:scale(1.47)!important}
 }
