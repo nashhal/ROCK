@@ -14,6 +14,15 @@
     if(theme) theme.setAttribute('content','#0B0C0D');
   }
 
+  function addCommerceLayer(){
+    if(document.getElementById('rock-commerce-v2-script')) return;
+    const script=document.createElement('script');
+    script.id='rock-commerce-v2-script';
+    script.src='rock-commerce-v2.js?v=20260915-1';
+    script.async=false;
+    document.body.appendChild(script);
+  }
+
   function addPerformanceLayer(){
     if(document.getElementById('rock-performance-script')) return;
     const script=document.createElement('script');
@@ -48,6 +57,7 @@
   }
   function boot(){
     addDesignSystem();
+    addCommerceLayer();
     addPerformanceLayer();
     addShopByNeed();
     addBrandNote();
