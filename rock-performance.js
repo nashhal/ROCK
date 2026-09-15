@@ -56,13 +56,15 @@
     runSearch(value);
   }, true);
 
-  let scrollTop = 0;
-  window.addEventListener('scroll', () => {
-    scrollTop = window.scrollY;
-  }, { passive: true, capture: true });
-  window.addEventListener('scroll', rafThrottle(() => {
+  let scrollTop = window.scrollY;
+  const updateNav = rafThrottle(() => {
     if (nav) nav.classList.toggle('scrolled', scrollTop > 30);
-  }), { passive: true });
+  });
+  window.addEventListener('scroll', (event) => {
+    event.stopImmediatePropagation();
+    scrollTop = window.scrollY;
+    updateNav();
+  }, { passive: true, capture: true });
 
   if (parallaxEls.length && window.matchMedia('(hover:hover)').matches) {
     let pointer = { x: 0, y: 0 };
@@ -75,12 +77,12 @@
       });
     });
     window.addEventListener('mousemove', (event) => {
+      event.stopImmediatePropagation();
       pointer = { x: event.clientX, y: event.clientY };
       updateParallax();
     }, { passive: true, capture: true });
   }
 
-  /* Prevent uncontrolled repeated rendering during bursty UI actions. */
   window.ROCK_PERF = Object.freeze({
     rafThrottle,
     debounced
