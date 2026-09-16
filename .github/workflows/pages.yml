@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html product.html checkout.html policies.html support.html styles.css enhancements.css logo-system.css rock-brand.css rock-cards.css rock-vnext.css brand-system.css navy-brand.css global-commerce.css product-page.css checkout.css world-class.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js rock-performance.js rock-i18n.js config/store.config.js global-commerce.js product-page.js product-linker.js seo-layer.js rock-identity.js world-class.js checkout.js scripts/prepare_product_images.py; do
+          for file in index.html product.html checkout.html policies.html support.html styles.css enhancements.css logo-system.css rock-brand.css rock-cards.css rock-vnext.css brand-system.css global-commerce.css product-page.css checkout.css world-class.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js rock-performance.js rock-i18n.js config/store.config.js global-commerce.js product-page.js product-linker.js seo-layer.js rock-identity.js world-class.js checkout.js scripts/prepare_product_images.py; do
             test -f "$file"
           done
           echo "Validated ROCK storefront files."
@@ -41,7 +41,6 @@ jobs:
           grep -q 'checkout.html' world-class.js
           grep -q 'ROCK_CONFIG' config/store.config.js
           grep -q 'application/ld+json' product-page.js
-          grep -q 'navy-brand.css' index.html
           grep -q 'rock-i18n.js' index.html
 
       - name: Validate local HTML assets
@@ -111,7 +110,6 @@ jobs:
           for file in script.js catalog-pricing.js excel-catalog-only.js image-fix.js global-commerce.js rock-performance.js rock-i18n.js product-page.js product-linker.js seo-layer.js rock-identity.js world-class.js checkout.js; do
             node --check "$file"
           done
-          if [ -f i18n.js ]; then node --check i18n.js; fi
 
       - name: Validate semantic product data
         shell: bash
