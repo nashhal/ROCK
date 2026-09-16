@@ -1,6 +1,8 @@
 /* ROCK logo system — visible on both light and dark surfaces. */
+/* Keep the official ROCK wordmark as the only brand mark in the header. */
+.announcement{display:none!important}
 .brand span{display:block;width:154px;height:38px;font-size:0;line-height:0;background:url("rock_logo%20(1).svg?v=20260915-1") center/contain no-repeat;background-color:transparent;flex:0 0 auto}
-/* The supplied logo artwork is white; invert only on light header/footer surfaces. */
+/* The supplied logo artwork is white; invert only on the light navigation surface. */
 .nav .brand span{filter:invert(1)!important}
 .footer .brand span{filter:none!important}
 .rock-wordmark{display:block;width:154px;height:auto;max-height:none;object-fit:contain;flex:0 0 auto;filter:none!important}
