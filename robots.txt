@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /config/
-Disallow: /scripts/
-Disallow: /docs/
-Sitemap: https://nashhal.github.io/ROCK/sitemap.xml
