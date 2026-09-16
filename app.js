@@ -1,53 +1,51 @@
 (() => {
-  const products = Array.isArray(window.ROCK_PRODUCTS) ? window.ROCK_PRODUCTS.filter(p => Number.isFinite(Number(p.price))) : [];
-  const state = { query: '', category: 'all', sort: 'featured', lang: 'ar', cart: JSON.parse(localStorage.getItem('rock-cart') || '{}') };
-  const els = {
-    grid: document.getElementById('catalogGrid'), featured: document.getElementById('featuredGrid'), chips: document.getElementById('chips'), empty: document.getElementById('empty'),
-    search: document.getElementById('search'), sort: document.getElementById('sort'), cartCount: document.getElementById('cartCount'), cartItems: document.getElementById('cartItems'), cartTotal: document.getElementById('cartTotal'),
-    drawer: document.getElementById('cartDrawer'), overlay: document.getElementById('cartOverlay'), year: document.getElementById('year'), productTotal: document.getElementById('productTotal'), langBtn: document.getElementById('langBtn'), menuBtn: document.getElementById('menuBtn')
-  };
-  const cats = {all:'الكل',power:'الطاقة والشحن',audio:'الصوت',car:'السيارة',lifestyle:'أسلوب الحياة'};
-  const money = value => new Intl.NumberFormat(state.lang === 'ar' ? 'ar-SA' : 'en-SA', {style:'currency',currency:'SAR',minimumFractionDigits:2}).format(value);
-  const save = () => localStorage.setItem('rock-cart', JSON.stringify(state.cart));
-  const image = src => src || 'assets/products/catalog-placeholder.svg';
-  const visible = () => {
-    let out = products.filter(p => state.category === 'all' || p.category === state.category);
+  const products = (window.ROCK_PRODUCTS || []).filter(p => Number.isFinite(Number(p.price)) && p.image);
+  const state = { query:'', category:'all', sort:'featured', lang:'ar', cart:JSON.parse(localStorage.getItem('rock-cart-v2') || '{}') };
+  const $ = id => document.getElementById(id);
+  const el = { grid:$('catalogGrid'), featured:$('featuredGrid'), chips:$('chips'), search:$('search'), sort:$('sort'), empty:$('empty'), total:$('productTotal'), count:$('cartCount'), items:$('cartItems'), cartTotal:$('cartTotal'), drawer:$('cartDrawer'), overlay:$('cartOverlay'), lang:$('langBtn'), year:$('year'), menu:$('menuBtn') };
+  const cats = { all:{ar:'الكل',en:'All'}, power:{ar:'الطاقة والشحن',en:'Power'}, audio:{ar:'الصوت',en:'Audio'}, car:{ar:'السيارة',en:'Car'}, lifestyle:{ar:'أسلوب الحياة',en:'Lifestyle'} };
+  const text = { ar:{cart:'السلة',search:'ابحث بالاسم أو الموديل',empty:'لا توجد منتجات مطابقة للبحث.',cartEmpty:'السلة فارغة حاليًا',continue:'متابعة الطلب',note:'الواجهة جاهزة للربط بالدفع والشحن.'}, en:{cart:'Cart',search:'Search by product or model',empty:'No products match your search.',cartEmpty:'Your cart is empty',continue:'Continue order',note:'Ready for payment and shipping integration.'} };
+  const locale = () => state.lang === 'ar' ? 'ar-SA' : 'en-SA';
+  const money = n => new Intl.NumberFormat(locale(),{style:'currency',currency:'SAR',minimumFractionDigits:2}).format(Number(n));
+  const name = p => state.lang === 'ar' ? p.nameAr : p.nameEn;
+  const esc = s => String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const persist = () => localStorage.setItem('rock-cart-v2',JSON.stringify(state.cart));
+  function visible(){
+    let out = products.filter(p => state.category==='all' || p.category===state.category);
     const q = state.query.trim().toLowerCase();
-    if (q) out = out.filter(p => `${p.name} ${p.model}`.toLowerCase().includes(q));
-    if (state.sort === 'low') out.sort((a,b) => a.price - b.price);
-    if (state.sort === 'high') out.sort((a,b) => b.price - a.price);
+    if(q) out = out.filter(p => `${p.nameAr} ${p.nameEn} ${p.model}`.toLowerCase().includes(q));
+    if(state.sort==='low') out.sort((a,b)=>a.price-b.price);
+    if(state.sort==='high') out.sort((a,b)=>b.price-a.price);
     return out;
-  };
-  const productCard = p => `<article class="product-card">
-      <div class="product-media"><img loading="lazy" src="${image(p.image)}" alt="${escapeHtml(p.name)}" onerror="this.src='assets/products/catalog-placeholder.svg'"><span class="price-tag">${money(p.price)}</span></div>
-      <div class="product-info"><span class="product-code">${escapeHtml(p.model || p.id)}</span><h3 class="product-name">${escapeHtml(p.name)}</h3>
-      <div class="product-bottom"><strong class="product-price">${money(p.price)}</strong><button class="add" data-add="${p.id}" aria-label="إضافة إلى السلة">+</button></div></div>
-    </article>`;
-  const featureCard = (p,i) => `<article class="feature-card"><span class="index">0${i+1} / ROCK</span><span class="feature-icon"></span><div><h3>${escapeHtml(p.name.replace(/^ROCK /,''))}</h3><span class="price">${money(p.price)}</span></div></article>`;
-  function escapeHtml(s){return String(s).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+  }
+  function card(p){return `<article class="product-card"><div class="product-media"><img loading="lazy" src="${esc(p.image)}" alt="${esc(name(p))}" onerror="this.closest('.product-card').remove()"><span class="price">${money(p.price)}</span></div><div class="product-info"><span class="model">${esc(p.model)}</span><h3 class="product-name">${esc(name(p))}</h3><div class="product-bottom"><strong class="product-price">${money(p.price)}</strong><button class="add" data-add="${esc(p.id)}" aria-label="${state.lang==='ar'?'إضافة إلى السلة':'Add to cart'}">+</button></div></div></article>`}
+  function feature(p,i){return `<article class="featured-card"><span class="meta">0${i+1} / ${esc(p.model)}</span><span class="mark"></span><div><div class="name">${esc(name(p).replace(/^ROCK\s*/,'')}</div><div class="price">${money(p.price)}</div></div></article>`}
   function render(){
-    els.chips.innerHTML = Object.entries(cats).map(([key,label]) => `<button class="chip ${state.category===key?'active':''}" data-cat="${key}">${label}</button>`).join('');
-    const out = visible(); els.grid.innerHTML = out.map(productCard).join(''); els.empty.hidden = out.length !== 0;
-    const featured = [...products].sort((a,b)=>a.price-b.price).slice(-4); els.featured.innerHTML = featured.map(featureCard).join('');
-    els.productTotal.textContent = products.length; bindDynamic(); renderCart();
+    el.chips.innerHTML = Object.entries(cats).map(([k,v])=>`<button class="chip ${state.category===k?'active':''}" data-cat="${k}">${v[state.lang]}</button>`).join('');
+    const out = visible(); el.grid.innerHTML = out.map(card).join(''); el.empty.hidden = out.length>0;
+    const featured = [...products].sort((a,b)=>b.price-a.price).slice(0,4); el.featured.innerHTML = featured.map(feature).join('');
+    el.total.textContent = products.length; el.search.placeholder=text[state.lang].search; renderCart(); bind();
+    document.documentElement.lang=state.lang; document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';
   }
-  function bindDynamic(){
+  function bind(){
     document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{state.category=b.dataset.cat;render()});
-    document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addToCart(b.dataset.add));
+    document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>add(b.dataset.add));
+    document.querySelectorAll('[data-inc]').forEach(b=>b.onclick=()=>qty(b.dataset.inc,1));
+    document.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>qty(b.dataset.dec,-1));
   }
-  function addToCart(id){state.cart[id]=(state.cart[id]||0)+1;save();renderCart();openCart();}
-  function changeQty(id,d){state.cart[id]=(state.cart[id]||0)+d;if(state.cart[id]<=0)delete state.cart[id];save();renderCart()}
+  function add(id){state.cart[id]=(state.cart[id]||0)+1;persist();renderCart();openCart()}
+  function qty(id,delta){state.cart[id]=(state.cart[id]||0)+delta;if(state.cart[id]<=0)delete state.cart[id];persist();renderCart()}
   function renderCart(){
-    const lines=Object.entries(state.cart).map(([id,qty])=>{const p=products.find(x=>x.id===id);return p?{p,qty}:null}).filter(Boolean);
-    const count=lines.reduce((n,x)=>n+x.qty,0), total=lines.reduce((n,x)=>n+x.qty*x.p.price,0); els.cartCount.textContent=count; els.cartTotal.textContent=money(total);
-    els.cartItems.innerHTML=lines.length?lines.map(({p,qty})=>`<div class="cart-line"><img src="${image(p.image)}" alt=""><div><h4>${escapeHtml(p.name)}</h4><small>${money(p.price)} × ${qty}</small></div><div class="qty"><button data-dec="${p.id}">−</button><span>${qty}</span><button data-inc="${p.id}">+</button></div></div>`).join(''):`<div class="empty">السلة فارغة حاليًا</div>`;
-    document.querySelectorAll('[data-inc]').forEach(b=>b.onclick=()=>changeQty(b.dataset.inc,1)); document.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>changeQty(b.dataset.dec,-1));
+    const lines=Object.entries(state.cart).map(([id,q])=>{const p=products.find(x=>x.id===id);return p?{p,q}:null}).filter(Boolean);
+    const count=lines.reduce((s,x)=>s+x.q,0), total=lines.reduce((s,x)=>s+x.q*x.p.price,0); el.count.textContent=count; el.cartTotal.textContent=money(total);
+    el.items.innerHTML=lines.length?lines.map(({p,q})=>`<div class="cart-line"><img src="${esc(p.image)}" alt=""><div><h4>${esc(name(p))}</h4><small>${money(p.price)} × ${q}</small></div><div class="qty"><button data-dec="${esc(p.id)}">−</button><span>${q}</span><button data-inc="${esc(p.id)}">+</button></div></div>`).join(''):`<div class="empty">${text[state.lang].cartEmpty}</div>`;
   }
-  function openCart(){els.drawer.classList.add('open');els.overlay.classList.add('open');document.body.style.overflow='hidden'}
-  function closeCart(){els.drawer.classList.remove('open');els.overlay.classList.remove('open');document.body.style.overflow=''}
-  els.search.oninput=e=>{state.query=e.target.value;render()}; els.sort.onchange=e=>{state.sort=e.target.value;render()}; document.getElementById('cartBtn').onclick=openCart; document.getElementById('closeCart').onclick=closeCart; els.overlay.onclick=closeCart;
-  document.getElementById('checkoutBtn').onclick=()=>alert('واجهة الطلب جاهزة للربط بخدمة دفع لاحقًا.');
-  els.langBtn.onclick=()=>{state.lang=state.lang==='ar'?'en':'ar';els.langBtn.textContent=state.lang==='ar'?'EN':'AR';document.documentElement.lang=state.lang;document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';render()};
-  els.menuBtn.onclick=()=>{let nav=document.querySelector('.mobile-nav');if(!nav){nav=document.createElement('nav');nav.className='mobile-nav';nav.innerHTML='<a href="#shop">المتجر</a><a href="#featured">مختاراتنا</a><a href="#story">عن ROCK</a>';document.body.appendChild(nav)}nav.classList.toggle('open')};
-  els.year.textContent=new Date().getFullYear(); render();
+  function openCart(){el.drawer.classList.add('open');el.overlay.classList.add('open');document.body.classList.add('lock')}
+  function closeCart(){el.drawer.classList.remove('open');el.overlay.classList.remove('open');document.body.classList.remove('lock')}
+  el.search.oninput=e=>{state.query=e.target.value;render()}; el.sort.onchange=e=>{state.sort=e.target.value;render()}; $('cartBtn').onclick=openCart; $('closeCart').onclick=closeCart; el.overlay.onclick=closeCart;
+  $('checkoutBtn').onclick=()=>alert(text[state.lang].note);
+  el.lang.onclick=()=>{state.lang=state.lang==='ar'?'en':'ar';el.lang.textContent=state.lang==='ar'?'EN':'AR';render()};
+  el.menu.onclick=()=>document.querySelector('.mobile-nav')?.classList.toggle('open');
+  const nav=document.createElement('nav');nav.className='mobile-nav';nav.innerHTML='<a href="#shop">المتجر</a><a href="#featured">المختارات</a><a href="#about">ROCK</a>';document.body.appendChild(nav);
+  el.year.textContent=new Date().getFullYear(); render();
 })();
