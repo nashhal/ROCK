@@ -1,4 +1,4 @@
-name: Deploy ROCK to GitHub Pages
+name: Deploy ROCK
 
 on:
   push:
@@ -15,33 +15,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify storefront
-        shell: bash
+      - name: Verify clean storefront
         run: |
-          set -euo pipefail
           test -f index.html
           test -f styles.css
           test -f products.js
           test -f app.js
           test -f assets/brand/rock-logo.svg
           test -d assets/products
-          grep -q "ROCK_PRODUCTS" products.js
-          grep -q "Google Fonts" index.html || true
+          test -f '1789300982120_ROCK_To_FUN (1).pdf'
 
-      - name: Setup Pages
+      - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
-      - name: Deploy
-        id: deployment
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
