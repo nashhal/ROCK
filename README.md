@@ -6,14 +6,15 @@ ROCK storefront for everyday technology accessories across charging, power, car 
 https://nashhal.github.io/ROCK/
 
 ## Project structure
-The repository is a static storefront. Production UI is kept intentionally dependency-light:
+The repository is a static storefront. Production UI is intentionally dependency-light.
 
 - HTML pages: `index.html`, `product.html`, `checkout.html`, `policies.html`, `support.html`
-- Core styles: `styles.css`, `brand-system.css`, `logo-system.css`, `rock-global.css`, `rock-cards.css`, `rock-vnext.css`
-- Commerce/UI styles: `global-commerce.css`, `product-page.css`, `checkout.css`, `world-class.css`
-- Runtime scripts: `script.js`, `catalog-pricing.js`, `excel-catalog-only.js`, `image-fix.js`, `global-commerce.js`, `rock-performance.js`, `rock-i18n.js`, `product-page.js`, `product-linker.js`, `seo-layer.js`, `rock-identity.js`, `world-class.js`, `checkout.js`
+- Homepage styles: `rock-rebuild.css`, `rock-original-colors.css`
+- Product/commerce styles: `styles.css`, `rock-vnext.css`, `global-commerce.css`, `product-page.css`, `checkout.css`, `world-class.css`
+- Runtime scripts: `script.js`, `catalog-pricing.js`, `excel-catalog-only.js`, `image-fix.js`, `global-commerce.js`, `rock-performance.js`, `rock-i18n.js`, `product-page.js`, `product-linker.js`, `seo-layer.js`, `checkout.js`
 - Store configuration: `config/store.config.js`
 - Product assets: `assets/products/`
+- Brand assets: `rock_logo (1).svg`, `assets/rock-symbol.svg`, `assets/rock-wordmark.svg`
 - Deployment validation: `.github/workflows/pages.yml`
 
 ## Current storefront
@@ -23,7 +24,7 @@ The repository is a static storefront. Production UI is kept intentionally depen
 - Product detail pages and shareable product URLs
 - Search, category filters, sorting and cart drawer
 - Market and currency selector with preview conversion rates
-- Official ROCK logo system with a clean single-brand header
+- Official ROCK logo assets only
 - Monochrome ROCK visual identity: black, off-white, white and muted gray
 - GitHub Pages deployment with HTML, asset, image and JavaScript validation
 - JSON-LD, canonical and SEO layers
