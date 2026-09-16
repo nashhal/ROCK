@@ -1,0 +1,76 @@
+/* ROCK Original Brand Palette — restored from the original storefront layer. */
+:root{
+  --rock-navy:#0B1F3A;
+  --rock-navy-2:#102B50;
+  --rock-navy-soft:#E8EEF5;
+  --rock-navy-line:#CBD6E3;
+  --rock-navy-muted:#5D6F86;
+  --rock-navy-bright:#183F70;
+  --rock-navy-ink:#08182D;
+  --rock-white:#FFFFFF;
+}
+body{background:#F5F7FA!important;color:#0B1F3A!important}
+.nav{background:#FFFFFF!important;border-bottom-color:#CBD6E3!important}
+.mobile-menu{background:#0B1F3A!important;color:#fff!important}
+.mobile-menu a{color:#fff!important;border-color:rgba(255,255,255,.14)!important}
+.hero{background:linear-gradient(135deg,#07172C 0%,#0B1F3A 52%,#102B50 100%)!important;color:#fff!important}
+.hero-grid{background-image:linear-gradient(rgba(175,196,220,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(175,196,220,.08) 1px,transparent 1px)!important}
+.hero h1 em{color:#B9CDE3!important}
+.eyebrow{color:#AFC4DC!important}
+.hero-trust{color:#C5D3E1!important}
+.feature-dark{background:linear-gradient(135deg,#07172C,#0B1F3A 55%,#102B50)!important;color:#fff!important}
+.feature-copy h2 em,.section-head h2 em,.story-title h2 em,.showcase-copy h2 em,.shop-strip-inner h2 em{color:#B9CDE3!important}
+.section{background:#F5F7FA!important}
+.category-card{background:#E8EEF5!important;border-color:#CBD6E3!important;color:#0B1F3A!important}
+.category-card:not(.tall){background:#E8EEF5!important}
+.category-card:hover,.category-card:not(.tall):hover{background:#DCE6F1!important;border-color:#AFC0D3!important}
+.category-card.tall{background:#0B1F3A!important;color:#fff!important;border-color:#0B1F3A!important}
+.category-card.tall:hover{background:#102B50!important}
+.store-tools,.shop-top{color:#0B1F3A!important}
+.search-box{background:#fff!important;border-color:#CBD6E3!important;color:#0B1F3A!important}
+.search-box span{color:#5D6F86!important}
+.search-box input{color:#0B1F3A!important}
+.filter-pills button,#sortProducts,.filter-toggle{border-color:#CBD6E3!important;color:#0B1F3A!important;background:#fff!important}
+.filter-pills button.active,.filter-pills button:hover{background:#0B1F3A!important;border-color:#0B1F3A!important;color:#fff!important}
+.filter-toggle{background:#0B1F3A!important;color:#fff!important}
+.product-card{background:#FFFFFF!important;border-color:#D5DEE8!important;color:#0B1F3A!important}
+.product-card:hover{border-color:#AFC0D3!important;box-shadow:0 18px 45px rgba(11,31,58,.12)!important}
+.product-visual,.product-media{background:#E8EEF5!important}
+.product-category{color:#5D6F86!important}
+.product-price{color:#0B1F3A!important}
+.product-bottom{border-top-color:#D5DEE8!important}
+.product-add{background:#0B1F3A!important;color:#fff!important;border-color:#0B1F3A!important}
+.product-add:hover{background:#183F70!important;color:#fff!important}
+.rock-availability{color:#31577F!important}
+.rock-availability i{background:#183F70!important}
+.rock-model{color:#6D7F94!important}
+.service-band{background:#0B1F3A!important;color:#fff!important}
+.service-band span{color:#B9CDE3!important}
+.service-band a{color:#fff!important;border-color:#6F87A5!important}
+.showcase{background:#07172C!important;color:#fff!important}
+.shop-strip{background:#E8EEF5!important;color:#0B1F3A!important}
+.shop-strip-inner{background:transparent!important}
+.contact-link{color:#0B1F3A!important;border-color:#5D6F86!important}
+.rock-trust-item,.rock-usp-card{background:#fff!important;border-color:#D5DEE8!important}
+.rock-trust-icon,.rock-usp-icon{background:#E8EEF5!important;color:#0B1F3A!important}
+.rock-identity-note{border-top-color:#CBD6E3!important}
+.rock-identity-note p{color:#5D6F86!important}
+.rock-market-btn{border-color:rgba(175,196,220,.4)!important;color:#fff!important}
+.rock-market-btn b{color:#D7E4F1!important}
+.rock-market-panel{background:#F5F7FA!important;border-color:#CBD6E3!important}
+.rock-market-panel select{border-color:#CBD6E3!important;color:#0B1F3A!important}
+.rock-market-panel small{color:#5D6F86!important}
+.btn-primary{background:#08182D!important;border-color:#08182D!important;color:#fff!important}
+.btn-primary:hover{background:#0B1F3A!important;border-color:#0B1F3A!important}
+.btn-light{background:#E8EEF5!important;color:#0B1F3A!important}
+.search-overlay{background:#08182D!important;color:#fff!important}
+.search-overlay input{background:transparent!important;border-color:#6F87A5!important;color:#fff!important}
+.cart-drawer{background:#F5F7FA!important;color:#0B1F3A!important}
+.cart-drawer .cart-head{border-bottom-color:#CBD6E3!important}
+.cart-drawer .cart-foot{border-top-color:#CBD6E3!important}
+.cart-btn span{background:#B9CDE3!important;color:#0B1F3A!important}
+@media(max-width:760px){
+  .nav{background:#FFFFFF!important}
+  .mobile-menu{background:#0B1F3A!important}
+  .section,.shop-strip{background:#F5F7FA!important}
+}
