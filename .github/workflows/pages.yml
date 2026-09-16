@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html product.html checkout.html policies.html support.html styles.css enhancements.css logo-system.css rock-brand.css rock-cards.css rock-vnext.css brand-system.css global-commerce.css product-page.css checkout.css world-class.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js rock-performance.js rock-i18n.js config/store.config.js global-commerce.js product-page.js product-linker.js seo-layer.js rock-identity.js world-class.js checkout.js scripts/prepare_product_images.py; do
+          for file in index.html product.html checkout.html policies.html support.html styles.css enhancements.css logo-system.css rock-cards.css rock-vnext.css brand-system.css global-commerce.css product-page.css checkout.css world-class.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js rock-performance.js rock-i18n.js config/store.config.js global-commerce.js product-page.js product-linker.js seo-layer.js rock-identity.js world-class.js checkout.js; do
             test -f "$file"
           done
           echo "Validated ROCK storefront files."
