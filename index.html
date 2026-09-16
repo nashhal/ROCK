@@ -4,22 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#071a33">
-<meta name="description" content="ROCK — POWER YOUR EVERYDAY. منتجات ROCK الأصلية للطاقة والصوت والسيارة. أسعار واضحة من كتالوج ROCK.">
+<meta name="description" content="ROCK — POWER YOUR EVERYDAY. منتجات ROCK الأصلية للطاقة والصوت والسيارة بأسعار واضحة من الكتالوج.">
 <title>ROCK | POWER YOUR EVERYDAY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Tajawal:wght@400;500;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Tajawal:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="assets/brand/rock-logo.svg" type="image/svg+xml">
-<link rel="stylesheet" href="styles.css?v=20260916-rock-type-3">
+<link rel="stylesheet" href="styles.css?v=20260916-rock-final-1">
 </head>
 <body>
-<div class="announcement"><span>ROCK / POWER YOUR EVERYDAY</span><span>المنتجات المتاحة بأسعار الكتالوج</span></div>
+<div class="announcement"><span>ROCK / POWER YOUR EVERYDAY</span><span data-i18n="catalogPriced">المنتجات المتاحة بأسعار الكتالوج</span></div>
 <header class="header">
   <div class="container nav">
-    <button class="mobile-toggle" id="menuBtn" aria-label="القائمة">☰</button>
+    <button class="mobile-toggle" id="menuBtn" aria-label="القائمة" aria-expanded="false">☰</button>
     <a class="brand" href="#top" aria-label="ROCK"><img src="assets/brand/rock-logo.svg" alt="ROCK"></a>
-    <nav class="nav-links" aria-label="التنقل الرئيسي"><a href="#shop">المتجر</a><a href="#featured">المختارات</a><a href="#about">عن ROCK</a></nav>
-    <div class="nav-actions"><button id="langBtn" class="ghost-btn">EN</button><button id="cartBtn" class="cart-pill">السلة <b id="cartCount">0</b></button></div>
+    <nav class="nav-links" aria-label="التنقل الرئيسي">
+      <a href="#shop" data-i18n="shop">المتجر</a>
+      <a href="#featured" data-i18n="featured">المختارات</a>
+      <a href="#about" data-i18n="aboutNav">عن ROCK</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="langBtn" class="ghost-btn" aria-label="Change language">EN</button>
+      <button id="cartBtn" class="cart-pill"><span data-i18n="cart">السلة</span> <b id="cartCount">0</b></button>
+    </div>
   </div>
 </header>
 <main id="top">
@@ -28,22 +35,84 @@
     <div class="hero-copy">
       <p class="eyebrow">ROCK / POWER YOUR EVERYDAY</p>
       <h1>POWER<br>YOUR<br><em>EVERYDAY.</em></h1>
-      <p class="hero-lead">إكسسوارات تقنية مصممة لترافق يومك — من الطاقة والشحن إلى الصوت وحلول السيارة. اختيارات ROCK الأصلية، بموديلات واضحة وأسعار مأخوذة من الكتالوج.</p>
-      <div class="hero-actions"><a class="btn primary" href="#shop">اكتشف المجموعة</a><a class="btn secondary" href="#featured">استكشف المختارات</a></div>
-      <div class="stats"><div><strong id="productTotal">0</strong><span>منتج مسعّر</span></div><div><strong>4</strong><span>فئات رئيسية</span></div><div><strong>SAR</strong><span>العملة</span></div></div>
+      <p class="hero-lead" data-i18n="heroLead">إكسسوارات تقنية مصممة لترافق يومك — من الطاقة والشحن إلى الصوت وحلول السيارة. اختيارات ROCK الأصلية، بموديلات واضحة وأسعار مأخوذة من الكتالوج.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#shop" data-i18n="discover">اكتشف المجموعة</a>
+        <a class="btn secondary" href="#featured" data-i18n="exploreFeatured">استكشف المختارات</a>
+      </div>
+      <div class="stats">
+        <div><strong id="productTotal">0</strong><span data-i18n="pricedProducts">منتج مسعّر</span></div>
+        <div><strong>4</strong><span data-i18n="mainCategories">فئات رئيسية</span></div>
+        <div><strong>SAR</strong><span data-i18n="currency">العملة</span></div>
+      </div>
     </div>
-    <div class="hero-visual">
+    <div class="hero-visual" aria-hidden="true">
       <div class="visual-grid"></div><div class="visual-ring ring-one"></div><div class="visual-ring ring-two"></div>
-      <div class="product-showcase"><div class="showcase-top"><span>ROCK</span><span>01 / 04</span></div><div class="showcase-title">POWER<br>YOUR<br><span>EVERYDAY.</span></div><div class="showcase-bottom"><span>POWER / SOUND / DRIVE</span><span>ROCK</span></div></div>
+      <div class="product-showcase">
+        <div class="showcase-top"><span>ROCK</span><span>01 / 04</span></div>
+        <div class="showcase-title">POWER<br>YOUR<br><span>EVERYDAY.</span></div>
+        <div class="showcase-bottom"><span>POWER / SOUND / DRIVE</span><span>ROCK</span></div>
+      </div>
     </div>
   </div>
 </section>
-<section class="marquee"><div><span>POWER</span><b>•</b><span>SOUND</span><b>•</b><span>DRIVE</span><b>•</b><span>ROCK</span><b>•</b><span>EVERYDAY</span><b>•</b><span>POWER</span><b>•</b><span>SOUND</span></div></section>
-<section class="section" id="featured"><div class="container"><div class="section-head"><div><p class="eyebrow">CURATED BY ROCK</p><h2>مختارات تستحق الانتباه</h2></div><p>مجموعة منتقاة من منتجات ROCK الأعلى سعرًا في قائمة الكتالوج الحالية، مع الحفاظ على الموديل والسعر والصورة الأصلية لكل منتج.</p></div><div class="featured-grid" id="featuredGrid"></div></div></section>
-<section class="section shop" id="shop"><div class="container"><div class="section-head shop-head"><div><p class="eyebrow">THE COLLECTION</p><h2>كل ما تحتاجه، في مكان واحد</h2></div><div class="controls"><label class="search"><span>⌕</span><input id="search" type="search" placeholder="ابحث باسم المنتج أو الموديل" aria-label="البحث"></label><select id="sort" aria-label="ترتيب المنتجات"><option value="featured">مختارة</option><option value="low">الأقل سعرًا</option><option value="high">الأعلى سعرًا</option></select></div></div><div class="category-row" id="chips"></div><div class="products-grid" id="catalogGrid"></div><div class="empty" id="empty" hidden>لم نعثر على منتج مطابق. جرّب اسمًا أو موديلًا مختلفًا.</div></div></section>
-<section class="about" id="about"><div class="container about-grid"><div><p class="eyebrow">THE ROCK STANDARD</p><h2>أصلي من المصدر.<br>واضح في كل تفصيلة.</h2></div><div><p>تجربة ROCK تبدأ من المنتج نفسه: هوية العلامة الأصلية، صور المنتجات من الكتالوج، موديل محدد، وسعر واضح. واجهة بسيطة، محتوى دقيق، وتجربة شراء مصممة لتكون سريعة وواضحة.</p><div class="about-line"><span>ORIGINAL BRAND ASSET</span><span>CATALOG PRICED</span><span>BUILT FOR EVERYDAY</span></div></div></div></section>
+<section class="marquee" aria-hidden="true"><div><span>POWER</span><b>•</b><span>SOUND</span><b>•</b><span>DRIVE</span><b>•</b><span>ROCK</span><b>•</b><span>EVERYDAY</span><b>•</b><span>POWER</span><b>•</b><span>SOUND</span></div></section>
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-head">
+      <div><p class="eyebrow">CURATED BY ROCK</p><h2 data-i18n="featuredTitle">مختارات تستحق الانتباه</h2></div>
+      <p data-i18n="featuredLead">مجموعة منتقاة من منتجات ROCK الأعلى سعرًا في قائمة الكتالوج الحالية، مع الحفاظ على الموديل والسعر والصورة الأصلية لكل منتج.</p>
+    </div>
+    <div class="featured-grid" id="featuredGrid"></div>
+  </div>
+</section>
+<section class="section shop" id="shop">
+  <div class="container">
+    <div class="section-head shop-head">
+      <div><p class="eyebrow">THE COLLECTION</p><h2 data-i18n="collectionTitle">كل ما تحتاجه، في مكان واحد</h2></div>
+      <div class="controls">
+        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="ابحث باسم المنتج أو الموديل" data-i18n-placeholder="search" aria-label="البحث"></label>
+        <select id="sort" aria-label="ترتيب المنتجات">
+          <option value="featured" data-i18n="sortFeatured">مختارة</option>
+          <option value="low" data-i18n="sortLow">الأقل سعرًا</option>
+          <option value="high" data-i18n="sortHigh">الأعلى سعرًا</option>
+        </select>
+      </div>
+    </div>
+    <div class="category-row" id="chips"></div>
+    <div class="products-grid" id="catalogGrid"></div>
+    <div class="empty" id="empty" hidden></div>
+  </div>
+</section>
+<section class="about" id="about">
+  <div class="container about-grid">
+    <div><p class="eyebrow">THE ROCK STANDARD</p><h2 data-i18n="aboutTitle">أصلي من المصدر.<br>واضح في كل تفصيلة.</h2></div>
+    <div>
+      <p data-i18n="aboutLead">تجربة ROCK تبدأ من المنتج نفسه: هوية العلامة الأصلية، صور المنتجات من الكتالوج، موديل محدد، وسعر واضح. واجهة بسيطة، محتوى دقيق، وتجربة شراء مصممة لتكون سريعة وواضحة.</p>
+      <div class="about-line"><span>ORIGINAL BRAND ASSET</span><span>CATALOG PRICED</span><span>BUILT FOR EVERYDAY</span></div>
+    </div>
+  </div>
+</section>
 </main>
-<footer class="footer"><div class="container footer-grid"><div><img src="assets/brand/rock-logo.svg" alt="ROCK"><p>POWER YOUR EVERYDAY.</p></div><div><span class="footer-label">EXPLORE</span><a href="#shop">المتجر</a><a href="#featured">المختارات</a><a href="#about">عن ROCK</a></div><div><span class="footer-label">ROCK CATALOG</span><p>بيانات المنتجات المعروضة هنا مرتبطة بكتالوج ROCK المستخدم للموقع، مع الاعتماد على المنتجات التي يتوفر لها سعر واضح.</p></div></div><div class="container footer-bottom"><span>© <span id="year"></span> ROCK</span><span>Saudi Arabia</span></div></footer>
-<div class="overlay" id="cartOverlay"></div><aside class="cart" id="cartDrawer" aria-label="سلة المشتريات"><div class="cart-head"><div><p class="eyebrow">YOUR CART</p><h3>سلتك</h3></div><button id="closeCart" class="close" aria-label="إغلاق">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-foot"><div><span>الإجمالي</span><strong id="cartTotal">SAR 0.00</strong></div><button class="btn primary full" id="checkoutBtn">المتابعة إلى الطلب</button><small>واجهة المتجر مهيأة للربط بالدفع والشحن.</small></div></aside>
-<script src="products.js"></script><script src="app.js"></script>
-</body></html>
+<footer class="footer">
+  <div class="container footer-grid">
+    <div><img src="assets/brand/rock-logo.svg" alt="ROCK"><p>POWER YOUR EVERYDAY.</p></div>
+    <div><span class="footer-label">EXPLORE</span><a href="#shop" data-i18n="shop">المتجر</a><a href="#featured" data-i18n="featured">المختارات</a><a href="#about" data-i18n="aboutNav">عن ROCK</a></div>
+    <div><span class="footer-label">ROCK CATALOG</span><p data-i18n="catalogFooter">بيانات المنتجات المعروضة هنا مرتبطة بكتالوج ROCK المستخدم للموقع، مع الاعتماد على المنتجات التي يتوفر لها سعر واضح.</p></div>
+  </div>
+  <div class="container footer-bottom"><span>© <span id="year"></span> ROCK</span><span data-i18n="saudiArabia">Saudi Arabia</span></div>
+</footer>
+<div class="overlay" id="cartOverlay"></div>
+<aside class="cart" id="cartDrawer" aria-label="سلة المشتريات">
+  <div class="cart-head"><div><p class="eyebrow">YOUR CART</p><h3 data-i18n="yourCart">سلتك</h3></div><button id="closeCart" class="close" aria-label="إغلاق">×</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div><span data-i18n="total">الإجمالي</span><strong id="cartTotal">SAR 0.00</strong></div>
+    <button class="btn primary full" id="checkoutBtn" data-i18n="continueOrder">المتابعة إلى الطلب</button>
+    <small id="checkoutNote" data-i18n="checkoutNote">واجهة المتجر مهيأة للربط بالدفع والشحن.</small>
+  </div>
+</aside>
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
