@@ -1,0 +1,36 @@
+/* ROCK — Original monochrome brand palette override. No lime/colored accents. */
+:root{
+  --black:#101010!important;
+  --black-2:#151515!important;
+  --white:#ffffff!important;
+  --paper:#f3f3f1!important;
+  --paper-2:#e7e7e4!important;
+  --ink:#101010!important;
+  --muted:#969696!important;
+  --line:#d2d2ce!important;
+  --signal:#d9dad7!important;
+  --signal-2:#ecece9!important;
+}
+body{background:#f3f3f1!important;color:#101010!important}
+.nav{background:rgba(243,243,241,.94)!important}
+.icon-btn,.menu-btn{color:#101010!important}
+.cart-btn #cartCount{background:#d9dad7!important;color:#101010!important}
+.hero{background:#0b0b0b!important;color:#fff!important}
+.hero-kicker,.eyebrow,.hero-copy h1 em,.feature h2 em,.category-card.tall .category-index{color:#d9dad7!important}
+.btn-primary{background:#d9dad7!important;color:#101010!important;border-color:#d9dad7!important}
+.btn-primary:hover{background:#ecece9!important;border-color:#ecece9!important}
+.hero-panel{background:radial-gradient(circle at 50% 45%,rgba(217,218,215,.16),transparent 30%),linear-gradient(145deg,#202020,#121212 68%)!important}
+.hero-panel:after{border-color:rgba(217,218,215,.11)!important}
+.ring-3{border-color:rgba(217,218,215,.25)!important}
+.product-face:before{background:#d9dad7!important}
+.marquee{background:#d9dad7!important}
+.section-head h2 em,.story h2 em{color:#6f6f6b!important}
+.shape-a{border-color:#d9dad7!important;box-shadow:0 0 0 70px rgba(217,218,215,.06)!important}
+.product-add:hover{background:#d9dad7!important;color:#101010!important}
+.feature{background:#151515!important}
+.feature-visual{background:radial-gradient(circle at 50% 55%,rgba(217,218,215,.12),transparent 28%),linear-gradient(145deg,#202020,#111)!important}
+.o2{border-color:rgba(217,218,215,.10)!important}
+.feature-device:before{background:#d9dad7!important}
+.search-overlay{background:rgba(11,11,11,.97)!important}
+.float-note span{color:#969696!important}
+.hero-index{color:#797979!important}
