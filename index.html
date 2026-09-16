@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061a34">
+  <meta name="description" content="ROCK — تقنيات وإكسسوارات يومية مصممة للحياة الحديثة.">
+  <title>ROCK — Power Your Everyday</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/brand/rock-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="topbar"><span>تشكيلة ROCK الأصلية</span><span>أسعار المنتجات المفعّلة فقط</span></div>
+
+  <header class="site-header">
+    <div class="container nav-row">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="فتح القائمة">☰</button>
+      <a class="brand" href="#top" aria-label="ROCK">
+        <img src="assets/brand/rock-logo.svg" alt="ROCK" class="logo">
+      </a>
+      <nav class="desktop-nav" aria-label="التنقل">
+        <a href="#shop">المتجر</a>
+        <a href="#featured">مختاراتنا</a>
+        <a href="#story">عن ROCK</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="lang-btn" id="langBtn">EN</button>
+        <button class="cart-btn" id="cartBtn" aria-label="السلة">
+          <span>السلة</span><b id="cartCount">0</b>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">ROCK / EVERYDAY TECHNOLOGY</p>
+          <h1>تقنية يومية<br><span>بشكل أفضل.</span></h1>
+          <p class="hero-text">إكسسوارات شحن وطاقة وصوت وسيارة، مختارة من كتالوج ROCK بالأسعار المتاحة فعليًا.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#shop">اكتشف المنتجات</a>
+            <a class="btn btn-ghost" href="#story">اعرف أكثر</a>
+          </div>
+          <div class="hero-meta">
+            <div><strong id="productTotal">0</strong><span>منتج مسعّر</span></div>
+            <div><strong>4</strong><span>فئات رئيسية</span></div>
+            <div><strong>SAR</strong><span>العملة الأساسية</span></div>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orb orb-a"></div><div class="orb orb-b"></div>
+          <div class="hero-card">
+            <span class="hero-card-line">ROCK</span>
+            <span class="hero-card-big">POWER<br>YOUR<br>EVERYDAY</span>
+            <span class="hero-card-small">DESIGN / POWER / SOUND</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ticker"><div class="ticker-track"><span>POWER</span><i>•</i><span>SOUND</span><i>•</i><span>DRIVE</span><i>•</i><span>EVERYDAY</span><i>•</i><span>ROCK</span><i>•</i><span>POWER</span><i>•</i><span>SOUND</span><i>•</i><span>DRIVE</span><i>•</i><span>EVERYDAY</span></div></section>
+
+    <section class="section" id="featured">
+      <div class="container">
+        <div class="section-head">
+          <div><p class="eyebrow">FEATURED</p><h2>مختارات ROCK</h2></div>
+          <p>منتجات تحمل سعرًا واضحًا من قائمة الأسعار المستخدمة للموقع.</p>
+        </div>
+        <div class="feature-grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <section class="section section-shop" id="shop">
+      <div class="container">
+        <div class="section-head shop-head">
+          <div><p class="eyebrow">SHOP</p><h2>كل المنتجات</h2></div>
+          <div class="tools">
+            <label class="search"><span>⌕</span><input id="search" type="search" placeholder="ابحث عن منتج أو موديل"></label>
+            <select id="sort" aria-label="ترتيب المنتجات"><option value="featured">ترتيب مقترح</option><option value="low">السعر: الأقل</option><option value="high">السعر: الأعلى</option></select>
+          </div>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="catalog-grid" id="catalogGrid"></div>
+        <div class="empty" id="empty" hidden>لا توجد نتائج مطابقة.</div>
+      </div>
+    </section>
+
+    <section class="statement" id="story">
+      <div class="container statement-grid">
+        <div><p class="eyebrow">THE ROCK POINT OF VIEW</p><h2>أقل ضجيجًا.<br>أكثر وضوحًا.</h2></div>
+        <div><p>هوية ROCK هنا مبنية على الكحلي العميق، الأزرق الكهربائي، الأبيض والأسطح الهادئة. المنتج هو البطل، والواجهة لا تتنافس معه.</p><p class="muted">POWER YOUR EVERYDAY.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><img src="assets/brand/rock-logo.svg" alt="ROCK" class="logo footer-logo"><p>تقنية للحياة اليومية.</p></div>
+      <div><span class="footer-title">ROCK</span><a href="#shop">المتجر</a><a href="#featured">مختاراتنا</a><a href="#story">عن ROCK</a></div>
+      <div><span class="footer-title">ملاحظة</span><p>المعروض في المتجر يقتصر على المنتجات التي لها سعر في قائمة الأسعار المعتمدة للموقع.</p></div>
+    </div>
+    <div class="container footer-bottom"><span>© <span id="year"></span> ROCK</span><span>Power Your Everyday</span></div>
+  </footer>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="سلة التسوق">
+    <div class="cart-head"><div><span class="eyebrow">YOUR CART</span><h3>سلتك</h3></div><button class="icon-btn" id="closeCart">×</button></div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot"><div class="cart-total"><span>الإجمالي</span><strong id="cartTotal">SAR 0.00</strong></div><button class="btn btn-primary full" id="checkoutBtn">إتمام الطلب</button><small>الدفع الفعلي غير موصول بعد - هذه واجهة متجر أولية.</small></div>
+  </aside>
+
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
