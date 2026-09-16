@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071a33">
+  <meta name="description" content="ROCK — إكسسوارات تقنية وحلول يومية بتصميم واضح وروح عملية.">
+  <title>ROCK — Everyday, connected.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="announcement"><span>ROCK</span><span data-i18n="announcement">تقنية يومية بتفاصيل محسوبة</span><button class="announcement-close" aria-label="إغلاق">×</button></div>
+
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="فتح القائمة"><span></span><span></span></button>
+      <a class="brand" href="#top" aria-label="ROCK"><img src="assets/brand/rock-logo.svg" alt="ROCK"></a>
+      <nav class="desktop-nav" id="desktopNav">
+        <a href="#shop" data-nav="shop" data-i18n="shop">المتجر</a>
+        <a href="#collections" data-nav="collections" data-i18n="collections">التصنيفات</a>
+        <a href="#story" data-nav="story" data-i18n="story">عن ROCK</a>
+      </nav>
+      <div class="header-actions">
+        <button class="text-btn" id="langBtn">EN</button>
+        <button class="icon-btn" id="searchBtn" aria-label="بحث">⌕</button>
+        <button class="cart-btn" id="cartBtn"><span data-i18n="bag">السلة</span><b id="cartCount">0</b></button>
+      </div>
+    </div>
+    <div class="mobile-panel" id="mobilePanel">
+      <a href="#shop" data-mobile-link>المتجر</a>
+      <a href="#collections" data-mobile-link>التصنيفات</a>
+      <a href="#story" data-mobile-link>عن ROCK</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section-shell">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="eyebrow">مصمم للاستخدام اليومي</span></div>
+        <h1><span data-i18n="hero1">Less noise.</span><em data-i18n="hero2">More ROCK.</em></h1>
+        <p data-i18n="heroText">شحن وصوت وحلول للسيارة وأدوات للحياة اليومية، مختارة في تجربة شراء واحدة واضحة.</p>
+        <div class="hero-actions">
+          <a class="btn btn-dark" href="#shop" data-i18n="shopNow">تسوق الآن <span>↗</span></a>
+          <button class="btn btn-link" id="viewFeatured" data-i18n="featuredBtn">استكشف المختارات</button>
+        </div>
+        <div class="hero-meta">
+          <div><strong>22</strong><span data-i18n="products">منتجًا</span></div>
+          <div><strong>4</strong><span data-i18n="categories">فئات</span></div>
+          <div><strong>SAR</strong><span data-i18n="currency">أسعار واضحة</span></div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="ROCK product showcase">
+        <div class="visual-orbit orbit-a"></div><div class="visual-orbit orbit-b"></div>
+        <div class="visual-card primary"><img src="assets/products/pods700.webp" alt="ROCK product" loading="eager"><span>RO-700W</span></div>
+        <div class="visual-card secondary"><img src="assets/products/rkch765.webp" alt="ROCK charger" loading="eager"><span>RKCH765</span></div>
+        <div class="visual-label">ROCK / 2026</div>
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="ROCK highlights"><div class="ticker-track"><span>POWER</span><i>•</i><span>AUDIO</span><i>•</i><span>DRIVE</span><i>•</i><span>EVERYDAY</span><i>•</i><span>POWER</span><i>•</i><span>AUDIO</span><i>•</i><span>DRIVE</span><i>•</i><span>EVERYDAY</span></div></section>
+
+    <section class="section-shell shop-section" id="shop">
+      <div class="section-head">
+        <div><div class="eyebrow">01 / <span data-i18n="catalog">الكتالوج</span></div><h2 data-i18n="shopTitle">منتجات للاستخدام الحقيقي</h2></div>
+        <button class="filter-toggle" id="filtersBtn"><span data-i18n="filter">تصفية</span><span>+</span></button>
+      </div>
+      <div class="shop-toolbar" id="shopToolbar">
+        <div class="chips" id="categoryChips">
+          <button class="chip active" data-cat="all">All</button><button class="chip" data-cat="power">Power</button><button class="chip" data-cat="audio">Audio</button><button class="chip" data-cat="car">Drive</button><button class="chip" data-cat="lifestyle">Lifestyle</button>
+        </div>
+        <div class="shop-tools">
+          <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="ابحث عن موديل أو منتج" data-ph-ar="ابحث عن موديل أو منتج" data-ph-en="Search model or product"></label>
+          <select id="sortSelect"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option><option value="name">Name</option></select>
+        </div>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+      <div class="empty-state" id="emptyState" hidden><strong data-i18n="noResults">لا توجد نتائج</strong><span data-i18n="noResultsSub">جرّب كلمة بحث أو تصنيفًا آخر.</span></div>
+    </section>
+
+    <section class="collections section-shell" id="collections">
+      <div class="section-head"><div><div class="eyebrow">02 / <span data-i18n="collectionsLabel">المجموعات</span></div><h2 data-i18n="collectionsTitle">اختر حسب يومك</h2></div><span class="section-note" data-i18n="collectionsNote">من المكتب إلى الطريق</span></div>
+      <div class="collection-grid">
+        <button class="collection-card collection-power" data-collection="power"><span>01</span><div><b>POWER</b><small data-i18n="powerText">طاقة وشحن</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-audio" data-collection="audio"><span>02</span><div><b>AUDIO</b><small data-i18n="audioText">صوتك في كل مكان</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-drive" data-collection="car"><span>03</span><div><b>DRIVE</b><small data-i18n="driveText">حلول للسيارة</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-life" data-collection="lifestyle"><span>04</span><div><b>LIFESTYLE</b><small data-i18n="lifeText">تفاصيل يومية</small></div><strong>↗</strong></button>
+      </div>
+    </section>
+
+    <section class="story section-shell" id="story">
+      <div class="story-mark">R</div>
+      <div class="story-copy"><div class="eyebrow">03 / ROCK</div><h2 data-i18n="storyTitle">تقنية واضحة. حضور مختلف.</h2><p data-i18n="storyText">ROCK ليست مجموعة من الأجهزة المتشابهة. هي طريقة أبسط لاختيار ما تحتاجه: موديل واضح، سعر واضح، وصورة المنتج الحقيقي أمامك.</p><div class="story-links"><button class="under-btn" id="scrollTopBtn" data-i18n="backTop">العودة للبداية ↗</button><button class="under-btn" id="clearCartBtn" data-i18n="clearCart">تفريغ السلة</button></div></div>
+    </section>
+
+    <section class="closing-banner"><div><span>ROCK</span><h2>Everyday,<br><em>connected.</em></h2></div><button class="circle-arrow" id="closingShop" aria-label="تصفح المنتجات">↗</button></section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span>Everyday, connected.</span></div><div class="footer-links"><a href="#shop">Shop</a><a href="#collections">Collections</a><a href="#story">About</a></div><div class="footer-meta">© <span id="year"></span> ROCK</div></footer>
+
+  <div class="overlay" id="overlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="السلة"><div class="drawer-head"><div><span>ROCK</span><h3 data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total-row"><span data-i18n="total">الإجمالي</span><strong id="cartTotal">0 SAR</strong></div><button class="btn btn-dark full" id="checkoutBtn" data-i18n="checkout">تجهيز الطلب</button><button class="btn btn-soft full" id="continueBtn" data-i18n="continue">متابعة التسوق</button></div></aside>
+
+  <div class="modal" id="productModal"><div class="modal-card product-modal-card"><button class="close-btn" data-close-modal>×</button><div class="modal-image"><img id="modalImage" alt=""></div><div class="modal-info"><div class="modal-model" id="modalModel"></div><h3 id="modalName"></h3><p id="modalPrice"></p><button class="btn btn-dark full" id="modalAdd" data-i18n="addCart">أضف إلى السلة</button></div></div></div>
+  <div class="modal" id="checkoutModal"><div class="modal-card checkout-card"><button class="close-btn" data-close-modal>×</button><div class="eyebrow">ROCK / ORDER</div><h3 data-i18n="orderTitle">طلبك جاهز</h3><p data-i18n="orderText">راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.</p><textarea id="orderText" readonly></textarea><button class="btn btn-dark full" id="copyOrder" data-i18n="copyOrder">نسخ تفاصيل الطلب</button><button class="btn btn-soft full" id="doneOrder" data-i18n="done">تم</button></div></div>
+
+  <div class="toast" id="toast"></div>
+  <script src="products.js"></script><script src="app.js"></script>
+</body>
+</html>
