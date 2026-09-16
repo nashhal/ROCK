@@ -1,5 +1,0 @@
-:root{--rock-motion-duration:3.2s;--rock-motion-ease:cubic-bezier(.16,1,.3,1)}
-/* Intro animation disabled: the storefront must render immediately and never be blocked by the logo overlay. */
-.logo-assemble{display:none!important}
-.logo-assemble.is-hidden{display:none!important}
-body.rock-intro-active{overflow:auto}
