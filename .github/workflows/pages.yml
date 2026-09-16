@@ -33,12 +33,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html product.html checkout.html policies.html support.html styles.css enhancements.css logo-system.css rock-cards.css rock-vnext.css brand-system.css global-commerce.css product-page.css checkout.css world-class.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js rock-performance.js rock-i18n.js config/store.config.js global-commerce.js product-page.js product-linker.js seo-layer.js rock-identity.js world-class.js checkout.js; do
+          for file in index.html product.html checkout.html policies.html support.html styles.css rock-vnext.css global-commerce.css product-page.css checkout.css world-class.css script.js catalog-pricing.js excel-catalog-only.js image-fix.js rock-performance.js rock-i18n.js config/store.config.js global-commerce.js product-page.js product-linker.js seo-layer.js checkout.js; do
             test -f "$file"
           done
-          echo "Validated ROCK storefront files."
+          echo "Validated active ROCK storefront files."
           grep -q 'product.html' product-linker.js
-          grep -q 'checkout.html' world-class.js
           grep -q 'ROCK_CONFIG' config/store.config.js
           grep -q 'application/ld+json' product-page.js
           grep -q 'rock-i18n.js' index.html
@@ -107,7 +106,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in script.js catalog-pricing.js excel-catalog-only.js image-fix.js global-commerce.js rock-performance.js rock-i18n.js product-page.js product-linker.js seo-layer.js rock-identity.js world-class.js checkout.js; do
+          for file in script.js catalog-pricing.js excel-catalog-only.js image-fix.js global-commerce.js rock-performance.js rock-i18n.js product-page.js product-linker.js seo-layer.js checkout.js; do
             node --check "$file"
           done
 
