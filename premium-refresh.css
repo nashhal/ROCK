@@ -248,3 +248,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .policy-secondary{color:#234d75;background:#fff;border:1px solid #d6e2ef}
 @media(max-width:700px){.policy-shell{padding:48px 18px 65px}.policy-grid{grid-template-columns:1fr}.policy-card{min-height:0;padding:22px}.policy-intro h1{font-size:40px}.policy-nav{gap:12px}.policy-nav a{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.service-item,.product-card{transition:none!important}}
+
+
+/* Desktop hero: keep the first purchase decision visible without excessive scroll. */
+@media(min-width:981px){
+  .hero{min-height:clamp(560px,72vh,630px);padding-top:clamp(48px,6vh,70px);padding-bottom:clamp(48px,6vh,70px)}
+  .hero-visual{min-height:clamp(420px,58vh,470px)}
+}

@@ -128,7 +128,15 @@
   function openCart(){ $('#cartDrawer').classList.add('open');$('#overlay').classList.add('show'); }
   function closeCart(){ $('#cartDrawer').classList.remove('open');$('#overlay').classList.remove('show'); }
   function openModal(id){$('#'+id).classList.add('show');$('#overlay').classList.add('show')}
-  function closeModals(){$$('.modal').forEach(m=>m.classList.remove('show'));$('#overlay').classList.remove('show')}
+  function closeModals(){
+    const orderWasOpen = $('#checkoutModal').classList.contains('show');
+    $('.modal').forEach(modal=>modal.classList.remove('show'));
+    $('#overlay').classList.remove('show');
+    if(orderWasOpen){
+      $('#orderDetailsForm').reset();
+      $('#orderText').value='';
+    }
+  }
   function openProduct(id){const p=products.find(x=>x.id===id);if(!p)return;state.activeProduct=p;$('#modalImage').src=p.image;$('#modalImage').alt=name(p);$('#modalModel').textContent=p.model;$('#modalName').textContent=name(p);$('#modalPrice').textContent=money(p.price);openModal('productModal')}
   function checkout(){
     if(!state.cart.length) return;
