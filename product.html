@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#06162f">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="description" content="ROCK product details, model information and order guidance.">
+  <title>Product details | ROCK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="premium-refresh.css?v=2">
+  <link rel="stylesheet" href="product-page.css">
+</head>
+<body class="product-page-body">
+  <div class="announcement"><span>ROCK</span><span data-i18n="announcement">تقنية يومية بتفاصيل محسوبة</span></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="./" aria-label="ROCK"><img src="assets/brand/rock-logo.svg" alt="ROCK"></a>
+      <nav class="product-nav">
+        <a href="./#shop" data-i18n="shop">المتجر</a>
+        <a href="./#collections" data-i18n="collections">التصنيفات</a>
+        <a href="policies.html" data-i18n="storeInfo">معلومات المتجر</a>
+      </nav>
+      <div class="header-actions">
+        <button class="text-btn" id="langBtn" type="button" aria-label="Change language">EN</button>
+        <a class="cart-btn" href="./?cart=1"><span data-i18n="bag">السلة</span><b id="cartCount">0</b></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="product-page-shell">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="./" data-i18n="home">الرئيسية</a><span aria-hidden="true">/</span>
+      <a href="./#shop" data-i18n="shop">المتجر</a><span aria-hidden="true">/</span>
+      <span id="breadcrumbName" data-i18n="productDetails">تفاصيل المنتج</span>
+    </nav>
+
+    <section id="productNotFound" class="product-not-found" hidden>
+      <p class="product-eyebrow">ROCK / CATALOG</p>
+      <h1 data-i18n="notFoundTitle">لم يتم العثور على المنتج</h1>
+      <p data-i18n="notFoundText">تحقق من الرابط أو ارجع إلى قائمة المنتجات.</p>
+      <a class="product-primary-button" href="./#shop" data-i18n="backToShop">العودة إلى المتجر</a>
+    </section>
+
+    <section id="productLayout" class="product-detail-layout" hidden>
+      <div class="product-gallery-column">
+        <a class="product-back-link" href="./#shop">← <span data-i18n="backToShop">العودة إلى المتجر</span></a>
+        <div class="product-main-image">
+          <span id="detailCategory" class="product-detail-category">ROCK</span>
+          <img id="detailImage" src="assets/brand/rock-logo.svg" alt="" width="800" height="800">
+          <span class="product-image-watermark">ROCK / ORIGINAL CATALOG</span>
+        </div>
+        <div class="product-gallery-caption">
+          <span data-i18n="catalogImageNote">صورة المنتج من كتالوج ROCK</span>
+          <span id="detailModelCaption">ROCK</span>
+        </div>
+      </div>
+
+      <div class="product-detail-copy">
+        <p class="product-eyebrow" data-i18n="productDetails">تفاصيل المنتج</p>
+        <p id="detailModel" class="detail-model">ROCK</p>
+        <h1 id="detailName">ROCK</h1>
+        <p id="detailPrice" class="detail-price">—</p>
+        <p id="detailDescription" class="detail-description"></p>
+        <div class="detail-separator"></div>
+        <div class="detail-facts">
+          <article><span class="fact-symbol">01</span><div><h2 data-i18n="factModelTitle">Model reference</h2><p data-i18n="factModelText">Use the model number when asking about this product.</p></div></article>
+          <article><span class="fact-symbol">02</span><div><h2 data-i18n="factCompatTitle">Compatibility</h2><p data-i18n="factCompatText">Confirm device fit and supported features before ordering.</p></div></article>
+          <article><span class="fact-symbol">03</span><div><h2 data-i18n="factDeliveryTitle">Availability and delivery</h2><p data-i18n="factDeliveryText">Stock, delivery time, shipping cost and warranty must be confirmed before an order is accepted.</p></div></article>
+        </div>
+        <div class="product-detail-actions">
+          <button id="detailAddButton" class="product-primary-button" type="button"><span data-i18n="addToBag">أضف إلى السلة</span><span aria-hidden="true">↗</span></button>
+          <a class="product-secondary-button" href="policies.html" data-i18n="orderInfo">معلومات الطلب والخصوصية</a>
+        </div>
+        <p class="product-order-note" data-i18n="orderNote">هذه النسخة تُجهّز ملخص الطلب داخل المتصفح ولا تنفّذ دفعًا إلكترونيًا أو إرسالًا تلقائيًا.</p>
+      </div>
+    </section>
+
+    <section id="relatedSection" class="related-section" hidden>
+      <div class="related-section-heading"><div><p class="product-eyebrow">ROCK / DISCOVER</p><h2 data-i18n="relatedTitle">منتجات من الفئة نفسها</h2></div><a href="./#shop" data-i18n="viewAllProducts">عرض جميع المنتجات ↗</a></div>
+      <div id="relatedGrid" class="related-grid"></div>
+    </section>
+  </main>
+
+  <footer class="product-footer">
+    <a class="product-footer-brand" href="./"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span>Everyday, connected.</span></a>
+    <p>© <span id="footerYear"></span> ROCK</p>
+    <a href="policies.html" data-i18n="storeInfo">معلومات المتجر</a>
+  </footer>
+  <div id="productToast" class="product-toast" role="status" aria-live="polite"></div>
+  <script src="products.js"></script>
+  <script src="product-page.js"></script>
+</body>
+</html>

@@ -187,3 +187,64 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* ROCK storefront refinement v2: clearer product actions, trust strip, and mobile navigation. */
+.product-image-link{display:flex;color:inherit}
+.product-title-link{display:block;color:inherit}
+.product-title-link:hover{color:#0b6fc9}
+.product-detail-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;color:#54708e;font-size:11px;font-weight:800;text-decoration:none;border-bottom:1px solid transparent;width:max-content;max-width:100%;transition:color .2s,border-color .2s}
+.product-detail-link:hover{color:#0a68c2;border-bottom-color:#0a68c2}
+.product-info{display:flex;flex-direction:column;align-items:flex-start}
+.product-bottom{width:100%;margin-top:auto}
+.product-name{overflow-wrap:anywhere}
+.product-image img{display:block}
+.product-actions .mini-btn{flex-shrink:0}
+.service-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding-top:25px;padding-bottom:25px}
+.service-item{display:flex;align-items:flex-start;gap:14px;padding:22px 20px;background:#fff;border:1px solid #e1eaf4;border-radius:18px;box-shadow:0 8px 26px rgba(8,36,72,.035)}
+.service-number{display:grid;place-items:center;min-width:32px;height:32px;border-radius:10px;color:#0d64b4;background:#eaf4ff;font:800 10px/1 Manrope,sans-serif}
+.service-item h3{font-size:13px;line-height:1.35;margin:1px 0 6px;color:#071a33}
+.service-item p{font-size:11px;line-height:1.7;margin:0;color:#687b91}
+.mobile-panel{background:#07172f!important;border-top-color:rgba(255,255,255,.12)!important}
+.mobile-panel a{color:rgba(245,249,255,.78)!important;border-bottom-color:rgba(255,255,255,.09)!important}
+.mobile-panel a:hover{color:#fff!important}
+.order-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.order-fields label,.order-summary-label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:#29415d}
+.order-fields input,.order-fields textarea{width:100%;min-width:0;border:1px solid #dbe5f1;border-radius:10px;padding:11px 12px;background:#fbfdff;color:#071a33;font-size:13px;outline:none}
+.order-fields input:focus,.order-fields textarea:focus{border-color:#5caeff;box-shadow:0 0 0 3px rgba(45,140,255,.12)}
+.order-notes{grid-column:1/-1}
+.order-privacy-note{padding:11px 13px;background:#f3f7fc;border:1px solid #e2ebf5;border-radius:10px;color:#546b85!important;font-size:11px!important;line-height:1.65}
+.order-summary-label{margin-top:10px}
+.checkout-card{max-height:min(92vh,900px);overflow:auto}
+.checkout-card textarea#orderText{min-height:140px}
+[dir="rtl"] .product-detail-link{align-self:flex-start}
+@media(max-width:760px){.service-strip{grid-template-columns:1fr;gap:10px;padding-top:18px;padding-bottom:18px}.service-item{padding:16px}.order-fields{grid-template-columns:1fr}.order-notes{grid-column:auto}.checkout-card{padding:25px 20px}.checkout-card h3{font-size:30px}}
+@media(min-width:981px){.product-card{min-height:100%;}.product-info{min-height:173px}}
+
+
+/* ROCK information page */
+.policy-page{background:#f6f9fd;color:#0a1830}
+.policy-page .site-header{background:rgba(5,18,39,.97)}
+.policy-page .brand img{filter:brightness(0) invert(1)}
+.policy-nav{display:flex;gap:25px;margin:auto}
+.policy-nav a{font-size:12px;font-weight:700;color:rgba(245,249,255,.74)}
+.policy-nav a:hover{color:#fff}
+.policy-shell{max-width:1120px;padding:72px 28px 96px;margin:auto}
+.policy-intro{max-width:780px;margin-bottom:30px}
+.policy-eyebrow{font:800 10px/1.4 Manrope,sans-serif;letter-spacing:.18em;color:#2978bf;margin:0 0 15px}
+.policy-intro h1{font-size:clamp(38px,5vw,66px);line-height:1.04;letter-spacing:-.06em;color:#071a33;margin:0 0 18px}
+.policy-intro>p:last-child{font-size:15px;line-height:1.9;color:#667b93;margin:0}
+.policy-notice{display:flex;align-items:flex-start;gap:13px;padding:19px 21px;margin:28px 0;background:#edf5ff;border:1px solid #d4e8fc;border-radius:15px;color:#254f77}
+.policy-notice p{font-size:12px;line-height:1.85;margin:0}
+.policy-notice-dot{width:9px;height:9px;flex-shrink:0;margin-top:7px;border-radius:50%;background:#2d8cff;box-shadow:0 0 0 5px rgba(45,140,255,.12)}
+.policy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.policy-card{position:relative;padding:25px 24px 27px;border:1px solid #e1eaf4;border-radius:18px;background:#fff;min-height:190px}
+.policy-number{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#eaf4ff;color:#1b6eb2;font:800 10px/1 Manrope,sans-serif;margin-bottom:18px}
+.policy-card h2{font-size:17px;letter-spacing:-.03em;color:#0a1e38;margin:0 0 11px}
+.policy-card p{font-size:12px;line-height:1.95;color:#60758d;margin:0}
+.policy-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:30px}
+.policy-primary,.policy-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 19px;border-radius:12px;font-size:12px;font-weight:800}
+.policy-primary{color:#fff;background:linear-gradient(110deg,#06162f,#104c87)}
+.policy-secondary{color:#234d75;background:#fff;border:1px solid #d6e2ef}
+@media(max-width:700px){.policy-shell{padding:48px 18px 65px}.policy-grid{grid-template-columns:1fr}.policy-card{min-height:0;padding:22px}.policy-intro h1{font-size:40px}.policy-nav{gap:12px}.policy-nav a{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.service-item,.product-card{transition:none!important}}

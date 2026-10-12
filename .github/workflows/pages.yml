@@ -19,13 +19,50 @@ jobs:
       - name: Validate storefront
         run: |
           test -f index.html
+          test -f product.html
+          test -f product-page.css
+          test -f product-page.js
+          test -f policies.html
+          test -f policy-page.js
           test -f styles.css
+          test -f premium-refresh.css
           test -f app.js
           test -f products.js
           test -f assets/brand/rock-logo.svg
           test -d assets/products
           node --check app.js
           node --check products.js
+          node --check product-page.js
+          node --check policy-page.js
+          node - <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const context = { globalThis: {} };
+          vm.runInNewContext(fs.readFileSync('products.js', 'utf8'), context);
+          const products = context.globalThis.ROCK_PRODUCTS;
+          if (!Array.isArray(products) || products.length < 1) throw new Error('No products found');
+          const ids = new Set();
+          for (const p of products) {
+            if (!p.id || ids.has(p.id)) throw new Error('Missing or duplicate product id: ' + p.id);
+            ids.add(p.id);
+            if (!p.model || !p.nameAr || !p.nameEn || !Number.isFinite(p.price) || p.price < 0) throw new Error('Invalid product fields: ' + p.id);
+            if (!/^assets\/products\/[a-z0-9-]+\.webp$/i.test(p.image) || !fs.existsSync(p.image)) throw new Error('Missing product image: ' + p.id + ' -> ' + p.image);
+          }
+          console.log('Validated ' + products.length + ' products and their local images.');
+          NODE
+          node - <<'NODE'
+          const fs = require('fs');
+          for (const file of ['index.html','product.html','policies.html']) {
+            const html = fs.readFileSync(file, 'utf8');
+            for (const match of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
+              const url = match[1];
+              if (/^(https?:|mailto:|tel:|#|data:|javascript:)/i.test(url)) continue;
+              const local = url.split('?')[0].split('#')[0];
+              if (local && !fs.existsSync(local)) throw new Error(file + ' points to missing local file: ' + local);
+            }
+          }
+          console.log('Validated local HTML asset links.');
+          NODE
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
