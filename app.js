@@ -48,7 +48,7 @@
   function t(k){return copy[state.lang][k] || k}
   function name(p){return state.lang==='ar'?p.nameAr:p.nameEn}
   function catLabel(c){return ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[c]||c}
-  function money(v){return `${Number(v).toFixed(0)} ${t('sar')}`}
+  function money(v){const n=Number(v);const shown=Number.isInteger(n)?String(n):n.toFixed(2);return `${shown} ${t('sar')}`}
 
   function applyLanguage(){
     document.documentElement.lang = state.lang;
@@ -70,7 +70,7 @@
   }
   function filtered(){
     const q=state.query.trim().toLowerCase();
-    let arr=products.filter(p=>(state.cat==='all'||p.category===state.cat)&&(!q||`${p.model} ${p.nameAr} ${p.nameEn}`.toLowerCase().includes(q)));
+    let arr=products.filter(p=>(state.cat==='all'||p.category===state.cat)&&(!q||`${p.model} ${p.barcode||''} ${p.nameAr} ${p.nameEn} ${p.descriptionEn||''}`.toLowerCase().includes(q)));
     if(state.sort==='low')arr.sort((a,b)=>a.price-b.price); else if(state.sort==='high')arr.sort((a,b)=>b.price-a.price); else if(state.sort==='name')arr.sort((a,b)=>name(a).localeCompare(name(b)));
     return arr;
   }
@@ -201,7 +201,7 @@
   $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{if(state.activeProduct)add(state.activeProduct.id);closeModals()};
   $$('[data-close-modal]').forEach(b=>b.onclick=closeModals);
   $('#menuBtn').onclick=()=>$('#mobilePanel').classList.toggle('open');$$('[data-mobile-link]').forEach(a=>a.onclick=()=>$('#mobilePanel').classList.remove('open'));
-  $('.announcement-close').onclick=()=>$('.announcement').remove();$('#year').textContent=new Date().getFullYear();
+  $('.announcement-close').onclick=()=>$('.announcement').remove();$('#year').textContent=new Date().getFullYear();const productCountNode=$('#heroProductCount');if(productCountNode)productCountNode.textContent=String(products.length);
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){closeCart();closeModals();$('#mobilePanel').classList.remove('open');return;}
     if(e.key==='Tab'){
