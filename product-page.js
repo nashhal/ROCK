@@ -44,7 +44,6 @@
   const priceText = value => { const amount=Number(value); const shown=Number.isInteger(amount)?String(amount):amount.toFixed(2); return shown+' '+t('sar'); };
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const imagePath = path => typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path) ? path : '';
-  const safePhotoUrl = value => typeof value === 'string' && /^https:\/\/drive\.google\.com\/(?:drive\/folders\/[A-Za-z0-9_-]+|file\/d\/[A-Za-z0-9_-]+\/view)(?:\?[A-Za-z0-9_=&%-]+)?$/.test(value.trim()) ? value.trim() : '';
   function applyLanguage(){
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
@@ -77,6 +76,7 @@
     if(!product){
       $('#productNotFound').hidden=false;
       $('#productLayout').hidden=true;
+      const robots=$('meta[name="robots"]');if(robots)robots.content='noindex,follow';
       $('#relatedSection').hidden=true;
       document.title=t('notFoundTitle')+' | ROCK';
       return;
@@ -127,12 +127,47 @@
     $('#detailModel').textContent=product.model;
     $('#detailModelCaption').textContent=product.model;
     $('#detailName').textContent=name(product);
-    $('#detailPrice').textContent=priceText(product.price);$('#detailBarcode').textContent=product.barcode?t('barcodeLabel')+': '+product.barcode:'';const photosLink=$('#detailPhotosLink');const photosUrl=safePhotoUrl(product.picturesUrl);photosLink.hidden=!photosUrl;if(photosUrl)photosLink.href=photosUrl;
+    $('#detailPrice').textContent=priceText(product.price);$('#detailBarcode').textContent=product.barcode?t('barcodeLabel')+': '+product.barcode:'';
     const descriptionKey={power:'descPower',audio:'descAudio',car:'descCar',lifestyle:'descLifestyle'}[product.category]||'descLifestyle';
     $('#detailDescription').textContent=lang==='en'&&product.descriptionEn?product.descriptionEn:t(descriptionKey);
     $('#breadcrumbName').textContent=name(product);
     document.title=name(product)+' | ROCK';
-    const desc=$('meta[name="description"]');if(desc)desc.content=t(descriptionKey);
+    const desc=$('meta[name="description"]');
+    const seoDescription=lang==='en'
+      ? `${name(product)}. Model ${product.model}. Listed price ${priceText(product.price)}. Check compatibility and confirm availability before ordering.`
+      : `${name(product)}. رقم الموديل ${product.model}. السعر المعروض ${priceText(product.price)}. تحقق من التوافق وأكد التوفر قبل الطلب.`;
+    if(desc)desc.content=seoDescription;
+    const canonicalUrl='https://nashhal.github.io/ROCK/product.html?id='+encodeURIComponent(product.id);
+    let canonical=$('link[rel="canonical"]');
+    if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical);}
+    canonical.href=canonicalUrl;
+    const metaContent=(selector,value)=>{
+      let node=$(selector);
+      if(!node){
+        node=document.createElement('meta');
+        const match=selector.match(/\[(name|property)="([^"]+)"\]/);
+        if(match)node.setAttribute(match[1],match[2]);
+        document.head.appendChild(node);
+      }
+      node.content=value;
+    };
+    metaContent('meta[property="og:title"]',name(product)+' | ROCK');
+    metaContent('meta[property="og:description"]',seoDescription);
+    metaContent('meta[property="og:url"]',canonicalUrl);
+    metaContent('meta[property="og:image"]','https://nashhal.github.io/ROCK/'+(detailImagePath||'assets/brand/rock-logo.svg'));
+    metaContent('meta[name="twitter:title"]',name(product)+' | ROCK');
+    metaContent('meta[name="twitter:description"]',seoDescription);
+    const productSchema={
+      '@context':'https://schema.org','@type':'Product',name:name(product),description:seoDescription,
+      sku:product.model&&product.model!=='—'?product.model:product.id,
+      image:galleryImages.map(path=>'https://nashhal.github.io/ROCK/'+path),
+      brand:{'@type':'Brand',name:'ROCK'},category:category(product.category),
+      ...(product.barcode?{gtin:product.barcode}:{}),
+      offers:{'@type':'Offer',url:canonicalUrl,priceCurrency:'SAR',price:Number(product.price)}
+    };
+    let schema=$('#rockProductSchema');
+    if(!schema){schema=document.createElement('script');schema.type='application/ld+json';schema.id='rockProductSchema';document.head.appendChild(schema);}
+    schema.textContent=JSON.stringify(productSchema);
     renderRelated();
   }
   function toast(message){const node=$('#productToast');node.textContent=message;node.classList.add('show');window.setTimeout(()=>node.classList.remove('show'),2200)}
