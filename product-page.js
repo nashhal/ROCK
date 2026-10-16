@@ -83,12 +83,46 @@
     }
     $('#productLayout').hidden=false;
     $('#productNotFound').hidden=true;
-    const detailImage=$('#detailImage'), detailImagePath=imagePath(product.image), detailPlaceholder=$('#detailImagePlaceholder');
+    const detailImage=$('#detailImage'),detailPlaceholder=$('#detailImagePlaceholder'),galleryThumbs=$('#detailGalleryThumbs');
+    const detailImagePath=imagePath(product.image);
+    const galleryImages=(Array.isArray(product.images)?product.images:[]).map(imagePath).filter((path,index,all)=>path&&all.indexOf(path)===index);
+    if(detailImagePath&&!galleryImages.includes(detailImagePath))galleryImages.unshift(detailImagePath);
+    const updateMainImage=path=>{
+      detailImage.onerror=()=>{detailImage.hidden=true;detailPlaceholder.hidden=false};
+      detailPlaceholder.hidden=true;
+      detailImage.hidden=false;
+      detailImage.alt=name(product);
+      detailImage.src=path;
+      [...galleryThumbs.querySelectorAll('.product-gallery-thumb')].forEach(button=>{
+        const active=button.dataset.image===path;
+        button.classList.toggle('is-active',active);
+        button.setAttribute('aria-pressed',active?'true':'false');
+      });
+    };
+    detailImage.alt=name(product);
+    detailImage.onerror=()=>{detailImage.hidden=true;detailPlaceholder.hidden=false};
     detailPlaceholder.hidden=Boolean(detailImagePath);
     detailImage.hidden=!detailImagePath;
-    detailImage.alt=name(product);
-    if(detailImagePath){detailImage.src=detailImagePath;detailImage.onerror=()=>{detailImage.hidden=true;detailPlaceholder.hidden=false};}
-    else detailImage.removeAttribute('src');
+    if(detailImagePath)detailImage.src=detailImagePath;else detailImage.removeAttribute('src');
+    galleryThumbs.innerHTML='';
+    galleryThumbs.hidden=galleryImages.length<2;
+    galleryImages.forEach((path,index)=>{
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='product-gallery-thumb'+(path===detailImagePath?' is-active':'');
+      button.dataset.image=path;
+      button.setAttribute('aria-pressed',path===detailImagePath?'true':'false');
+      button.setAttribute('aria-label',(lang==='ar'?'الصورة ':'Image ')+(index+1));
+      const thumb=document.createElement('img');
+      thumb.src=path;
+      thumb.alt=(lang==='ar'?'عرض الصورة ':'View image ')+(index+1);
+      thumb.loading='lazy';
+      thumb.width=100;thumb.height=100;
+      thumb.addEventListener('error',()=>{button.hidden=true;},{once:true});
+      button.appendChild(thumb);
+      button.addEventListener('click',()=>updateMainImage(path));
+      galleryThumbs.appendChild(button);
+    });
     $('#detailCategory').textContent=category(product.category);
     $('#detailModel').textContent=product.model;
     $('#detailModelCaption').textContent=product.model;
