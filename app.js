@@ -5,12 +5,13 @@
   function storageGet(key, fallback=''){ try { const value = localStorage.getItem(key); return value === null ? fallback : value; } catch { return fallback; } }
   function storageSet(key, value){ try { localStorage.setItem(key, value); return true; } catch { return false; } }
   const initialLang = storageGet('rock-lang', 'ar');
-  const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', cart: safeCart(), activeProduct: null };
+  const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', minPrice: '', maxPrice: '', cart: safeCart(), activeProduct: null };
 
   const copy = {
     ar: {
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
       sortFeatured:'ترتيب المتجر',sortLow:'السعر: من الأقل للأعلى',sortHigh:'السعر: من الأعلى للأقل',sortName:'الاسم',
+      resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',
       viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'إضافة إلى السلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',
       trustProductTitle:'كتالوج حسب الموديل',trustProductText:'تعرّف على موديل ROCK قبل الاختيار.',
       trustPriceTitle:'أسعار واضحة',trustPriceText:'تصفّح الأسعار المعروضة بالريال السعودي.',
@@ -24,6 +25,7 @@
     en: {
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',
       sortFeatured:'Store order',sortLow:'Price: low to high',sortHigh:'Price: high to low',sortName:'Name',
+      resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',
       viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',
       trustProductTitle:'Model-first catalog',trustProductText:'Identify the ROCK model before choosing.',
       trustPriceTitle:'Clear listed prices',trustPriceText:'Browse prices shown in Saudi riyals.',
@@ -65,12 +67,21 @@
     });
     $('#langBtn').textContent = state.lang === 'ar' ? 'EN' : 'AR';
     $('#searchInput').placeholder = state.lang === 'ar' ? 'ابحث عن موديل أو منتج' : 'Search model or product';
+    $('#minPrice').placeholder = state.lang === 'ar' ? 'من' : 'Min';
+    $('#maxPrice').placeholder = state.lang === 'ar' ? 'إلى' : 'Max';
     render();
     renderCart();
   }
   function filtered(){
     const q=state.query.trim().toLowerCase();
-    let arr=products.filter(p=>(state.cat==='all'||p.category===state.cat)&&(!q||`${p.model} ${p.barcode||''} ${p.nameAr} ${p.nameEn} ${p.descriptionEn||''}`.toLowerCase().includes(q)));
+    const min=state.minPrice===''?null:Number(state.minPrice);
+    const max=state.maxPrice===''?null:Number(state.maxPrice);
+    let arr=products.filter(p=>
+      (state.cat==='all'||p.category===state.cat) &&
+      (!q||`${p.model} ${p.barcode||''} ${p.nameAr} ${p.nameEn} ${p.descriptionEn||''}`.toLowerCase().includes(q)) &&
+      (min===null||(Number.isFinite(min)&&p.price>=min)) &&
+      (max===null||(Number.isFinite(max)&&p.price<=max))
+    );
     if(state.sort==='low')arr.sort((a,b)=>a.price-b.price); else if(state.sort==='high')arr.sort((a,b)=>b.price-a.price); else if(state.sort==='name')arr.sort((a,b)=>name(a).localeCompare(name(b)));
     return arr;
   }
@@ -79,6 +90,10 @@
     const arr = filtered();
     grid.innerHTML = '';
     $('#emptyState').hidden = arr.length > 0;
+    const summary=$('#resultsSummary');
+    if(summary)summary.textContent=`${t('resultsPrefix')} ${arr.length}`;
+    const clearButton=$('#clearFiltersBtn');
+    if(clearButton)clearButton.disabled=state.cat==='all'&&!state.query.trim()&&state.sort==='featured'&&state.minPrice===''&&state.maxPrice==='';
     arr.forEach((p, i) => {
       const detailUrl = 'product.html?id=' + encodeURIComponent(p.id);
       const image = safeImage(p.image);
@@ -211,7 +226,15 @@
   $('#searchBtn').onclick=()=>{$('#searchInput').focus();document.querySelector('#shop').scrollIntoView({behavior:'smooth'})};
   $('#filtersBtn').onclick=()=>$('#shopToolbar').classList.toggle('open');
   $('#searchInput').oninput=e=>{state.query=e.target.value;render()};$('#sortSelect').onchange=e=>{state.sort=e.target.value;render()};
-  $('#categoryChips').querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{$$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.cat=b.dataset.cat;render()});
+  $('#minPrice').oninput=e=>{state.minPrice=e.target.value;render()};
+  $('#maxPrice').oninput=e=>{state.maxPrice=e.target.value;render()};
+  $('#clearFiltersBtn').onclick=()=>{
+    state.cat='all';state.query='';state.sort='featured';state.minPrice='';state.maxPrice='';
+    $('#searchInput').value='';$('#sortSelect').value='featured';$('#minPrice').value='';$('#maxPrice').value='';
+    $('#categoryChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat==='all'));
+    render();
+  };
+  $('#categoryChips').querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.cat=b.dataset.cat;render()});
   $$('.collection-card').forEach(b=>b.onclick=()=>{state.cat=b.dataset.collection;$$('#categoryChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===state.cat));document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()});
   $('#viewFeatured').onclick=()=>{state.sort='featured';$('#sortSelect').value='featured';document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()};
   $('#closingShop').onclick=()=>document.querySelector('#shop').scrollIntoView({behavior:'smooth'});
