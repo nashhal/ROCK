@@ -108,7 +108,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/12DKVkM_IO5PrPzXd2lKn6lHDFDnQ85vU?usp=drive_link"
   },
   {
-    "id": "c43",
+    "id": "car30",
     "barcode": "6942433007802",
     "model": "C43",
     "category": "car",
@@ -132,7 +132,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1cMU6vvzmlSWZSdS4ITLk1rE6PYief7c3?usp=drive_link"
   },
   {
-    "id": "nc20-car",
+    "id": "nc20",
     "barcode": "6975653086586",
     "model": "NC-20",
     "category": "car",
@@ -144,7 +144,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1i8BwsHXm8DTLzVLQ_TGB6MDgFj0K7F7h?usp=drive_link"
   },
   {
-    "id": "ro700w",
+    "id": "pods700",
     "barcode": "0002020070285",
     "model": "RO-700W",
     "category": "audio",
@@ -168,7 +168,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1enQl3JkQvpoaCWnRS-A-VhZQCbhHzCVj?usp=drive_link"
   },
   {
-    "id": "rau0785-white",
+    "id": "eb200",
     "barcode": "6942433007826",
     "model": "RAU0785",
     "category": "audio",
@@ -192,7 +192,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": ""
   },
   {
-    "id": "rau0788",
+    "id": "eb710",
     "barcode": "6942433007789",
     "model": "RAU0788",
     "category": "audio",
@@ -204,7 +204,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1CJvWSQngJu2mENy90XX4udm1RU8qsuch?usp=drive_link"
   },
   {
-    "id": "rau0790",
+    "id": "s1",
     "barcode": "6942433007741",
     "model": "RAU0790",
     "category": "audio",
@@ -216,7 +216,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/12BrYp00QAQAYMOC8wZoNnNFzy_XFtJNl?usp=drive_link"
   },
   {
-    "id": "rau0782",
+    "id": "a5pro",
     "barcode": "6942433002012",
     "model": "RAU0782",
     "category": "audio",
@@ -288,7 +288,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1muiS-au0EH4LoNy3YPywm9IQUBk2oqeI?usp=drive_link"
   },
   {
-    "id": "rau0768",
+    "id": "y6",
     "barcode": "6975653083929",
     "model": "RAU0768",
     "category": "audio",
@@ -300,7 +300,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1gReAtqLBHORBrYJwxo4Vg_YwuYPe7kwt?usp=drive_link"
   },
   {
-    "id": "rau0791",
+    "id": "es09",
     "barcode": "6942433007338",
     "model": "RAU0791",
     "category": "audio",
@@ -384,7 +384,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": ""
   },
   {
-    "id": "rst10860",
+    "id": "pen",
     "barcode": "6975653084131",
     "model": "RST10860",
     "category": "lifestyle",
@@ -408,7 +408,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1yPl8NFQ4pSdSuoCwMArgAXuTtvaHet4c?usp=drive_link"
   },
   {
-    "id": "rst10890",
+    "id": "trimmer",
     "barcode": "6942433007383",
     "model": "RST10890",
     "category": "lifestyle",
