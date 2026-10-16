@@ -10,7 +10,7 @@
     ar:{
       announcement:'تقنية يومية بتفاصيل محسوبة',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
       productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
-      catalogImageNote:'صورة المنتج من كتالوج ROCK',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
+      catalogImageNote:'صورة المنتج من كتالوج ROCK',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
       factCompatTitle:'التوافق',factCompatText:'تحقق من توافق المنتج مع جهازك والميزات المدعومة قبل الطلب.',
       factDeliveryTitle:'التوفر والتوصيل',factDeliveryText:'يجب تأكيد المخزون ومدة التوصيل وتكلفته والضمان قبل قبول الطلب.',
       addToBag:'أضف إلى السلة',orderInfo:'معلومات الطلب والخصوصية',
@@ -25,7 +25,7 @@
     en:{
       announcement:'Everyday technology, considered.',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
       productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
-      catalogImageNote:'Product image from the ROCK catalog',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
+      catalogImageNote:'Product image from the ROCK catalog',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
       factCompatTitle:'Compatibility',factCompatText:'Confirm device fit and supported features before ordering.',
       factDeliveryTitle:'Availability and delivery',factDeliveryText:'Stock, delivery time, shipping cost and warranty must be confirmed before an order is accepted.',
       addToBag:'Add to bag',orderInfo:'Order and privacy information',
@@ -41,8 +41,10 @@
   const t = key => i18n[lang][key] || key;
   const name = item => lang === 'ar' ? item.nameAr : item.nameEn;
   const category = key => ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[key] || 'ROCK';
+  const priceText = value => { const amount=Number(value); const shown=Number.isInteger(amount)?String(amount):amount.toFixed(2); return shown+' '+t('sar'); };
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const imagePath = path => typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path) ? path : 'assets/brand/rock-logo.svg';
+  const safePhotoUrl = value => typeof value === 'string' && /^https:\/\/drive\.google\.com\/(?:drive\/folders\/[A-Za-z0-9_-]+|file\/d\/[A-Za-z0-9_-]+\/view)(?:\?[A-Za-z0-9_=&%-]+)?$/.test(value.trim()) ? value.trim() : '';
   function applyLanguage(){
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
@@ -63,7 +65,7 @@
     $('#relatedGrid').innerHTML='';
     related.forEach(item=>{
       const a=document.createElement('a');a.className='related-card';a.href='product.html?id='+encodeURIComponent(item.id);
-      a.innerHTML='<img loading="lazy" width="360" height="360" src="'+escapeHtml(imagePath(item.image))+'" alt="'+escapeHtml(name(item))+'"><small>'+escapeHtml(item.model)+'</small><strong>'+escapeHtml(name(item))+'</strong><span>'+Number(item.price).toFixed(0)+' '+escapeHtml(t('sar'))+'</span>';
+      a.innerHTML='<img loading="lazy" width="360" height="360" src="'+escapeHtml(imagePath(item.image))+'" alt="'+escapeHtml(name(item))+'"><small>'+escapeHtml(item.model)+'</small><strong>'+escapeHtml(name(item))+'</strong><span>'+escapeHtml(priceText(item.price))+'</span>';
       $('#relatedGrid').appendChild(a);
     });
     $('#relatedSection').hidden=related.length===0;
@@ -84,9 +86,9 @@
     $('#detailModel').textContent=product.model;
     $('#detailModelCaption').textContent=product.model;
     $('#detailName').textContent=name(product);
-    $('#detailPrice').textContent=Number(product.price).toFixed(0)+' '+t('sar');
+    $('#detailPrice').textContent=priceText(product.price);$('#detailBarcode').textContent=product.barcode?t('barcodeLabel')+': '+product.barcode:'';const photosLink=$('#detailPhotosLink');const photosUrl=safePhotoUrl(product.picturesUrl);photosLink.hidden=!photosUrl;if(photosUrl)photosLink.href=photosUrl;
     const descriptionKey={power:'descPower',audio:'descAudio',car:'descCar',lifestyle:'descLifestyle'}[product.category]||'descLifestyle';
-    $('#detailDescription').textContent=t(descriptionKey);
+    $('#detailDescription').textContent=lang==='en'&&product.descriptionEn?product.descriptionEn:t(descriptionKey);
     $('#breadcrumbName').textContent=name(product);
     document.title=name(product)+' | ROCK';
     const desc=$('meta[name="description"]');if(desc)desc.content=t(descriptionKey);
