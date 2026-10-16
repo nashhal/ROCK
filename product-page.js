@@ -10,7 +10,7 @@
     ar:{
       announcement:'تقنية يومية بتفاصيل محسوبة',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
       productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
-      catalogImageNote:'صورة المنتج من كتالوج ROCK',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
+      catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
       factCompatTitle:'التوافق',factCompatText:'تحقق من توافق المنتج مع جهازك والميزات المدعومة قبل الطلب.',
       factDeliveryTitle:'التوفر والتوصيل',factDeliveryText:'يجب تأكيد المخزون ومدة التوصيل وتكلفته والضمان قبل قبول الطلب.',
       addToBag:'أضف إلى السلة',orderInfo:'معلومات الطلب والخصوصية',
@@ -25,7 +25,7 @@
     en:{
       announcement:'Everyday technology, considered.',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
       productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
-      catalogImageNote:'Product image from the ROCK catalog',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
+      catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
       factCompatTitle:'Compatibility',factCompatText:'Confirm device fit and supported features before ordering.',
       factDeliveryTitle:'Availability and delivery',factDeliveryText:'Stock, delivery time, shipping cost and warranty must be confirmed before an order is accepted.',
       addToBag:'Add to bag',orderInfo:'Order and privacy information',
@@ -65,7 +65,10 @@
     $('#relatedGrid').innerHTML='';
     related.forEach(item=>{
       const a=document.createElement('a');a.className='related-card';a.href='product.html?id='+encodeURIComponent(item.id);
-      a.innerHTML='<img loading="lazy" width="360" height="360" src="'+escapeHtml(imagePath(item.image))+'" alt="'+escapeHtml(name(item))+'"><small>'+escapeHtml(item.model)+'</small><strong>'+escapeHtml(name(item))+'</strong><span>'+escapeHtml(priceText(item.price))+'</span>';
+      const image=imagePath(item.image);
+      a.innerHTML=(image?'<img data-related-image loading="lazy" width="360" height="360" src="'+escapeHtml(image)+'" alt="'+escapeHtml(name(item))+'">':'<span class="product-photo-placeholder" role="img" aria-label="'+escapeHtml(t('photoPending'))+'"><strong>ROCK</strong><small>'+escapeHtml(t('photoPending'))+'</small></span>')+'<small>'+escapeHtml(item.model)+'</small><strong>'+escapeHtml(name(item))+'</strong><span>'+escapeHtml(priceText(item.price))+'</span>';
+      const relatedImage=a.querySelector('[data-related-image]');
+      if(relatedImage) relatedImage.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='product-photo-placeholder';ph.setAttribute('role','img');ph.setAttribute('aria-label',t('photoPending'));const mark=document.createElement('strong');mark.textContent='ROCK';const note=document.createElement('small');note.textContent=t('photoPending');ph.append(mark,note);relatedImage.replaceWith(ph)},{once:true});
       $('#relatedGrid').appendChild(a);
     });
     $('#relatedSection').hidden=related.length===0;
@@ -80,8 +83,12 @@
     }
     $('#productLayout').hidden=false;
     $('#productNotFound').hidden=true;
-    $('#detailImage').src=imagePath(product.image);
-    $('#detailImage').alt=name(product);
+    const detailImage=$('#detailImage'), detailImagePath=imagePath(product.image), detailPlaceholder=$('#detailImagePlaceholder');
+    detailPlaceholder.hidden=Boolean(detailImagePath);
+    detailImage.hidden=!detailImagePath;
+    detailImage.alt=name(product);
+    if(detailImagePath){detailImage.src=detailImagePath;detailImage.onerror=()=>{detailImage.hidden=true;detailPlaceholder.hidden=false};}
+    else detailImage.removeAttribute('src');
     $('#detailCategory').textContent=category(product.category);
     $('#detailModel').textContent=product.model;
     $('#detailModelCaption').textContent=product.model;
