@@ -47,7 +47,7 @@ jobs:
             if (!p.id || ids.has(p.id)) throw new Error('Missing or duplicate product id: ' + p.id);
             ids.add(p.id);
             if (!p.model || !p.nameAr || !p.nameEn || !Number.isFinite(p.price) || p.price < 0) throw new Error('Invalid product fields: ' + p.id);
-            if (!/^assets\\/products\\/[a-z0-9-]+\\.webp$/i.test(p.image)) throw new Error('Invalid product image path: ' + p.id + ' -> ' + p.image);
+            if (typeof p.image !== 'string' || !p.image.startsWith('assets/products/') || !p.image.endsWith('.webp') || !/^[a-z0-9-]+$/.test(p.image.slice(16, -5))) throw new Error('Invalid product image path: ' + p.id + ' -> ' + p.image);
             if (!fs.existsSync(p.image)) missingImages.push(p.id);
           }
           console.log('Validated ' + products.length + ' products and their image references.');
