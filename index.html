@@ -86,6 +86,15 @@
           <select id="sortSelect"><option value="featured" data-i18n="sortFeatured">Featured</option><option value="low" data-i18n="sortLow">Price: low to high</option><option value="high" data-i18n="sortHigh">Price: high to low</option><option value="name" data-i18n="sortName">Name</option></select>
         </div>
       </div>
+      <div class="catalog-filter-row">
+        <p class="results-summary" id="resultsSummary" aria-live="polite">عدد النتائج: 41</p>
+        <div class="price-controls">
+          <span class="price-controls-label" data-i18n="priceRange">نطاق السعر</span>
+          <label class="price-input"><span data-i18n="minPrice">من</span><input id="minPrice" type="number" inputmode="decimal" min="0" step="0.01" placeholder="من"></label>
+          <label class="price-input"><span data-i18n="maxPrice">إلى</span><input id="maxPrice" type="number" inputmode="decimal" min="0" step="0.01" placeholder="إلى"></label>
+        </div>
+        <button class="clear-filter" type="button" id="clearFiltersBtn" data-i18n="clearFilters">مسح الفلاتر</button>
+      </div>
       <div class="product-grid" id="productGrid"></div>
       <div class="empty-state" id="emptyState" hidden><strong data-i18n="noResults">لا توجد نتائج</strong><span data-i18n="noResultsSub">جرّب كلمة بحث أو تصنيفًا آخر.</span></div>
     </section>

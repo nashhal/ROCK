@@ -255,3 +255,27 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .hero{min-height:clamp(560px,72vh,630px);padding-top:clamp(48px,6vh,70px);padding-bottom:clamp(48px,6vh,70px)}
   .hero-visual{min-height:clamp(420px,58vh,470px)}
 }
+
+
+/* Competitive benchmark enhancement: price filtering and clear result feedback. */
+.catalog-filter-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:-5px 0 22px;padding:12px 0 14px;border-bottom:1px solid var(--line)}
+.results-summary{margin:0;color:#6b7d91;font-size:11px;font-weight:800;white-space:nowrap}
+.price-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.price-controls-label{font-size:11px;font-weight:800;color:#49637f;margin-inline-end:2px}
+.price-input{display:flex;align-items:center;gap:7px;color:#70849b;font-size:10px;font-weight:700}
+.price-input input{width:90px;height:36px;border:1px solid #d9e4f0;border-radius:10px;padding:0 10px;color:#071a33;background:#fff;outline:0;font:700 11px/1 Manrope,"IBM Plex Sans Arabic",sans-serif;direction:ltr;text-align:left}
+.price-input input:focus{border-color:#398bd7;box-shadow:0 0 0 3px rgba(45,140,255,.12)}
+.clear-filter{border:1px solid #d9e4f0;background:#fff;color:#45617e;border-radius:999px;padding:9px 14px;font-size:10px;font-weight:800;transition:background .2s,border-color .2s,color .2s}
+.clear-filter:hover:not(:disabled){background:#edf5ff;border-color:#a8c8e8;color:#084e91}
+.clear-filter:disabled{opacity:.42;cursor:not-allowed}
+@media(max-width:760px){
+  .catalog-filter-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;margin:0 0 16px}
+  .price-controls{grid-column:1/-1;grid-row:2;justify-content:flex-start}
+  .clear-filter{justify-self:end}
+  .price-controls-label{width:100%;margin:0}
+}
+@media(max-width:420px){
+  .price-input{gap:5px}
+  .price-input input{width:76px;height:34px;padding:0 8px}
+  .price-controls{gap:8px}
+}
