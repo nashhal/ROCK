@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PRODUCTS_JS = ROOT / "products.js"
 PRODUCT_DIR = ROOT / "assets" / "products"
 MAX_IMAGES_PER_PRODUCT = 8
-MAX_FOLDER_CANDIDATES = 80
+MAX_FOLDER_CANDIDATES = 24
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".avif", ".tif", ".tiff"}
 FILE_ID_PATTERNS = [
     re.compile(r"/file/d/([A-Za-z0-9_-]+)"),
@@ -91,7 +91,7 @@ def folder_file_candidates(session: requests.Session, folder_id: str) -> list[tu
     last_error = ""
     for url in urls:
         try:
-            response = session.get(url, timeout=35)
+            response = session.get(url, timeout=(5, 12))
             response.raise_for_status()
             html = response.text
         except Exception as exc:
@@ -135,7 +135,9 @@ def folder_file_candidates(session: requests.Session, folder_id: str) -> list[tu
             break
     if not collected and last_error:
         log(f"  Folder {folder_id}: cannot list folder ({last_error})")
-    # Preserve order and cap candidates to avoid downloading unrelated, large folders.
+    # Prefer clearly named image files; keep the folder's visual order for ties.
+    collected.sort(key=lambda item: 0 if IMAGE_EXT_RE.search(item[1]) else 1)
+    # Cap candidates so one inaccessible folder cannot stall the deployment.
     return collected[:MAX_FOLDER_CANDIDATES]
 
 
@@ -147,7 +149,7 @@ def download_drive_file(session: requests.Session, file_id: str) -> tuple[bytes 
     last_error = "not an image"
     for url in urls:
         try:
-            response = session.get(url, timeout=60, allow_redirects=True)
+            response = session.get(url, timeout=(5, 18), allow_redirects=True)
             if response.status_code != 200 or not response.content:
                 last_error = f"HTTP {response.status_code}"
                 continue
@@ -159,7 +161,7 @@ def download_drive_file(session: requests.Session, file_id: str) -> tuple[bytes 
                 if match and "drive.google.com" in response.url:
                     confirm = match.group(1).decode("ascii", "ignore")
                     confirm_url = f"https://drive.google.com/uc?export=download&confirm={confirm}&id={file_id}"
-                    response = session.get(confirm_url, timeout=60, allow_redirects=True)
+                    response = session.get(confirm_url, timeout=(5, 18), allow_redirects=True)
                     content = response.content
                     ctype = response.headers.get("content-type", "").lower()
             if not content or "text/html" in ctype:
@@ -262,7 +264,7 @@ def main() -> int:
     total_images = 0
     warnings: list[str] = []
     # Keep the number of simultaneous requests low for Drive and GitHub Actions.
-    with ThreadPoolExecutor(max_workers=5) as pool:
+    with ThreadPoolExecutor(max_workers=8) as pool:
         futures = {pool.submit(sync_product, product): product for product in eligible}
         for future in as_completed(futures):
             product = futures[future]
