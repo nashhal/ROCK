@@ -1,5 +1,77 @@
 const ROCK_PRODUCTS = [
   {
+    "id": "rkcbl146",
+    "barcode": "850079508156",
+    "model": "RKCBL146",
+    "category": "power",
+    "price": 6.25,
+    "image": "assets/products/rkcbl146.webp",
+    "nameAr": "كابل شحن USB-A إلى Lightning بقدرة 27 واط",
+    "nameEn": "ROCK RKCBL146 USB-A to Lightning Cable, 27W, 1m",
+    "descriptionEn": "ROCK Fast Charging Cable, USB-A to Lightning connector, 27W, 1.0 m.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1YRlyH3Zqo6aMvT6DoVDGSXwvKK6b8cq2?usp=drive_link"
+  },
+  {
+    "id": "rkcbl144",
+    "barcode": "850079508002",
+    "model": "RKCBL144",
+    "category": "power",
+    "price": 6.25,
+    "image": "assets/products/rkcbl144.webp",
+    "nameAr": "كابل شحن USB-C إلى Lightning بقدرة 27 واط",
+    "nameEn": "ROCK RKCBL144 USB-C to Lightning Cable, 27W, 1m",
+    "descriptionEn": "ROCK Fast Charging Cable, USB-C to Lightning connector, 27W, 1.0 m.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1rEo4Y5IHJ5ub8QVxWnFFEI7rYGCGUZrY?usp=drive_link"
+  },
+  {
+    "id": "rkcbl148",
+    "barcode": "850079508170",
+    "model": "RKCBL148",
+    "category": "power",
+    "price": 6.25,
+    "image": "assets/products/rkcbl148.webp",
+    "nameAr": "كابل شحن USB-A إلى USB-C بقدرة 60 واط",
+    "nameEn": "ROCK RKCBL148 USB-A to USB-C Cable, 60W, 1m",
+    "descriptionEn": "ROCK Fast Charging Cable, USB-A to USB-C connector, 60W, 1.0 m.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1TTk3VyLarnmU6wq3LPmeSCiGuLN9Em1B?usp=drive_link"
+  },
+  {
+    "id": "rkcbl147",
+    "barcode": "850079508163",
+    "model": "RKCBL147",
+    "category": "power",
+    "price": 6.25,
+    "image": "assets/products/rkcbl147.webp",
+    "nameAr": "كابل شحن USB-C إلى USB-C بقدرة 60 واط",
+    "nameEn": "ROCK RKCBL147 USB-C to USB-C Cable, 60W, 1m",
+    "descriptionEn": "ROCK Fast Charging Cable, USB-C to USB-C connector, 60W, 1.0 m.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1nQ3SaW5AzNPhWyFIL-pRQLPR2n4S0C8B?usp=drive_link"
+  },
+  {
+    "id": "rkcbl145",
+    "barcode": "850079508149",
+    "model": "RKCBL145",
+    "category": "power",
+    "price": 6.25,
+    "image": "assets/products/rkcbl145.webp",
+    "nameAr": "كابل شحن USB-A إلى Micro USB بقدرة 12 واط",
+    "nameEn": "ROCK RKCBL145 USB-A to Micro-USB Cable, 12W, 1m",
+    "descriptionEn": "ROCK Fast Charging Cable, USB-A to Micro connector, 12W, 1.0 m.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1PPYoJTF8RPFTHhr3TSfcJTIk4OFY0nzR?usp=drive_link"
+  },
+  {
+    "id": "rcb056",
+    "barcode": "6942433009752",
+    "model": "RCB056",
+    "category": "power",
+    "price": 6.25,
+    "image": "assets/products/rcb056.webp",
+    "nameAr": "كابل شحن ROCK RCB056 بطول 120 سم",
+    "nameEn": "ROCK RCB056 Multi-Connector Charging Cable, 120cm",
+    "descriptionEn": "ROCK fast charging USB-A cable with Lightning support. Micro and Type-C connectors support charging only. Length: 120 cm.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1zDHIBlN8uMQrkcX5JNplNv5dVc1a2_Di?usp=drive_link"
+  },
+  {
     "id": "rkch720",
     "barcode": "850079508101",
     "model": "RKCH720",
@@ -84,6 +156,18 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1JvZ4cXU7cqHmKt3RR1eJHnp5KIzrQIdY?usp=drive_link"
   },
   {
+    "id": "ro701w",
+    "barcode": "0020210110153",
+    "model": "RO-701W",
+    "category": "audio",
+    "price": 69,
+    "image": "assets/products/ro701w.webp",
+    "nameAr": "سماعات ROCK Pods 701 اللاسلكية — أبيض",
+    "nameEn": "ROCK Pods 701 Bluetooth Earphones, White",
+    "descriptionEn": "ROCK Pods 701 Bluetooth earphones (white).",
+    "picturesUrl": "https://drive.google.com/drive/folders/1enQl3JkQvpoaCWnRS-A-VhZQCbhHzCVj?usp=drive_link"
+  },
+  {
     "id": "eb200",
     "barcode": "6942433007826",
     "model": "RAU0785",
@@ -94,6 +178,18 @@ const ROCK_PRODUCTS = [
     "nameEn": "ROCK EB TWS AI Smart Earphones, White",
     "descriptionEn": "ROCK EB TWS AI smart earphones (white).",
     "picturesUrl": "https://drive.google.com/file/d/1WOvH7eOhECgOUagBDquZd_LVd6tLtlnU/view?usp=drive_link"
+  },
+  {
+    "id": "rau0785-black",
+    "barcode": "6942433007833",
+    "model": "—",
+    "category": "audio",
+    "price": 59,
+    "image": "assets/products/rau0785-black.webp",
+    "nameAr": "سماعات ROCK EB TWS AI — أسود",
+    "nameEn": "ROCK EB TWS AI Smart Earphones, Black",
+    "descriptionEn": "ROCK EB TWS AI smart earphones (black). The model number and photo folder were not listed in the supplied price sheet.",
+    "picturesUrl": ""
   },
   {
     "id": "eb710",
@@ -130,6 +226,42 @@ const ROCK_PRODUCTS = [
     "nameEn": "ROCK A5 Pro Touchscreen ANC TWS Earphones",
     "descriptionEn": "ROCK A5 Pro smart touchscreen ANC TWS earphones.",
     "picturesUrl": "https://drive.google.com/drive/folders/1sEWlw24MXZ-yKplUKa3RVz21kUmXM36m?usp=drive_link"
+  },
+  {
+    "id": "hp6030bt-silver",
+    "barcode": "6942433007352",
+    "model": "HP-6030BT",
+    "category": "audio",
+    "price": 46,
+    "image": "assets/products/hp6030bt-silver.webp",
+    "nameAr": "سماعات ROCK 05 اللاسلكية — فضي",
+    "nameEn": "ROCK 05 Wireless Headphones, Silver",
+    "descriptionEn": "ROCK 05 wireless headphones (silver).",
+    "picturesUrl": "https://drive.google.com/drive/folders/1gLfhNUyWv9kJ_iI-3l2tRyHUgW7BkG2x?usp=drive_link"
+  },
+  {
+    "id": "hp6030bt-grey",
+    "barcode": "6942433007345",
+    "model": "HP-6030BT",
+    "category": "audio",
+    "price": 46,
+    "image": "assets/products/hp6030bt-grey.webp",
+    "nameAr": "سماعات ROCK 05 اللاسلكية — رمادي",
+    "nameEn": "ROCK 05 Wireless Headphones, Grey",
+    "descriptionEn": "ROCK 05 wireless headphones (grey). The photo folder was not listed in the supplied price sheet.",
+    "picturesUrl": ""
+  },
+  {
+    "id": "ro0545",
+    "barcode": "1120200120090",
+    "model": "RO-0545",
+    "category": "audio",
+    "price": 15,
+    "image": "assets/products/ro0545.webp",
+    "nameAr": "سماعة ROCK سلكية لأجهزة iPhone — أبيض",
+    "nameEn": "ROCK RO-0545 Wired In-Ear Earphones for iPhone, White",
+    "descriptionEn": "ROCK wired in-ear earphones for iPhone (white).",
+    "picturesUrl": "https://drive.google.com/drive/folders/10nfpznewcsPFx26rOyZWhhSQlyd7JWl4?usp=drive_link"
   },
   {
     "id": "ro0546t",
@@ -228,6 +360,30 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/1dGob_7p6Wy-egGVmKjTdBOqfjSy4IyIe?usp=drive_link"
   },
   {
+    "id": "rock-tag-beige",
+    "barcode": "6942433005488",
+    "model": "ROCK Tag",
+    "category": "lifestyle",
+    "price": 20,
+    "image": "assets/products/rock-tag-beige.webp",
+    "nameAr": "متعقّب ROCK Tag الذكي — بيج",
+    "nameEn": "ROCK Tag Wireless Smart Tracker, Beige",
+    "descriptionEn": "ROCK Tag wireless smart tracker (beige).",
+    "picturesUrl": "https://drive.google.com/drive/folders/1r-koUACYUxVOcQme3f7xgqzvSysi5HEp?usp=drive_link"
+  },
+  {
+    "id": "rock-tag-black",
+    "barcode": "6942433006003",
+    "model": "ROCK Tag",
+    "category": "lifestyle",
+    "price": 20,
+    "image": "assets/products/rock-tag-black.webp",
+    "nameAr": "متعقّب ROCK Tag الذكي — أسود",
+    "nameEn": "ROCK Tag Wireless Smart Tracker, Black",
+    "descriptionEn": "ROCK Tag wireless smart tracker (black). The photo folder was not listed in the supplied price sheet.",
+    "picturesUrl": ""
+  },
+  {
     "id": "pen",
     "barcode": "6975653084131",
     "model": "RST10860",
@@ -262,6 +418,78 @@ const ROCK_PRODUCTS = [
     "nameEn": "ROCK RST10890 Trimmer Kit, Black",
     "descriptionEn": "ROCK trimmer kit (black).",
     "picturesUrl": "https://drive.google.com/drive/folders/1oceZzjQ__E4bSSqEbMp1iH-482lOIZ_E?usp=drive_link"
+  },
+  {
+    "id": "cable-120w-retractable",
+    "barcode": "6822154851697",
+    "model": "—",
+    "category": "power",
+    "price": 13,
+    "image": "assets/products/cable-120w-retractable.webp",
+    "nameAr": "كابل ROCK قابل للسحب بقدرة 120 واط",
+    "nameEn": "ROCK 120W Retractable Dual-Ended USB / Type-C Cable",
+    "descriptionEn": "ROCK 120W dual-ended cable (USB and Type-C), supports fast charging and data transfer, retractable automatic pull-and-retraction design, compact and durable.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1sbFVYReHP1MLscopD-X__t7YSqBP9RtL?hl=ar"
+  },
+  {
+    "id": "car-charger-68w",
+    "barcode": "6815213515838",
+    "model": "—",
+    "category": "car",
+    "price": 28,
+    "image": "assets/products/car-charger-68w.webp",
+    "nameAr": "شاحن سيارة ROCK بقدرة 68 واط وثلاثة مخارج",
+    "nameEn": "ROCK 68W Car Charger, 2 Type-C + USB",
+    "descriptionEn": "ROCK 68W car charger with three outputs (two Type-C and USB), PD/QC fast charging, intelligent power distribution, compact design and full protection.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1t4D-uypRMO5ibtIaFeYX5t8U_oghuxP6?hl=ar"
+  },
+  {
+    "id": "wall-charger-50w",
+    "barcode": "6815213515821",
+    "model": "—",
+    "category": "power",
+    "price": 37,
+    "image": "assets/products/wall-charger-50w.webp",
+    "nameAr": "شاحن حائط ROCK GaN بقدرة 50 واط وكابل مدمج",
+    "nameEn": "ROCK 50W GaN Wall Charger with Built-in Type-C Cable",
+    "descriptionEn": "ROCK 50W GaN wall charger with dual USB and Type-C outputs, built-in Type-C cable, fast charging, compact design and full protection.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1_IZNKdercNfY4oYwsrmZ2ROsHxbwUlz3?hl=ar"
+  },
+  {
+    "id": "car-charger-45w",
+    "barcode": "6815213515845",
+    "model": "—",
+    "category": "car",
+    "price": 36,
+    "image": "assets/products/car-charger-45w.webp",
+    "nameAr": "شاحن سيارة ROCK بقدرة 45 واط وكابلين مدمجين",
+    "nameEn": "ROCK 45W Car Charger with Dual Built-in Cables",
+    "descriptionEn": "ROCK 45W car charger with USB and Type-C outputs, integrated Lightning and Type-C cables, and star laser light projection.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1_rd_4oKYbOXr6NuPVA9y7_LretYR1gy1?hl=ar"
+  },
+  {
+    "id": "typec-wired-headphones",
+    "barcode": "6815213515814",
+    "model": "—",
+    "category": "audio",
+    "price": 19,
+    "image": "assets/products/typec-wired-headphones.webp",
+    "nameAr": "سماعة ROCK سلكية بمنفذ Type-C وتصميم خطاف",
+    "nameEn": "ROCK Wired Type-C Earphones with Ergonomic Ear Hooks",
+    "descriptionEn": "ROCK wired Type-C headphones with ergonomic ear-hook design, built-in microphone, HD calls and Hi-Fi sound, 120 cm cable length, stable and comfortable fit.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1NfIDONi-rO1Ev7M9fZy2N-kk5Cl2jLJD?hl=ar"
+  },
+  {
+    "id": "wall-charger-45w",
+    "barcode": "6658741587843",
+    "model": "—",
+    "category": "power",
+    "price": 25,
+    "image": "assets/products/wall-charger-45w.webp",
+    "nameAr": "شاحن حائط ROCK GaN بقدرة 45 واط مع كابل Type-C",
+    "nameEn": "ROCK 45W GaN Wall Charger with Type-C Cable",
+    "descriptionEn": "ROCK 45W GaN wall charger with Type-C PD output and included cut-resistant Type-C cable, fast charging, compact design and full protection.",
+    "picturesUrl": "https://drive.google.com/drive/folders/1opc5zmnDZYCN6kuq0ePNORqOI7BMYL-2?hl=ar"
   }
 ];
 
