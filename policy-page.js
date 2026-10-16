@@ -35,6 +35,12 @@
     document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=words[lang][el.dataset.i18n]||el.textContent});
     $('#langBtn').textContent=lang==='ar'?'EN':'AR';
     document.title=(lang==='ar'?'معلومات المتجر والخصوصية':'Store information & privacy')+' | ROCK';
+    const description=document.querySelector('meta[name="description"]');
+    if(description)description.content=lang==='ar'?'معلومات متجر ROCK حول الطلبات والتوصيل والخصوصية والأسعار.':'ROCK store information about orders, delivery, privacy and pricing.';
+    const ogTitle=document.querySelector('meta[property="og:title"]');
+    if(ogTitle)ogTitle.content=document.title;
+    const ogDescription=document.querySelector('meta[property="og:description"]');
+    if(ogDescription&&description)ogDescription.content=description.content;
     $('#year').textContent=String(new Date().getFullYear());
   }
   $('#langBtn').addEventListener('click',()=>{lang=lang==='ar'?'en':'ar';setStored('rock-lang',lang);apply()});

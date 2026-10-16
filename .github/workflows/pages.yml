@@ -41,6 +41,9 @@ jobs:
           test -f premium-refresh.css
           test -f app.js
           test -f products.js
+          test -f robots.txt
+          test -f sitemap.xml
+          test -f 404.html
           test -f assets/brand/rock-logo.svg
           test -d assets/products
           node --check app.js
@@ -78,6 +81,27 @@ jobs:
             }
           }
           console.log('Validated local HTML asset links.');
+          const productHtml = fs.readFileSync('product.html', 'utf8');
+          if (productHtml.includes('id="detailPhotosLink"')) throw new Error('Product page exposes a Drive folder link');
+          NODE
+          node - <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const context = { globalThis: {} };
+          vm.runInNewContext(fs.readFileSync('products.js', 'utf8'), context);
+          const products = context.globalThis.ROCK_PRODUCTS;
+          const sitemap = fs.readFileSync('sitemap.xml', 'utf8');
+          for (const p of products) {
+            const url = 'https://nashhal.github.io/ROCK/product.html?id=' + encodeURIComponent(p.id);
+            if (!sitemap.includes('<loc>' + url + '</loc>')) throw new Error('Product missing from sitemap: ' + p.id);
+          }
+          if (!sitemap.includes('https://nashhal.github.io/ROCK/')) throw new Error('Homepage missing from sitemap');
+          if (!fs.readFileSync('robots.txt', 'utf8').includes('Sitemap: https://nashhal.github.io/ROCK/sitemap.xml')) throw new Error('robots.txt sitemap reference missing');
+          const productScript = fs.readFileSync('product-page.js', 'utf8');
+          for (const token of ['schema.org','application/ld+json','og:title','link[rel="canonical"]']) {
+            if (!productScript.includes(token)) throw new Error('Missing product SEO feature token: ' + token);
+          }
+          console.log('Validated sitemap URLs, robots.txt and product SEO for ' + products.length + ' products.');
           NODE
       - name: Configure Pages
         uses: actions/configure-pages@v5
