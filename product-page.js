@@ -9,7 +9,7 @@
   const i18n = {
     ar:{
       announcement:'تقنية يومية بتفاصيل محسوبة',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
-      productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
+      productDetails:'تفاصيل المنتج',modelNotListed:'الموديل غير مدرج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
       catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
       factCompatTitle:'التوافق',factCompatText:'تحقق من توافق المنتج مع جهازك والميزات المدعومة قبل الطلب.',
       factDeliveryTitle:'التوفر والتوصيل',factDeliveryText:'يجب تأكيد المخزون ومدة التوصيل وتكلفته والضمان قبل قبول الطلب.',
@@ -24,7 +24,7 @@
     },
     en:{
       announcement:'Everyday technology, considered.',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
-      productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
+      productDetails:'Product details',modelNotListed:'Model not listed',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
       catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
       factCompatTitle:'Compatibility',factCompatText:'Confirm device fit and supported features before ordering.',
       factDeliveryTitle:'Availability and delivery',factDeliveryText:'Stock, delivery time, shipping cost and warranty must be confirmed before an order is accepted.',
@@ -40,6 +40,7 @@
   };
   const t = key => i18n[lang][key] || key;
   const name = item => lang === 'ar' ? item.nameAr : item.nameEn;
+  const modelLabel = item => item.model && item.model !== '—' ? item.model : t('modelNotListed');
   const category = key => ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[key] || 'ROCK';
   const priceText = value => { const amount=Number(value); const shown=Number.isInteger(amount)?String(amount):amount.toFixed(2); return shown+' '+t('sar'); };
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -65,7 +66,7 @@
     related.forEach(item=>{
       const a=document.createElement('a');a.className='related-card';a.href='product.html?id='+encodeURIComponent(item.id);
       const image=imagePath(item.image);
-      a.innerHTML=(image?'<img data-related-image loading="lazy" width="360" height="360" src="'+escapeHtml(image)+'" alt="'+escapeHtml(name(item))+'">':'<span class="product-photo-placeholder" role="img" aria-label="'+escapeHtml(t('photoPending'))+'"><strong>ROCK</strong><small>'+escapeHtml(t('photoPending'))+'</small></span>')+'<small>'+escapeHtml(item.model)+'</small><strong>'+escapeHtml(name(item))+'</strong><span>'+escapeHtml(priceText(item.price))+'</span>';
+      a.innerHTML=(image?'<img data-related-image loading="lazy" width="360" height="360" src="'+escapeHtml(image)+'" alt="'+escapeHtml(name(item))+'">':'<span class="product-photo-placeholder" role="img" aria-label="'+escapeHtml(t('photoPending'))+'"><strong>ROCK</strong><small>'+escapeHtml(t('photoPending'))+'</small></span>')+'<small>'+escapeHtml(modelLabel(item))+'</small><strong>'+escapeHtml(name(item))+'</strong><span>'+escapeHtml(priceText(item.price))+'</span>';
       const relatedImage=a.querySelector('[data-related-image]');
       if(relatedImage) relatedImage.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='product-photo-placeholder';ph.setAttribute('role','img');ph.setAttribute('aria-label',t('photoPending'));const mark=document.createElement('strong');mark.textContent='ROCK';const note=document.createElement('small');note.textContent=t('photoPending');ph.append(mark,note);relatedImage.replaceWith(ph)},{once:true});
       $('#relatedGrid').appendChild(a);
@@ -124,8 +125,8 @@
       galleryThumbs.appendChild(button);
     });
     $('#detailCategory').textContent=category(product.category);
-    $('#detailModel').textContent=product.model;
-    $('#detailModelCaption').textContent=product.model;
+    $('#detailModel').textContent=modelLabel(product);
+    $('#detailModelCaption').textContent=modelLabel(product);
     $('#detailName').textContent=name(product);
     $('#detailPrice').textContent=priceText(product.price);$('#detailBarcode').textContent=product.barcode?t('barcodeLabel')+': '+product.barcode:'';
     const descriptionKey={power:'descPower',audio:'descAudio',car:'descCar',lifestyle:'descLifestyle'}[product.category]||'descLifestyle';
@@ -134,8 +135,8 @@
     document.title=name(product)+' | ROCK';
     const desc=$('meta[name="description"]');
     const seoDescription=lang==='en'
-      ? `${name(product)}. Model ${product.model}. Listed price ${priceText(product.price)}. Check compatibility and confirm availability before ordering.`
-      : `${name(product)}. رقم الموديل ${product.model}. السعر المعروض ${priceText(product.price)}. تحقق من التوافق وأكد التوفر قبل الطلب.`;
+      ? `${name(product)}. Model ${modelLabel(product)}. Listed price ${priceText(product.price)}. Check compatibility and confirm availability before ordering.`
+      : `${name(product)}. رقم الموديل ${modelLabel(product)}. السعر المعروض ${priceText(product.price)}. تحقق من التوافق وأكد التوفر قبل الطلب.`;
     if(desc)desc.content=seoDescription;
     const canonicalUrl='https://nashhal.github.io/ROCK/product.html?id='+encodeURIComponent(product.id);
     let canonical=$('link[rel="canonical"]');
