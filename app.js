@@ -120,7 +120,7 @@
   }
   function safeImage(path){
     return typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path)
-      ? path : 'assets/brand/rock-logo.svg';
+      ? path : '';
   }
   function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function add(id){
