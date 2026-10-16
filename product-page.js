@@ -43,7 +43,7 @@
   const category = key => ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[key] || 'ROCK';
   const priceText = value => { const amount=Number(value); const shown=Number.isInteger(amount)?String(amount):amount.toFixed(2); return shown+' '+t('sar'); };
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const imagePath = path => typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path) ? path : 'assets/brand/rock-logo.svg';
+  const imagePath = path => typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path) ? path : '';
   const safePhotoUrl = value => typeof value === 'string' && /^https:\/\/drive\.google\.com\/(?:drive\/folders\/[A-Za-z0-9_-]+|file\/d\/[A-Za-z0-9_-]+\/view)(?:\?[A-Za-z0-9_=&%-]+)?$/.test(value.trim()) ? value.trim() : '';
   function applyLanguage(){
     document.documentElement.lang=lang;
