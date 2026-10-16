@@ -81,7 +81,8 @@ jobs:
             }
           }
           console.log('Validated local HTML asset links.');
-          if (html.includes('id="detailPhotosLink"')) throw new Error('Product page exposes a Drive folder link');
+          const productHtml = fs.readFileSync('product.html', 'utf8');
+          if (productHtml.includes('id="detailPhotosLink"')) throw new Error('Product page exposes a Drive folder link');
           NODE
           node - <<'NODE'
           const fs = require('fs');
