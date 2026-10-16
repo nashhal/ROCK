@@ -396,7 +396,7 @@ const ROCK_PRODUCTS = [
     "picturesUrl": "https://drive.google.com/drive/folders/19zhR7_hHsgR2OgdWQenKTJyE0dqtAlbe?usp=drive_link"
   },
   {
-    "id": "rst10887",
+    "id": "laptop-bag",
     "barcode": "6942433000049",
     "model": "RST10887",
     "category": "lifestyle",
