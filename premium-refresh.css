@@ -83,7 +83,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(12px,2vw,20px);}
 .product-card{border:1px solid rgba(14,48,86,.06);border-radius:12px;background:#fff;box-shadow:0 6px 20px rgba(12,40,74,.035);transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease)}
 .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(8,36,72,.08);border-color:rgba(45,140,255,.18)}
-.product-image{aspect-ratio:1/1;background:radial-gradient(circle at 50% 35%,#fff 0%,#f2f6fb 55%,#e9f0f8 100%);overflow:hidden;display:block;position:relative}
+.product-image{aspect-ratio:1/1;background:#fff;overflow:hidden;display:block;position:relative}
 .product-image:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit}
 .product-image img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 8px 8px rgba(11,34,62,.06));transition:transform .35s var(--ease),filter .25s}
 .product-card:hover .product-image img{transform:scale(1.03);filter:drop-shadow(0 12px 12px rgba(11,34,62,.1))}
