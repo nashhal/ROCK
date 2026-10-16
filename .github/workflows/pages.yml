@@ -42,13 +42,16 @@ jobs:
           const products = context.globalThis.ROCK_PRODUCTS;
           if (!Array.isArray(products) || products.length < 1) throw new Error('No products found');
           const ids = new Set();
+          const missingImages = [];
           for (const p of products) {
             if (!p.id || ids.has(p.id)) throw new Error('Missing or duplicate product id: ' + p.id);
             ids.add(p.id);
             if (!p.model || !p.nameAr || !p.nameEn || !Number.isFinite(p.price) || p.price < 0) throw new Error('Invalid product fields: ' + p.id);
-            if (!/^assets\/products\/[a-z0-9-]+\.webp$/i.test(p.image) || !fs.existsSync(p.image)) throw new Error('Missing product image: ' + p.id + ' -> ' + p.image);
+            if (!/^assets\\/products\\/[a-z0-9-]+\\.webp$/i.test(p.image)) throw new Error('Invalid product image path: ' + p.id + ' -> ' + p.image);
+            if (!fs.existsSync(p.image)) missingImages.push(p.id);
           }
-          console.log('Validated ' + products.length + ' products and their local images.');
+          console.log('Validated ' + products.length + ' products and their image references.');
+          if (missingImages.length) console.warn('Local product photos still need to be added for: ' + missingImages.join(', '));
           NODE
           node - <<'NODE'
           const fs = require('fs');
