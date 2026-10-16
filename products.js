@@ -9,7 +9,13 @@ const ROCK_PRODUCTS = [
     "nameAr": "كابل شحن USB-A إلى Lightning بقدرة 27 واط",
     "nameEn": "ROCK RKCBL146 USB-A to Lightning Cable, 27W, 1m",
     "descriptionEn": "ROCK Fast Charging Cable, USB-A to Lightning connector, 27W, 1.0 m.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1YRlyH3Zqo6aMvT6DoVDGSXwvKK6b8cq2?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1YRlyH3Zqo6aMvT6DoVDGSXwvKK6b8cq2?usp=drive_link",
+    "images": [
+      "assets/products/rkcbl146.webp",
+      "assets/products/rkcbl146-02.webp",
+      "assets/products/rkcbl146-03.webp",
+      "assets/products/rkcbl146-04.webp"
+    ]
   },
   {
     "id": "rkcbl144",
@@ -21,7 +27,13 @@ const ROCK_PRODUCTS = [
     "nameAr": "كابل شحن USB-C إلى Lightning بقدرة 27 واط",
     "nameEn": "ROCK RKCBL144 USB-C to Lightning Cable, 27W, 1m",
     "descriptionEn": "ROCK Fast Charging Cable, USB-C to Lightning connector, 27W, 1.0 m.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1rEo4Y5IHJ5ub8QVxWnFFEI7rYGCGUZrY?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1rEo4Y5IHJ5ub8QVxWnFFEI7rYGCGUZrY?usp=drive_link",
+    "images": [
+      "assets/products/rkcbl144.webp",
+      "assets/products/rkcbl144-02.webp",
+      "assets/products/rkcbl144-03.webp",
+      "assets/products/rkcbl144-04.webp"
+    ]
   },
   {
     "id": "rkcbl148",
@@ -33,7 +45,13 @@ const ROCK_PRODUCTS = [
     "nameAr": "كابل شحن USB-A إلى USB-C بقدرة 60 واط",
     "nameEn": "ROCK RKCBL148 USB-A to USB-C Cable, 60W, 1m",
     "descriptionEn": "ROCK Fast Charging Cable, USB-A to USB-C connector, 60W, 1.0 m.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1TTk3VyLarnmU6wq3LPmeSCiGuLN9Em1B?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1TTk3VyLarnmU6wq3LPmeSCiGuLN9Em1B?usp=drive_link",
+    "images": [
+      "assets/products/rkcbl148.webp",
+      "assets/products/rkcbl148-02.webp",
+      "assets/products/rkcbl148-03.webp",
+      "assets/products/rkcbl148-04.webp"
+    ]
   },
   {
     "id": "rkcbl147",
@@ -45,7 +63,13 @@ const ROCK_PRODUCTS = [
     "nameAr": "كابل شحن USB-C إلى USB-C بقدرة 60 واط",
     "nameEn": "ROCK RKCBL147 USB-C to USB-C Cable, 60W, 1m",
     "descriptionEn": "ROCK Fast Charging Cable, USB-C to USB-C connector, 60W, 1.0 m.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1nQ3SaW5AzNPhWyFIL-pRQLPR2n4S0C8B?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1nQ3SaW5AzNPhWyFIL-pRQLPR2n4S0C8B?usp=drive_link",
+    "images": [
+      "assets/products/rkcbl147.webp",
+      "assets/products/rkcbl147-02.webp",
+      "assets/products/rkcbl147-03.webp",
+      "assets/products/rkcbl147-04.webp"
+    ]
   },
   {
     "id": "rkcbl145",
@@ -57,7 +81,13 @@ const ROCK_PRODUCTS = [
     "nameAr": "كابل شحن USB-A إلى Micro USB بقدرة 12 واط",
     "nameEn": "ROCK RKCBL145 USB-A to Micro-USB Cable, 12W, 1m",
     "descriptionEn": "ROCK Fast Charging Cable, USB-A to Micro connector, 12W, 1.0 m.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1PPYoJTF8RPFTHhr3TSfcJTIk4OFY0nzR?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1PPYoJTF8RPFTHhr3TSfcJTIk4OFY0nzR?usp=drive_link",
+    "images": [
+      "assets/products/rkcbl145.webp",
+      "assets/products/rkcbl145-02.webp",
+      "assets/products/rkcbl145-03.webp",
+      "assets/products/rkcbl145-04.webp"
+    ]
   },
   {
     "id": "rcb056",
@@ -69,7 +99,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "كابل شحن ROCK RCB056 بطول 120 سم",
     "nameEn": "ROCK RCB056 Multi-Connector Charging Cable, 120cm",
     "descriptionEn": "ROCK fast charging USB-A cable with Lightning support. Micro and Type-C connectors support charging only. Length: 120 cm.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1zDHIBlN8uMQrkcX5JNplNv5dVc1a2_Di?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1zDHIBlN8uMQrkcX5JNplNv5dVc1a2_Di?usp=drive_link",
+    "images": [
+      "assets/products/rcb056.webp",
+      "assets/products/rcb056-02.webp",
+      "assets/products/rcb056-03.webp",
+      "assets/products/rcb056-04.webp",
+      "assets/products/rcb056-05.webp",
+      "assets/products/rcb056-06.webp",
+      "assets/products/rcb056-07.webp",
+      "assets/products/rcb056-08.webp"
+    ]
   },
   {
     "id": "rkch720",
@@ -81,7 +121,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن حائط ROCK GaN بقدرة 20 واط",
     "nameEn": "ROCK RKCH720 20W GaN Wall Charger",
     "descriptionEn": "ROCK Fast Wall Charger with one USB port and two PD ports, GaN, 20W.",
-    "picturesUrl": "https://drive.google.com/drive/folders/10n1tWnp1jJbYHUPyhVrqCuB7SNcjjBl5?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/10n1tWnp1jJbYHUPyhVrqCuB7SNcjjBl5?usp=drive_link",
+    "images": [
+      "assets/products/rkch720.webp",
+      "assets/products/rkch720-02.webp",
+      "assets/products/rkch720-03.webp",
+      "assets/products/rkch720-04.webp",
+      "assets/products/rkch720-05.webp",
+      "assets/products/rkch720-06.webp",
+      "assets/products/rkch720-07.webp",
+      "assets/products/rkch720-08.webp"
+    ]
   },
   {
     "id": "rkch735",
@@ -93,7 +143,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن ROCK GaN صغير بقدرة 35 واط",
     "nameEn": "ROCK RKCH735 35W Compact GaN Wall Charger",
     "descriptionEn": "ROCK Fast Wall Charger, small and portable, GaN, 35W.",
-    "picturesUrl": "https://drive.google.com/drive/folders/18Igd2Rc5-Jk9JzDslTS8D-FUDF8lvZMA?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/18Igd2Rc5-Jk9JzDslTS8D-FUDF8lvZMA?usp=drive_link",
+    "images": [
+      "assets/products/rkch735.webp",
+      "assets/products/rkch735-02.webp",
+      "assets/products/rkch735-03.webp",
+      "assets/products/rkch735-04.webp",
+      "assets/products/rkch735-05.webp",
+      "assets/products/rkch735-06.webp",
+      "assets/products/rkch735-07.webp",
+      "assets/products/rkch735-08.webp"
+    ]
   },
   {
     "id": "rkch765",
@@ -105,7 +165,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن حائط ROCK GaN بقدرة 65 واط",
     "nameEn": "ROCK RKCH765 65W GaN Wall Charger",
     "descriptionEn": "ROCK Fast Wall Charger with one USB port and two PD ports, GaN, 65W.",
-    "picturesUrl": "https://drive.google.com/drive/folders/12DKVkM_IO5PrPzXd2lKn6lHDFDnQ85vU?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/12DKVkM_IO5PrPzXd2lKn6lHDFDnQ85vU?usp=drive_link",
+    "images": [
+      "assets/products/rkch765.webp",
+      "assets/products/rkch765-02.webp",
+      "assets/products/rkch765-03.webp",
+      "assets/products/rkch765-04.webp",
+      "assets/products/rkch765-05.webp",
+      "assets/products/rkch765-06.webp",
+      "assets/products/rkch765-07.webp",
+      "assets/products/rkch765-08.webp"
+    ]
   },
   {
     "id": "car30",
@@ -117,7 +187,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن سيارة ROCK H30 بكابل قابل للسحب",
     "nameEn": "ROCK C43 H30 Retractable Car Charger",
     "descriptionEn": "ROCK H30 Car Charger with built-in retractable Type-C cable (30W) plus USB-A/USB-C ports (15W).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1cm3B_QzovxmjuD0Of2bYGyhw20dgOTQx?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1cm3B_QzovxmjuD0Of2bYGyhw20dgOTQx?usp=drive_link",
+    "images": [
+      "assets/products/car30.webp"
+    ]
   },
   {
     "id": "sd017",
@@ -129,7 +202,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن سيارة ROCK H16 بقدرة 72 واط",
     "nameEn": "ROCK SD-017 H16 72W Car Charger",
     "descriptionEn": "ROCK H16 Car Charger, dual USB-A and USB-C ports with PD, 72W.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1cMU6vvzmlSWZSdS4ITLk1rE6PYief7c3?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1cMU6vvzmlSWZSdS4ITLk1rE6PYief7c3?usp=drive_link",
+    "images": [
+      "assets/products/sd017.webp",
+      "assets/products/sd017-02.webp",
+      "assets/products/sd017-03.webp",
+      "assets/products/sd017-04.webp",
+      "assets/products/sd017-05.webp",
+      "assets/products/sd017-06.webp",
+      "assets/products/sd017-07.webp",
+      "assets/products/sd017-08.webp"
+    ]
   },
   {
     "id": "nc20",
@@ -141,7 +224,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن سيارة ROCK H20 بمنفذين",
     "nameEn": "ROCK NC-20 H20 15W Car Charger",
     "descriptionEn": "ROCK H20 Car Charger, dual USB-A and USB-C ports, 15W.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1i8BwsHXm8DTLzVLQ_TGB6MDgFj0K7F7h?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1i8BwsHXm8DTLzVLQ_TGB6MDgFj0K7F7h?usp=drive_link",
+    "images": [
+      "assets/products/nc20.webp",
+      "assets/products/nc20-02.webp",
+      "assets/products/nc20-03.webp",
+      "assets/products/nc20-04.webp",
+      "assets/products/nc20-05.webp",
+      "assets/products/nc20-06.webp",
+      "assets/products/nc20-07.webp",
+      "assets/products/nc20-08.webp"
+    ]
   },
   {
     "id": "pods700",
@@ -153,7 +246,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعات ROCK Pods 700 اللاسلكية — أبيض",
     "nameEn": "ROCK Pods 700 Bluetooth Earphones, White",
     "descriptionEn": "ROCK Pods 700 Bluetooth earphones (white).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1JvZ4cXU7cqHmKt3RR1eJHnp5KIzrQIdY?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1JvZ4cXU7cqHmKt3RR1eJHnp5KIzrQIdY?usp=drive_link",
+    "images": [
+      "assets/products/pods700.webp",
+      "assets/products/pods700-02.webp",
+      "assets/products/pods700-03.webp",
+      "assets/products/pods700-04.webp",
+      "assets/products/pods700-05.webp",
+      "assets/products/pods700-06.webp",
+      "assets/products/pods700-07.webp",
+      "assets/products/pods700-08.webp"
+    ]
   },
   {
     "id": "ro701w",
@@ -165,7 +268,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعات ROCK Pods 701 اللاسلكية — أبيض",
     "nameEn": "ROCK Pods 701 Bluetooth Earphones, White",
     "descriptionEn": "ROCK Pods 701 Bluetooth earphones (white).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1enQl3JkQvpoaCWnRS-A-VhZQCbhHzCVj?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1enQl3JkQvpoaCWnRS-A-VhZQCbhHzCVj?usp=drive_link",
+    "images": [
+      "assets/products/ro701w.webp",
+      "assets/products/ro701w-02.webp",
+      "assets/products/ro701w-03.webp",
+      "assets/products/ro701w-04.webp",
+      "assets/products/ro701w-05.webp",
+      "assets/products/ro701w-06.webp",
+      "assets/products/ro701w-07.webp",
+      "assets/products/ro701w-08.webp"
+    ]
   },
   {
     "id": "eb200",
@@ -201,7 +314,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعات ROCK EB 710 — أبيض",
     "nameEn": "ROCK EB 710 Bluetooth Earphones, White",
     "descriptionEn": "ROCK EB 710 Bluetooth earphones (white).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1CJvWSQngJu2mENy90XX4udm1RU8qsuch?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1CJvWSQngJu2mENy90XX4udm1RU8qsuch?usp=drive_link",
+    "images": [
+      "assets/products/eb710.webp"
+    ]
   },
   {
     "id": "s1",
@@ -213,7 +329,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعات ROCK S1 بشاشة لمس",
     "nameEn": "ROCK S1 Smart Touchscreen TWS Bluetooth Earphones",
     "descriptionEn": "ROCK S1 smart touchscreen TWS Bluetooth earphones.",
-    "picturesUrl": "https://drive.google.com/drive/folders/12BrYp00QAQAYMOC8wZoNnNFzy_XFtJNl?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/12BrYp00QAQAYMOC8wZoNnNFzy_XFtJNl?usp=drive_link",
+    "images": [
+      "assets/products/s1.webp"
+    ]
   },
   {
     "id": "a5pro",
@@ -225,7 +344,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعات ROCK A5 Pro مع عزل ضوضاء",
     "nameEn": "ROCK A5 Pro Touchscreen ANC TWS Earphones",
     "descriptionEn": "ROCK A5 Pro smart touchscreen ANC TWS earphones.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1sEWlw24MXZ-yKplUKa3RVz21kUmXM36m?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1sEWlw24MXZ-yKplUKa3RVz21kUmXM36m?usp=drive_link",
+    "images": [
+      "assets/products/a5pro.webp",
+      "assets/products/a5pro-02.webp",
+      "assets/products/a5pro-03.webp",
+      "assets/products/a5pro-04.webp",
+      "assets/products/a5pro-05.webp",
+      "assets/products/a5pro-06.webp",
+      "assets/products/a5pro-07.webp",
+      "assets/products/a5pro-08.webp"
+    ]
   },
   {
     "id": "hp6030bt-silver",
@@ -237,7 +366,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعات ROCK 05 اللاسلكية — فضي",
     "nameEn": "ROCK 05 Wireless Headphones, Silver",
     "descriptionEn": "ROCK 05 wireless headphones (silver).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1gLfhNUyWv9kJ_iI-3l2tRyHUgW7BkG2x?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1gLfhNUyWv9kJ_iI-3l2tRyHUgW7BkG2x?usp=drive_link",
+    "images": [
+      "assets/products/hp6030bt-silver.webp"
+    ]
   },
   {
     "id": "hp6030bt-grey",
@@ -261,7 +393,14 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعة ROCK سلكية لأجهزة iPhone — أبيض",
     "nameEn": "ROCK RO-0545 Wired In-Ear Earphones for iPhone, White",
     "descriptionEn": "ROCK wired in-ear earphones for iPhone (white).",
-    "picturesUrl": "https://drive.google.com/drive/folders/10nfpznewcsPFx26rOyZWhhSQlyd7JWl4?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/10nfpznewcsPFx26rOyZWhhSQlyd7JWl4?usp=drive_link",
+    "images": [
+      "assets/products/ro0545.webp",
+      "assets/products/ro0545-02.webp",
+      "assets/products/ro0545-03.webp",
+      "assets/products/ro0545-04.webp",
+      "assets/products/ro0545-05.webp"
+    ]
   },
   {
     "id": "ro0546t",
@@ -273,7 +412,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعة ROCK سلكية بمنفذ Type-C — أبيض",
     "nameEn": "ROCK RO-0546T Wired Type-C In-Ear Earphones, White",
     "descriptionEn": "ROCK wired Type-C in-ear earphones (white).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1hnfnvaTjwZ5RG_HSE-I6lXw9dLnzpJY4?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1hnfnvaTjwZ5RG_HSE-I6lXw9dLnzpJY4?usp=drive_link",
+    "images": [
+      "assets/products/ro0546t.webp",
+      "assets/products/ro0546t-02.webp",
+      "assets/products/ro0546t-03.webp",
+      "assets/products/ro0546t-04.webp",
+      "assets/products/ro0546t-05.webp",
+      "assets/products/ro0546t-06.webp",
+      "assets/products/ro0546t-07.webp",
+      "assets/products/ro0546t-08.webp"
+    ]
   },
   {
     "id": "aux139",
@@ -285,7 +434,15 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعة ROCK سلكية داخل الأذن — أبيض",
     "nameEn": "ROCK AUX-139 Wired In-Ear Earphones, White",
     "descriptionEn": "ROCK wired in-ear earphones (white).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1muiS-au0EH4LoNy3YPywm9IQUBk2oqeI?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1muiS-au0EH4LoNy3YPywm9IQUBk2oqeI?usp=drive_link",
+    "images": [
+      "assets/products/aux139.webp",
+      "assets/products/aux139-02.webp",
+      "assets/products/aux139-03.webp",
+      "assets/products/aux139-04.webp",
+      "assets/products/aux139-05.webp",
+      "assets/products/aux139-06.webp"
+    ]
   },
   {
     "id": "y6",
@@ -297,7 +454,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعة ROCK Y6 الرياضية اللاسلكية — أسود",
     "nameEn": "ROCK Y6 Neckband Wireless Sports Earphones, Black",
     "descriptionEn": "ROCK Y6 neckband wireless sports earphones (black).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1gReAtqLBHORBrYJwxo4Vg_YwuYPe7kwt?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1gReAtqLBHORBrYJwxo4Vg_YwuYPe7kwt?usp=drive_link",
+    "images": [
+      "assets/products/y6.webp",
+      "assets/products/y6-02.webp",
+      "assets/products/y6-03.webp",
+      "assets/products/y6-04.webp",
+      "assets/products/y6-05.webp",
+      "assets/products/y6-06.webp",
+      "assets/products/y6-07.webp",
+      "assets/products/y6-08.webp"
+    ]
   },
   {
     "id": "es09",
@@ -309,7 +476,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعات ROCK ES09 الرقمية بمنفذ Type-C — أسود",
     "nameEn": "ROCK ES09 Type-C Digital Wired Earphones, Black",
     "descriptionEn": "ROCK ES09 Type-C digital wired earphones (black).",
-    "picturesUrl": "https://drive.google.com/drive/folders/185cFJw2p3SSeMtp5bkQV3uG7OzuoPncM?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/185cFJw2p3SSeMtp5bkQV3uG7OzuoPncM?usp=drive_link",
+    "images": [
+      "assets/products/es09.webp"
+    ]
   },
   {
     "id": "rph1003",
@@ -321,7 +491,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "حامل جوال مكتبي معدني دوّار ROCK",
     "nameEn": "ROCK RPH1003 Rotatable Metal Desktop Phone Holder",
     "descriptionEn": "ROCK metal rotatable desktop mobile phone holder.",
-    "picturesUrl": "https://drive.google.com/drive/folders/11NNP1v7xMjHWa7LXb88flP5bwo5bO2tl?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/11NNP1v7xMjHWa7LXb88flP5bwo5bO2tl?usp=drive_link",
+    "images": [
+      "assets/products/rph1003.webp"
+    ]
   },
   {
     "id": "rph0878",
@@ -333,7 +506,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "حامل مكتبي قابل للتعديل ROCK",
     "nameEn": "ROCK RPH0878 Universal Adjustable Desktop Stand",
     "descriptionEn": "ROCK universal adjustable desktop stand.",
-    "picturesUrl": "https://drive.google.com/drive/folders/14dcmiLJWG3Bb8r35a6spcVfsCusScq8j?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/14dcmiLJWG3Bb8r35a6spcVfsCusScq8j?usp=drive_link",
+    "images": [
+      "assets/products/rph0878.webp",
+      "assets/products/rph0878-02.webp",
+      "assets/products/rph0878-03.webp",
+      "assets/products/rph0878-04.webp",
+      "assets/products/rph0878-05.webp",
+      "assets/products/rph0878-06.webp",
+      "assets/products/rph0878-07.webp",
+      "assets/products/rph0878-08.webp"
+    ]
   },
   {
     "id": "ram0037",
@@ -345,7 +528,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "حامل جوال مغناطيسي للسيارة ROCK Q08",
     "nameEn": "ROCK Q08 Magnetic Car Mount",
     "descriptionEn": "ROCK Q08 magnetic car mount.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1hEA28RXF4nslinORaXO-oAeqNXHFPzba?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1hEA28RXF4nslinORaXO-oAeqNXHFPzba?usp=drive_link",
+    "images": [
+      "assets/products/ram0037.webp",
+      "assets/products/ram0037-02.webp",
+      "assets/products/ram0037-03.webp",
+      "assets/products/ram0037-04.webp",
+      "assets/products/ram0037-05.webp",
+      "assets/products/ram0037-06.webp",
+      "assets/products/ram0037-07.webp",
+      "assets/products/ram0037-08.webp"
+    ]
   },
   {
     "id": "w31",
@@ -357,7 +550,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن لاسلكي وحامل جاذبية للسيارة W31",
     "nameEn": "ROCK W31 Wireless Charger Gravity Car Mount",
     "descriptionEn": "ROCK W31 wireless charging gravity car mount.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1dGob_7p6Wy-egGVmKjTdBOqfjSy4IyIe?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1dGob_7p6Wy-egGVmKjTdBOqfjSy4IyIe?usp=drive_link",
+    "images": [
+      "assets/products/w31.webp"
+    ]
   },
   {
     "id": "rock-tag-beige",
@@ -369,7 +565,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "متعقّب ROCK Tag الذكي — بيج",
     "nameEn": "ROCK Tag Wireless Smart Tracker, Beige",
     "descriptionEn": "ROCK Tag wireless smart tracker (beige).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1r-koUACYUxVOcQme3f7xgqzvSysi5HEp?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1r-koUACYUxVOcQme3f7xgqzvSysi5HEp?usp=drive_link",
+    "images": [
+      "assets/products/rock-tag-beige.webp"
+    ]
   },
   {
     "id": "rock-tag-black",
@@ -393,7 +592,17 @@ const ROCK_PRODUCTS = [
     "nameAr": "قلم ROCK مغناطيسي سعوي",
     "nameEn": "ROCK RST10860 Active Magnetic Capacitive Pen",
     "descriptionEn": "ROCK B0B active magnetic capacitive pen.",
-    "picturesUrl": "https://drive.google.com/drive/folders/19zhR7_hHsgR2OgdWQenKTJyE0dqtAlbe?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/19zhR7_hHsgR2OgdWQenKTJyE0dqtAlbe?usp=drive_link",
+    "images": [
+      "assets/products/pen.webp",
+      "assets/products/pen-02.webp",
+      "assets/products/pen-03.webp",
+      "assets/products/pen-04.webp",
+      "assets/products/pen-05.webp",
+      "assets/products/pen-06.webp",
+      "assets/products/pen-07.webp",
+      "assets/products/pen-08.webp"
+    ]
   },
   {
     "id": "laptop-bag",
@@ -405,7 +614,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "حقيبة لابتوب ROCK",
     "nameEn": "ROCK RST10887 Laptop Bag",
     "descriptionEn": "ROCK laptop bag.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1yPl8NFQ4pSdSuoCwMArgAXuTtvaHet4c?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1yPl8NFQ4pSdSuoCwMArgAXuTtvaHet4c?usp=drive_link",
+    "images": [
+      "assets/products/laptop-bag.webp"
+    ]
   },
   {
     "id": "trimmer",
@@ -417,7 +629,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "مجموعة تشذيب ROCK — أسود",
     "nameEn": "ROCK RST10890 Trimmer Kit, Black",
     "descriptionEn": "ROCK trimmer kit (black).",
-    "picturesUrl": "https://drive.google.com/drive/folders/1oceZzjQ__E4bSSqEbMp1iH-482lOIZ_E?usp=drive_link"
+    "picturesUrl": "https://drive.google.com/drive/folders/1oceZzjQ__E4bSSqEbMp1iH-482lOIZ_E?usp=drive_link",
+    "images": [
+      "assets/products/trimmer.webp"
+    ]
   },
   {
     "id": "cable-120w-retractable",
@@ -429,7 +644,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "كابل ROCK قابل للسحب بقدرة 120 واط",
     "nameEn": "ROCK 120W Retractable Dual-Ended USB / Type-C Cable",
     "descriptionEn": "ROCK 120W dual-ended cable (USB and Type-C), supports fast charging and data transfer, retractable automatic pull-and-retraction design, compact and durable.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1sbFVYReHP1MLscopD-X__t7YSqBP9RtL?hl=ar"
+    "picturesUrl": "https://drive.google.com/drive/folders/1sbFVYReHP1MLscopD-X__t7YSqBP9RtL?hl=ar",
+    "images": [
+      "assets/products/cable-120w-retractable.webp"
+    ]
   },
   {
     "id": "car-charger-68w",
@@ -441,7 +659,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن سيارة ROCK بقدرة 68 واط وثلاثة مخارج",
     "nameEn": "ROCK 68W Car Charger, 2 Type-C + USB",
     "descriptionEn": "ROCK 68W car charger with three outputs (two Type-C and USB), PD/QC fast charging, intelligent power distribution, compact design and full protection.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1t4D-uypRMO5ibtIaFeYX5t8U_oghuxP6?hl=ar"
+    "picturesUrl": "https://drive.google.com/drive/folders/1t4D-uypRMO5ibtIaFeYX5t8U_oghuxP6?hl=ar",
+    "images": [
+      "assets/products/car-charger-68w.webp"
+    ]
   },
   {
     "id": "wall-charger-50w",
@@ -453,7 +674,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن حائط ROCK GaN بقدرة 50 واط وكابل مدمج",
     "nameEn": "ROCK 50W GaN Wall Charger with Built-in Type-C Cable",
     "descriptionEn": "ROCK 50W GaN wall charger with dual USB and Type-C outputs, built-in Type-C cable, fast charging, compact design and full protection.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1_IZNKdercNfY4oYwsrmZ2ROsHxbwUlz3?hl=ar"
+    "picturesUrl": "https://drive.google.com/drive/folders/1_IZNKdercNfY4oYwsrmZ2ROsHxbwUlz3?hl=ar",
+    "images": [
+      "assets/products/wall-charger-50w.webp"
+    ]
   },
   {
     "id": "car-charger-45w",
@@ -465,7 +689,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن سيارة ROCK بقدرة 45 واط وكابلين مدمجين",
     "nameEn": "ROCK 45W Car Charger with Dual Built-in Cables",
     "descriptionEn": "ROCK 45W car charger with USB and Type-C outputs, integrated Lightning and Type-C cables, and star laser light projection.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1_rd_4oKYbOXr6NuPVA9y7_LretYR1gy1?hl=ar"
+    "picturesUrl": "https://drive.google.com/drive/folders/1_rd_4oKYbOXr6NuPVA9y7_LretYR1gy1?hl=ar",
+    "images": [
+      "assets/products/car-charger-45w.webp"
+    ]
   },
   {
     "id": "typec-wired-headphones",
@@ -477,7 +704,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "سماعة ROCK سلكية بمنفذ Type-C وتصميم خطاف",
     "nameEn": "ROCK Wired Type-C Earphones with Ergonomic Ear Hooks",
     "descriptionEn": "ROCK wired Type-C headphones with ergonomic ear-hook design, built-in microphone, HD calls and Hi-Fi sound, 120 cm cable length, stable and comfortable fit.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1NfIDONi-rO1Ev7M9fZy2N-kk5Cl2jLJD?hl=ar"
+    "picturesUrl": "https://drive.google.com/drive/folders/1NfIDONi-rO1Ev7M9fZy2N-kk5Cl2jLJD?hl=ar",
+    "images": [
+      "assets/products/typec-wired-headphones.webp"
+    ]
   },
   {
     "id": "wall-charger-45w",
@@ -489,7 +719,10 @@ const ROCK_PRODUCTS = [
     "nameAr": "شاحن حائط ROCK GaN بقدرة 45 واط مع كابل Type-C",
     "nameEn": "ROCK 45W GaN Wall Charger with Type-C Cable",
     "descriptionEn": "ROCK 45W GaN wall charger with Type-C PD output and included cut-resistant Type-C cable, fast charging, compact design and full protection.",
-    "picturesUrl": "https://drive.google.com/drive/folders/1opc5zmnDZYCN6kuq0ePNORqOI7BMYL-2?hl=ar"
+    "picturesUrl": "https://drive.google.com/drive/folders/1opc5zmnDZYCN6kuq0ePNORqOI7BMYL-2?hl=ar",
+    "images": [
+      "assets/products/wall-charger-45w.webp"
+    ]
   }
 ];
 
