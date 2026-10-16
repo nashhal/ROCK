@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#06162f">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-[...]">
   <link rel="canonical" href="https://nashhal.github.io/ROCK/">
-  <meta name="description" content="تسوّق إكسسوارات ROCK للشحن والصوت والسيارة وأسلوب الحياة. تصفّح الموديلات والأسعار بالريال السعودي، وتحقق من تفاصيل المنتج قبل الطلب.">
+  <meta name="description" content="تسوّق إكسسوارات ROCK للشحن والصوت والسيارة وأسلوب الحياة. تصفّح الموديلات والأسعار بالري[...]">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ROCK">
@@ -18,7 +18,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="ROCK — Everyday, connected.">
   <meta name="twitter:description" content="إكسسوارات تقنية للشحن والصوت والسيارة وأسلوب الحياة.">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ROCK","url":"https://nashhal.github.io/ROCK/","inLanguage":["ar","en"],"description":"ROCK consumer technology accessories catalog."}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ROCK","url":"https://nashhal.github.io/ROCK/","inLanguage":["ar","en"],"description":"ROCK consumer [...]"}</script>
   <title>ROCK — Everyday, connected.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,7 +41,7 @@
       <div class="header-actions">
         <button class="text-btn" id="langBtn">EN</button>
         <button class="icon-btn" id="searchBtn" aria-label="بحث">⌕</button>
-        <button class="cart-btn" id="cartBtn"><span data-i18n="bag">السلة</span><b id="cartCount">0</b></button>
+        <button class="cart-btn" id="cartBtn" aria-label="عرض السلة"><span data-i18n="bag">السلة</span><b id="cartCount" aria-live="polite" aria-atomic="true">0</b></button>
       </div>
     </div>
     <div class="mobile-panel" id="mobilePanel">
@@ -69,13 +69,13 @@
       </div>
       <div class="hero-visual" aria-label="ROCK product showcase">
         <div class="visual-orbit orbit-a"></div><div class="visual-orbit orbit-b"></div>
-        <div class="visual-card primary"><img src="assets/products/pods700.webp" alt="ROCK product" loading="eager"><span>RO-700W</span></div>
-        <div class="visual-card secondary"><img src="assets/products/rkch765.webp" alt="ROCK charger" loading="eager"><span>RKCH765</span></div>
+        <div class="visual-card primary"><img src="assets/products/pods700.webp" alt="RO-700W" loading="eager"><span>RO-700W</span></div>
+        <div class="visual-card secondary"><img src="assets/products/rkch765.webp" alt="RKCH765" loading="eager"><span>RKCH765</span></div>
         <div class="visual-label">ROCK / 2026</div>
       </div>
     </section>
 
-    <section class="ticker" aria-label="ROCK highlights"><div class="ticker-track"><span>POWER</span><i>•</i><span>AUDIO</span><i>•</i><span>DRIVE</span><i>•</i><span>EVERYDAY</span><i>•</i><span>POWER</span><i>•</i><span>AUDIO</span><i>•</i><span>DRIVE</span><i>•</i><span>EVERYDAY</span></div></section>
+    <section class="ticker" aria-label="ROCK highlights"><div class="ticker-track"><span>POWER</span><i>•</i><span>AUDIO</span><i>•</i><span>DRIVE</span><i>•</i><span>EVERYDAY</span><i>•</i></div></section>
 
     <section class="service-strip section-shell" aria-label="Shopping information">
       <article class="service-item"><span class="service-number">01</span><div><h3 data-i18n="trustProductTitle">Model-first catalog</h3><p data-i18n="trustProductText">Find the exact ROCK model before choosing.</p></div></article>
@@ -107,11 +107,11 @@
         <button class="clear-filter" type="button" id="clearFiltersBtn" data-i18n="clearFilters">مسح الفلاتر</button>
       </div>
       <div class="product-grid" id="productGrid"></div>
-      <div class="empty-state" id="emptyState" hidden><strong data-i18n="noResults">لا توجد نتائج</strong><span data-i18n="noResultsSub">جرّب كلمة بحث أو تصنيفًا آخر.</span></div>
+      <div class="empty-state" id="emptyState" hidden><strong data-i18n="noResults">لا توجد نتائج</strong><span data-i18n="noResultsSub">جرّب كلمة بحث أو تصنيفًا آخر</span></div>
     </section>
 
     <section class="collections section-shell" id="collections">
-      <div class="section-head"><div><div class="eyebrow">02 / <span data-i18n="collectionsLabel">المجموعات</span></div><h2 data-i18n="collectionsTitle">اختر حسب يومك</h2></div><span class="section-note" data-i18n="collectionsNote">من المكتب إلى الطريق</span></div>
+      <div class="section-head"><div><div class="eyebrow">02 / <span data-i18n="collectionsLabel">المجموعات</span></div><h2 data-i18n="collectionsTitle">اختر حسب يومك</h2></div></div>
       <div class="collection-grid">
         <button class="collection-card collection-power" data-collection="power"><span>01</span><div><b>POWER</b><small data-i18n="powerText">طاقة وشحن</small></div><strong>↗</strong></button>
         <button class="collection-card collection-audio" data-collection="audio"><span>02</span><div><b>AUDIO</b><small data-i18n="audioText">صوتك في كل مكان</small></div><strong>↗</strong></button>
@@ -122,19 +122,19 @@
 
     <section class="story section-shell" id="story">
       <div class="story-mark">R</div>
-      <div class="story-copy"><div class="eyebrow">03 / ROCK</div><h2 data-i18n="storyTitle">تقنية واضحة. حضور مختلف.</h2><p data-i18n="storyText">ROCK ليست مجموعة من الأجهزة المتشابهة. هي طريقة أبسط لاختيار ما تحتاجه: موديل واضح، سعر واضح، وصورة المنتج الحقيقي أمامك.</p><div class="story-links"><button class="under-btn" id="scrollTopBtn" data-i18n="backTop">العودة للبداية ↗</button><button class="under-btn" id="clearCartBtn" data-i18n="clearCart">تفريغ السلة</button></div></div>
+      <div class="story-copy"><div class="eyebrow">03 / ROCK</div><h2 data-i18n="storyTitle">تقنية واضحة. حضور مختلف.</h2><p data-i18n="storyText">ROCK ليست مجموعة م[...]</p></div>
     </section>
 
     <section class="closing-banner"><div><span>ROCK</span><h2>Everyday,<br><em>connected.</em></h2></div><button class="circle-arrow" id="closingShop" aria-label="تصفح المنتجات">↗</button></section>
   </main>
 
-  <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span>Everyday, connected.</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">Shop</a><a href="#collections" data-i18n="collections">Collections</a><a href="#story" data-i18n="story">About</a><a href="policies.html" data-i18n="storeInfo">Store information</a></div><div class="footer-meta">© <span id="year"></span> ROCK</div></footer>
+  <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span>Everyday, connected.</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">المتجر</a><a href="#collections" data-i18n="collections">التصنيفات</a><a href="#story" data-i18n="story">عن ROCK</a></div><div class="footer-meta">&copy; <span id="year"></span> ROCK</div></footer>
 
   <div class="overlay" id="overlay"></div>
-  <aside class="cart-drawer" id="cartDrawer" aria-label="السلة"><div class="drawer-head"><div><span>ROCK</span><h3 data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total-row"><span data-i18n="total">الإجمالي</span><strong id="cartTotal">0 SAR</strong></div><button class="btn btn-dark full" id="checkoutBtn" data-i18n="checkout">تجهيز الطلب</button><button class="btn btn-soft full" id="continueBtn" data-i18n="continue">متابعة التسوق</button></div></aside>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="السلة"><div class="drawer-head"><div><span>ROCK</span><h3 data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart" aria-label="إغلاق">×</button></div><div class="drawer-body"><div id="cartItems"></div><div class="drawer-foot"><div><strong id="cartTotal">0 SAR</strong></div><div><button class="btn" id="continueBtn" data-i18n="continue">متابعة التسوق</button><button class="btn btn-dark" id="checkoutBtn" data-i18n="checkout">جهّز الطلب</button></div></div></div></aside>
 
-  <div class="modal" id="productModal"><div class="modal-card product-modal-card"><button class="close-btn" data-close-modal>×</button><div class="modal-image"><img id="modalImage" alt=""></div><div class="modal-info"><div class="modal-model" id="modalModel"></div><h3 id="modalName"></h3><p id="modalPrice"></p><button class="btn btn-dark full" id="modalAdd" data-i18n="addCart">أضف إلى السلة</button></div></div></div>
-  <div class="modal" id="checkoutModal"><div class="modal-card checkout-card" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle"><button class="close-btn" data-close-modal aria-label="Close">×</button><div class="eyebrow">ROCK / ORDER REQUEST</div><h3 id="orderModalTitle" data-i18n="orderTitle">طلبك جاهز</h3><p data-i18n="orderText">أدخل بيانات التواصل لمراجعة ملخص الطلب. لن تُرسل البيانات تلقائيًا.</p><form id="orderDetailsForm" novalidate><div class="order-fields"><label><span data-i18n="customerNameLabel">الاسم</span><input id="customerName" name="customerName" autocomplete="name" required></label><label><span data-i18n="customerPhoneLabel">رقم الجوال</span><input id="customerPhone" name="customerPhone" type="tel" autocomplete="tel" required></label><label><span data-i18n="customerCityLabel">المدينة</span><input id="customerCity" name="customerCity" autocomplete="address-level2" required></label><label><span data-i18n="customerAddressLabel">العنوان أو نقطة الاستلام</span><input id="customerAddress" name="customerAddress" autocomplete="street-address" required></label><label class="order-notes"><span data-i18n="customerNotesLabel">ملاحظات (اختياري)</span><textarea id="customerNotes" name="customerNotes" rows="2"></textarea></label></div><p class="order-privacy-note" data-i18n="orderPrivacy">لا يوجد دفع إلكتروني أو إرسال تلقائي في هذه النسخة. لا تدخل بيانات البطاقة البنكية.</p><label class="order-summary-label"><span data-i18n="orderSummaryLabel">ملخص الطلب</span><textarea id="orderText" readonly aria-label="Order summary"></textarea></label><button class="btn btn-dark full" id="copyOrder" type="button" data-i18n="copyOrder">نسخ تفاصيل الطلب</button><button class="btn btn-soft full" id="doneOrder" type="button" data-i18n="done">تم</button></form></div></div>
+  <div class="modal" id="productModal"><div class="modal-card product-modal-card"><button class="close-btn" data-close-modal aria-label="إغلاق">×</button><div class="modal-image"><img id="modalImage" alt=""></div><div class="modal-copy"><div id="modalModel"></div><h3 id="modalName"></h3><div id="modalPrice"></div><div><button id="modalAdd" class="btn btn-dark" data-i18n="addToBag">إضافة إلى السلة</button></div></div></div></div>
+  <div class="modal" id="checkoutModal"><div class="modal-card checkout-card" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle"><button class="close-btn" data-close-modal aria-label="إغلاق">×</button><form id="orderDetailsForm"><div class="checkout-shell"><h2 id="orderModalTitle" data-i18n="orderHeader">طلب ROCK</h2><div class="order-fields"><label for="customerName">الاسم<input id="customerName" name="customerName" required></label><label for="customerPhone">رقم الجوال<input id="customerPhone" name="customerPhone" required></label><label for="customerCity">المدينة<input id="customerCity" name="customerCity"></label><label for="customerAddress">العنوان<input id="customerAddress" name="customerAddress"></label></div><label class="order-notes" for="customerNotes">ملاحظات<textarea id="customerNotes" name="customerNotes"></textarea></label><div class="order-privacy-note" data-i18n="orderPrivacy">لا يوجد دفع إلكتروني أو إرسال تلقائي في هذه النسخة. لا تدخل بيانات البطاقة البنكية.</div><div class="order-summary"><label class="order-summary-label" for="orderText">ملخص الطلب<textarea id="orderText" readonly></textarea></label><div class="order-actions"><button type="button" class="btn btn-dark" id="copyOrder" data-i18n="copyOrder">نسخ النص</button><button type="button" class="btn policy-secondary" id="doneOrder" data-i18n="done">تم</button></div></div></div></form></div></div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="products.js?v=20261016-global-quality"></script><script src="app.js?v=20261016-global-quality"></script>
