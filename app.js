@@ -11,7 +11,7 @@
     ar: {
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
       sortFeatured:'ترتيب المتجر',sortLow:'السعر: من الأقل للأعلى',sortHigh:'السعر: من الأعلى للأقل',sortName:'الاسم',
-      resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',
+      resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',modelNotListed:'الموديل غير مدرج',
       viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'إضافة إلى السلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',
       trustProductTitle:'كتالوج حسب الموديل',trustProductText:'تعرّف على موديل ROCK قبل الاختيار.',
       trustPriceTitle:'أسعار واضحة',trustPriceText:'تصفّح الأسعار المعروضة بالريال السعودي.',
@@ -25,7 +25,7 @@
     en: {
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',
       sortFeatured:'Store order',sortLow:'Price: low to high',sortHigh:'Price: high to low',sortName:'Name',
-      resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',
+      resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',modelNotListed:'Model not listed',
       viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',
       trustProductTitle:'Model-first catalog',trustProductText:'Identify the ROCK model before choosing.',
       trustPriceTitle:'Clear listed prices',trustPriceText:'Browse prices shown in Saudi riyals.',
@@ -49,6 +49,7 @@
   }
   function t(k){return copy[state.lang][k] || k}
   function name(p){return state.lang==='ar'?p.nameAr:p.nameEn}
+  function modelLabel(p){return p.model&&p.model!=='—'?p.model:t('modelNotListed')}
   function catLabel(c){return ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[c]||c}
   function money(v){const n=Number(v);const shown=Number.isInteger(n)?String(n):n.toFixed(2);return `${shown} ${t('sar')}`}
 
@@ -67,6 +68,8 @@
     });
     $('#langBtn').textContent = state.lang === 'ar' ? 'EN' : 'AR';
     $('#searchInput').placeholder = state.lang === 'ar' ? 'ابحث عن موديل أو منتج' : 'Search model or product';
+    $('#searchInput').setAttribute('aria-label',state.lang==='ar'?'البحث عن موديل أو منتج':'Search model or product');
+    $('#sortSelect').setAttribute('aria-label',state.lang==='ar'?'ترتيب المنتجات':'Sort products');
     $('#minPrice').placeholder = state.lang === 'ar' ? 'من' : 'Min';
     $('#maxPrice').placeholder = state.lang === 'ar' ? 'إلى' : 'Max';
     render();
@@ -102,11 +105,11 @@
       card.style.animationDelay = `${Math.min(i, 12) * 25}ms`;
       card.innerHTML = `
         <a class="product-image product-image-link" href="${detailUrl}" aria-label="${esc(t('viewProduct'))}: ${esc(name(p))}">
-          ${image ? `<img data-product-image loading="lazy" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="480">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
+          ${image ? `<img data-product-image loading="lazy" decoding="async" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="480">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
           <span class="product-tag">${esc(catLabel(p.category))}</span>
         </a>
         <div class="product-info">
-          <div class="product-model">${esc(p.model)}</div>
+          <div class="product-model">${esc(modelLabel(p))}</div>
           <a class="product-title-link" href="${detailUrl}"><div class="product-name">${esc(name(p))}</div></a>
           <div class="product-bottom">
             <span class="price">${money(p.price)}</span>
@@ -147,7 +150,7 @@
     updateCount(); const wrap=$('#cartItems');
     if(!state.cart.length){wrap.innerHTML=`<div class="empty-state"><strong>${t('empty')}</strong><span>${t('noResultsSub')}</span></div>`;$('#cartTotal').textContent=money(0);$('#checkoutBtn').disabled=true;return}
     $('#checkoutBtn').disabled=false; let total=0; wrap.innerHTML='';
-    state.cart.forEach(item=>{const p=products.find(x=>x.id===item.id);if(!p)return; total+=p.price*item.qty; const row=document.createElement('div');row.className='cart-row';const cartImage=safeImage(p.image);row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}<div><h4>${esc(name(p))}</h4><p>${esc(p.model)} · ${money(p.price)}</p><div class="qty"><button data-dec="${p.id}">−</button><span>${item.qty}</span><button data-inc="${p.id}">+</button></div></div><strong>${money(p.price*item.qty)}</strong>`;const cartImg=row.querySelector('[data-cart-image]');if(cartImg)cartImg.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='cart-image-placeholder';ph.textContent='ROCK';cartImg.replaceWith(ph)},{once:true});wrap.appendChild(row)});
+    state.cart.forEach(item=>{const p=products.find(x=>x.id===item.id);if(!p)return; total+=p.price*item.qty; const row=document.createElement('div');row.className='cart-row';const cartImage=safeImage(p.image);row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}<div><h4>${esc(name(p))}</h4><p>${esc(modelLabel(p))} · ${money(p.price)}</p><div class="qty"><button data-dec="${p.id}">−</button><span>${item.qty}</span><button data-inc="${p.id}">+</button></div></div><strong>${money(p.price*item.qty)}</strong>`;const cartImg=row.querySelector('[data-cart-image]');if(cartImg)cartImg.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='cart-image-placeholder';ph.textContent='ROCK';cartImg.replaceWith(ph)},{once:true});wrap.appendChild(row)});
     wrap.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>changeQty(b.dataset.dec,-1));wrap.querySelectorAll('[data-inc]').forEach(b=>b.onclick=()=>changeQty(b.dataset.inc,1));$('#cartTotal').textContent=money(total);
   }
   function changeQty(id,d){const row=state.cart.find(x=>x.id===id);if(!row)return;row.qty=Math.min(99,row.qty+d);if(row.qty<=0)state.cart=state.cart.filter(x=>x.id!==id);persist();renderCart()}
@@ -170,7 +173,7 @@
     imageWrap.dataset.placeholder=t('photoPending'); modalImage.alt=name(p);
     if(image){modalImage.src=image;modalImage.onerror=()=>{modalImage.hidden=true;imageWrap.classList.add('image-pending')};}
     else modalImage.removeAttribute('src');
-    $('#modalModel').textContent=p.model;$('#modalName').textContent=name(p);$('#modalPrice').textContent=money(p.price);openModal('productModal')
+    $('#modalModel').textContent=modelLabel(p);$('#modalName').textContent=name(p);$('#modalPrice').textContent=money(p.price);openModal('productModal')
   }
   function checkout(){
     if(!state.cart.length) return;
@@ -187,7 +190,7 @@
       if (!p) return '';
       const lineTotal = p.price * item.qty;
       total += lineTotal;
-      return `${name(p)} | ${p.model} | ${item.qty} × ${money(p.price)} = ${money(lineTotal)}`;
+      return `${name(p)} | ${modelLabel(p)} | ${item.qty} × ${money(p.price)} = ${money(lineTotal)}`;
     }).filter(Boolean);
     const parts = [t('orderHeader'), ...lines, '----------------', `${t('total')}: ${money(total)}`];
     if(includeCustomer){
@@ -224,7 +227,7 @@
   $('#langBtn').onclick=()=>{state.lang=state.lang==='ar'?'en':'ar';storageSet('rock-lang',state.lang);applyLanguage()};
   $('#cartBtn').onclick=openCart;$('#closeCart').onclick=closeCart;$('#continueBtn').onclick=closeCart;$('#overlay').onclick=()=>{closeCart();closeModals()};
   $('#searchBtn').onclick=()=>{$('#searchInput').focus();document.querySelector('#shop').scrollIntoView({behavior:'smooth'})};
-  $('#filtersBtn').onclick=()=>$('#shopToolbar').classList.toggle('open');
+  $('#filtersBtn').onclick=()=>{const open=$('#shopToolbar').classList.toggle('open');$('#filtersBtn').setAttribute('aria-expanded',String(open));};
   $('#searchInput').oninput=e=>{state.query=e.target.value;render()};$('#sortSelect').onchange=e=>{state.sort=e.target.value;render()};
   $('#minPrice').oninput=e=>{state.minPrice=e.target.value;render()};
   $('#maxPrice').oninput=e=>{state.maxPrice=e.target.value;render()};
