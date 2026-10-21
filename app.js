@@ -9,6 +9,10 @@
 
   const copy = {
     ar: {
+      pageTitle:'ROCK | ملحقات تقنية للشحن والصوت والسيارة',
+      openMenu:'فتح القائمة',search:'بحث',viewCart:'عرض السلة',closeAnnouncement:'إخفاء الشريط',shopProducts:'تصفح المنتجات',switchLanguage:'تغيير اللغة',
+      powerLabel:'الشحن والطاقة',audioLabel:'الصوت والسماعات',driveLabel:'إكسسوارات السيارة',lifeLabel:'إكسسوارات يومية',
+      brandTagline:'ملحقات تقنية ليومك',closingTitle:'تحتاجه كل يوم',closingAccent:'ببساطة.',
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
       sortFeatured:'ترتيب المتجر',sortLow:'السعر: من الأقل للأعلى',sortHigh:'السعر: من الأعلى للأقل',sortName:'الاسم',
       resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',sortBy:'ترتيب حسب',priceLabel:'السعر',modelLabel:'الموديل',modelMissing:'غير محدد',
@@ -23,6 +27,10 @@
       announcement:'ROCK | ملحقات تقنية ليومك',shop:'المتجر',collections:'التصنيفات',story:'عن ROCK',bag:'السلة',eyebrow:'إكسسوارات تقنية ليومك',hero1:'إكسسوارات تقنية',hero2:'ليومك، ببساطة.',heroText:'تصفّح إكسسوارات ROCK للشحن والصوت والسيارة، وقارن الموديلات والأسعار في مكان واحد.',shopNow:'تصفّح المنتجات',featuredBtn:'استكشف الفئات',products:'منتجًا',categories:'فئات',currency:'بالريال السعودي',catalog:'الكتالوج',shopTitle:'اختر ما يناسبك من ROCK',filter:'تصفية',collectionsLabel:'المجموعات',collectionsTitle:'تصفّح حسب الفئة',collectionsNote:'من المكتب إلى الطريق',powerText:'الشحن والطاقة',audioText:'السماعات والصوت',driveText:'ملحقات للسيارة',lifeText:'إكسسوارات يومية',storyTitle:'اختيار أوضح. استخدام أسهل.',storyText:'نعرض موديل المنتج وسعره بوضوح، لتتمكن من المقارنة واختيار ما تحتاجه دون تعقيد.',backTop:'العودة للبداية ↗',clearCart:'تفريغ السلة',bagTitle:'سلتك',total:'الإجمالي',checkout:'تجهيز الطلب',continue:'متابعة التسوق',addCart:'أضف إلى السلة',orderTitle:'طلبك جاهز',orderText:'راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.',copyOrder:'نسخ تفاصيل الطلب',done:'تم',noResults:'لا توجد نتائج',noResultsSub:'جرّب كلمة بحث أو تصنيفًا آخر',added:'تمت الإضافة إلى السلة',cleared:'تم تفريغ السلة',copied:'تم نسخ تفاصيل الطلب',empty:'السلة فارغة',sar:'ر.س'
     },
     en: {
+      pageTitle:'ROCK | Charging, audio and car accessories',
+      openMenu:'Open menu',search:'Search',viewCart:'View cart',closeAnnouncement:'Dismiss announcement',shopProducts:'Browse products',switchLanguage:'Switch language',
+      powerLabel:'POWER',audioLabel:'AUDIO',driveLabel:'CAR',lifeLabel:'EVERYDAY',
+      brandTagline:'Everyday tech essentials',closingTitle:'Your everyday',closingAccent:'essentials.',
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',
       sortFeatured:'Store order',sortLow:'Price: low to high',sortHigh:'Price: high to low',sortName:'Name',
       resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',sortBy:'Sort by',priceLabel:'Price',modelLabel:'Model',modelMissing:'Not specified',
@@ -53,9 +61,10 @@
   function money(v){const n=Number(v);const shown=Number.isInteger(n)?String(n):n.toFixed(2);return `${shown} ${t('sar')}`}
 
   function applyLanguage(){
+    document.title = t('pageTitle');
     document.documentElement.lang = state.lang;
     document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-    $$('[data-i18n]').forEach(el => {
+    $('[data-i18n]').forEach(el => {
       const key = el.dataset.i18n;
       if (key === 'shopNow') {
         const textNode = [...el.childNodes].find(node => node.nodeType === Node.TEXT_NODE);
@@ -65,6 +74,7 @@
         el.textContent = t(key);
       }
     });
+    $('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
     $('#langBtn').textContent = state.lang === 'ar' ? 'EN' : 'AR';
     $('#searchInput').placeholder = state.lang === 'ar' ? 'ابحث عن موديل أو منتج' : 'Search model or product';
     $('#searchInput').setAttribute('aria-label', state.lang === 'ar' ? 'ابحث باسم المنتج أو الموديل' : 'Search by product name or model');
@@ -250,13 +260,20 @@
   };
   $('#categoryChips').querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{$$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.cat=b.dataset.cat;render()});
   $$('.collection-card').forEach(b=>b.onclick=()=>{state.cat=b.dataset.collection;$$('#categoryChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===state.cat));document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()});
-  $('#viewFeatured').onclick=()=>{state.sort='featured';$('#sortSelect').value='featured';document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()};
+  $('#viewFeatured').onclick=()=>document.querySelector('#collections').scrollIntoView({behavior:'smooth'});
   $('#closingShop').onclick=()=>document.querySelector('#shop').scrollIntoView({behavior:'smooth'});
   $('#scrollTopBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
   $('#clearCartBtn').onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
   $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{if(state.activeProduct)add(state.activeProduct.id);closeModals()};
   $$('[data-close-modal]').forEach(b=>b.onclick=closeModals);
-  $('#menuBtn').onclick=()=>$('#mobilePanel').classList.toggle('open');$$('[data-mobile-link]').forEach(a=>a.onclick=()=>$('#mobilePanel').classList.remove('open'));
+  $('#menuBtn').onclick=()=>{
+    const expanded=$('#mobilePanel').classList.toggle('open');
+    $('#menuBtn').setAttribute('aria-expanded',String(expanded));
+  };
+  $('[data-mobile-link]').forEach(a=>a.onclick=()=>{
+    $('#mobilePanel').classList.remove('open');
+    $('#menuBtn').setAttribute('aria-expanded','false');
+  });
   $('.announcement-close').onclick=()=>$('.announcement').remove();$('#year').textContent=new Date().getFullYear();const productCountNode=$('#heroProductCount');if(productCountNode)productCountNode.textContent=String(products.length);
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){closeCart();closeModals();$('#mobilePanel').classList.remove('open');return;}
