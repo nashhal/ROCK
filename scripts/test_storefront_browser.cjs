@@ -111,8 +111,8 @@ async function waitForCatalog(page) {
     await page.evaluate(() => { localStorage.setItem('rock-lang', 'ar'); localStorage.removeItem('rock-cart'); });
     await page.goto(baseURL + '/product.html?id=rkch720', { waitUntil: 'networkidle' });
     await visible(page, '#productLayout', 'A valid product id should show product details');
-    assert.match(await page.locator('#detailName').textContent(), /ROCK RKCH720 20W GaN Wall Charger/);
-    assert.equal((await page.locator('#detailPrice').textContent()).trim(), '15 SAR');
+    assert.match(await page.locator('#detailName').textContent(), /شاحن حائط ROCK GaN بقدرة 20 واط/, 'Product page should initially use the Arabic catalog name');
+    assert.equal((await page.locator('#detailPrice').textContent()).trim(), '15 ر.س', 'Product price should use the Arabic currency label before switching languages');
     const productHeader = await page.locator('.site-header').evaluate(el => getComputedStyle(el).backgroundColor);
     assert.match(productHeader, /rgba?\(255,\s*255,\s*255/, 'Product page header should use the shared white-first surface');
     const productNavColor = await page.locator('.product-nav a').first().evaluate(el => getComputedStyle(el).color);
