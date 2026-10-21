@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from PIL import Image, ImageFilter, ImageOps, ImageStat
@@ -95,6 +96,30 @@ def build_manifest(products: list[dict]) -> dict:
     }
 
 
+def filter_sitemap(visible_ids: set[str]) -> None:
+    """Keep direct product URLs only for products shown in the public catalog."""
+    sitemap = ROOT / "sitemap.xml"
+    if not sitemap.is_file():
+        return
+    namespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
+    ET.register_namespace("", namespace)
+    tree = ET.parse(sitemap)
+    root = tree.getroot()
+    for node in list(root):
+        loc_node = node.find(f"{{{namespace}}}loc")
+        if loc_node is None or not loc_node.text:
+            continue
+        url = loc_node.text
+        marker = "product.html?id="
+        if marker not in url:
+            continue
+        product_id = url.split(marker, 1)[1].split("&", 1)[0]
+        if product_id not in visible_ids:
+            root.remove(node)
+    ET.indent(tree, space="  ")
+    tree.write(sitemap, encoding="utf-8", xml_declaration=True)
+
+
 def main() -> int:
     products = read_products()
     manifest = build_manifest(products)
@@ -107,6 +132,7 @@ def main() -> int:
         encoding="utf-8",
     )
     visible = set(manifest["visibleIds"])
+    filter_sitemap(visible)
     hidden = [(p.get("id", "?"), manifest["images"].get(p.get("id", ""), {}).get("reason", "unknown")) for p in products if p.get("id") not in visible]
     print(f"Product photo quality: showing {len(visible)}/{len(products)} products with clear white-background images.")
     if hidden:
