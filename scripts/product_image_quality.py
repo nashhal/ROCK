@@ -42,9 +42,12 @@ def analyze_image(relative_path: str) -> dict:
     try:
         raw = path.read_bytes()
         with Image.open(io.BytesIO(raw)) as original:
-            image = ImageOps.exif_transpose(original).convert("RGB")
-            width, height = image.size
-            image.load()
+            source = ImageOps.exif_transpose(original).convert("RGBA")
+            width, height = source.size
+            source.load()
+            white_canvas = Image.new("RGBA", source.size, (255, 255, 255, 255))
+            white_canvas.alpha_composite(source)
+            image = white_canvas.convert("RGB")
     except Exception:
         return {"visible": False, "reason": "unreadable"}
 
