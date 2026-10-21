@@ -233,8 +233,8 @@
     drawer.classList.remove('open');
     drawer.setAttribute('aria-hidden','true');
     $('#cartBtn').setAttribute('aria-expanded','false');
-    if(!$('.modal.show').length)$('#overlay').classList.remove('show');
-    if(!$('.modal.show').length)document.body.classList.remove('rock-dialog-open');
+    if(!$('.modal.show').length$('#overlay').classList.remove('show');
+    if(!$('.modal.show').lengthdocument.body.classList.remove('rock-dialog-open');
     const target=cartReturnFocus;
     cartReturnFocus=null;
     if(restoreFocus&&target&&target.isConnected&&typeof target.focus==='function')target.focus({preventScroll:true});
