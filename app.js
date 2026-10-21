@@ -171,26 +171,26 @@
   function openCart(){
     const drawer=$('#cartDrawer');
     if(!drawer.classList.contains('open')) cartReturnFocus=document.activeElement && document.activeElement!==document.body?document.activeElement:$('#cartBtn');
-    drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
+    drawer.removeAttribute('inert');drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
     $('#closeCart').focus({preventScroll:true});
   }
   function closeCart(restore=true){
     const drawer=$('#cartDrawer');const wasOpen=drawer.classList.contains('open');
-    drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');
+    drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');drawer.setAttribute('inert','');
     if(!$('.modal.show').length)$('#overlay').classList.remove('show');
     if(wasOpen&&restore){const target=cartReturnFocus||$('#cartBtn');cartReturnFocus=null;restoreFocus(target);}
   }
   function openModal(id,returnFocus=null){
     const modal=$('#'+id);
     if(!modal.classList.contains('show'))modalReturnFocus=returnFocus||(document.activeElement&&document.activeElement!==document.body?document.activeElement:$('#cartBtn'));
-    modal.classList.add('show');modal.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
+    modal.removeAttribute('inert');modal.classList.add('show');modal.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
     const target=modal.querySelector('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href]');
     if(target)target.focus({preventScroll:true});
   }
   function closeModals(restore=true){
     const wasOpen=$('.modal.show').length>0;
     const orderWasOpen=$('#checkoutModal').classList.contains('show');
-    $('.modal').forEach(modal=>{modal.classList.remove('show');modal.setAttribute('aria-hidden','true');});
+    $('.modal').forEach(modal=>{modal.classList.remove('show');modal.setAttribute('aria-hidden','true');modal.setAttribute('inert','');});
     if(!$('#cartDrawer').classList.contains('open'))$('#overlay').classList.remove('show');
     if(orderWasOpen){$('#orderDetailsForm').reset();$('#orderText').value='';}
     if(wasOpen&&restore){const target=modalReturnFocus||$('#cartBtn');modalReturnFocus=null;restoreFocus(target);}
@@ -275,10 +275,11 @@
   $('#clearCartBtn').onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
   $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{const id=state.activeProduct&&state.activeProduct.id;closeModals();if(id)add(id)};
   $$('[data-close-modal]').forEach(b=>b.onclick=closeModals);
-  $('#menuBtn').onclick=()=>$('#mobilePanel').classList.toggle('open');$$('[data-mobile-link]').forEach(a=>a.onclick=()=>$('#mobilePanel').classList.remove('open'));
+  function setMobileMenu(open){const panel=$('#mobilePanel');panel.classList.toggle('open',open);$('#menuBtn').setAttribute('aria-expanded',String(open));if(open)panel.removeAttribute('inert');else panel.setAttribute('inert','');}
+  $('#menuBtn').setAttribute('aria-expanded','false');$('#menuBtn').onclick=()=>setMobileMenu(!$('#mobilePanel').classList.contains('open'));$('[data-mobile-link]').forEach(a=>a.onclick=()=>setMobileMenu(false));
   $('.announcement-close').onclick=()=>$('.announcement').remove();$('#year').textContent=new Date().getFullYear();const productCountNode=$('#heroProductCount');if(productCountNode)productCountNode.textContent=String(products.length);
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){if($('.modal.show').length)closeModals();else if($('#cartDrawer').classList.contains('open'))closeCart();$('#mobilePanel').classList.remove('open');return;}
+    if(e.key==='Escape'){if($('.modal.show').length)closeModals();else if($('#cartDrawer').classList.contains('open'))closeCart();setMobileMenu(false);return;}
     if(e.key==='Tab'){
       const activeDialog = $('#checkoutModal').classList.contains('show') ? $('#checkoutModal') :
         ($('#productModal').classList.contains('show') ? $('#productModal') :
