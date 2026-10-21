@@ -39,7 +39,18 @@ async function waitForCatalog(page) {
     deviceScaleFactor: 1
   });
   const page = await context.newPage();
+  const failedRequests = [];
+  await page.addInitScript(() => {
+    window.__rockFailedImageEvents = [];
+    document.addEventListener('error', event => {
+      const target = event.target;
+      if (target instanceof HTMLImageElement) {
+        window.__rockFailedImageEvents.push({ src: target.currentSrc || target.src, alt: target.alt });
+      }
+    }, true);
+  });
   page.on('pageerror', error => errors.push(page.url() + ': ' + error.message));
+  page.on('requestfailed', request => failedRequests.push({ url: request.url(), error: request.failure()?.errorText || 'unknown' }));
 
   try {
     // Desktop homepage: catalog, logo, and a reviewable baseline screenshot.
@@ -55,7 +66,12 @@ async function waitForCatalog(page) {
     assert.ok(await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.every(image => image.naturalWidth > 0)),
       'Every shown product card must have a successfully loaded image');
     const listedIds = await page.locator('#productGrid [data-add]').evaluateAll(nodes => nodes.map(node => node.dataset.add));
-    assert.deepEqual(listedIds, approvedIds, 'Only products with clear, loadable white-background images should appear in the catalog');
+    const failedImages = await page.evaluate(() => window.__rockFailedImageEvents || []);
+    assert.deepEqual(listedIds, approvedIds,
+      'Only products with clear, loadable white-background images should appear in the catalog. ' +
+      'Broken image events: ' + JSON.stringify(failedImages.slice(0, 8)) +
+      '; failed requests: ' + JSON.stringify(failedRequests.slice(0, 8)) +
+      '; page errors: ' + errors.join(' | '));
     await visible(page, '.brand img', 'The original ROCK logo should remain visible');
     const logo = await page.locator('.brand img').evaluate(el => ({ complete: el.complete, width: el.naturalWidth }));
     assert.ok(logo.complete && logo.width > 0, 'The original ROCK logo asset should load');
