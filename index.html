@@ -22,14 +22,14 @@
   <title>ROCK | ملحقات تقنية للشحن والصوت والسيارة</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261021-audit-release-1">
-  <link rel="stylesheet" href="premium-refresh.css?v=20261021-audit-release-1">
-  <link rel="stylesheet" href="rocky-assistant.css?v=20261021-audit-release-1">
-  <link rel="stylesheet" href="white-modern.css?v=20261021-product-cart-v2">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261022-catalog-quality">
+  <link rel="stylesheet" href="premium-refresh.css?v=20261022-catalog-quality">
+  <link rel="stylesheet" href="rocky-assistant.css?v=20261022-catalog-quality">
+  <link rel="stylesheet" href="white-modern.css?v=20261022-catalog-refresh">
 </head>
 <body>
-  <div class="announcement"><span>ROCK</span><span data-i18n="announcement">ROCK — فجر جديد</span><button class="announcement-close" aria-label="إغلاق" data-i18n-aria="closeAnnouncement">×</button></div>
+  <div class="announcement"><span>ROCK</span><span data-i18n="announcement">ROCK — فجر جديد مع روك</span><button class="announcement-close" aria-label="إغلاق" data-i18n-aria="closeAnnouncement">×</button></div>
 
   <header class="site-header" id="top">
     <div class="header-inner">
@@ -57,14 +57,14 @@
     <section class="hero section-shell">
       <div class="hero-copy">
         <div class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="eyebrow">مصمم للاستخدام اليومي</span></div>
-        <h1><span data-i18n="hero1">Less noise.</span><em data-i18n="hero2">A New Dawn.</em></h1>
+        <h1><span data-i18n="hero1">فجر جديد</span><em data-i18n="hero2">مع روك.</em></h1>
         <p data-i18n="heroText">شحن وصوت وحلول للسيارة وأدوات للحياة اليومية، مختارة في تجربة شراء واحدة واضحة.</p>
         <div class="hero-actions">
           <a class="btn btn-dark" href="#shop" data-i18n="shopNow">تسوق الآن <span>↗</span></a>
           <button class="btn btn-link" id="viewFeatured" data-i18n="featuredBtn">استكشف المختارات</button>
         </div>
         <div class="hero-meta">
-          <div><strong id="heroProductCount">41</strong><span data-i18n="products">منتجًا</span></div>
+          <div><strong id="heroProductCount">0</strong><span data-i18n="products">منتجًا</span></div>
           <div><strong>4</strong><span data-i18n="categories">فئات</span></div>
           <div><strong>SAR</strong><span data-i18n="currency">أسعار واضحة</span></div>
         </div>
@@ -137,7 +137,7 @@
   <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle" aria-hidden="true"><div class="modal-card checkout-card"><button class="close-btn" type="button" data-close-modal aria-label="إغلاق" data-i18n-aria="closeDialog">×</button><form id="orderDetailsForm"><div class="checkout-shell"><h2 id="orderModalTitle" data-i18n="orderHeader">طلب ROCK</h2><div class="order-fields"><label for="customerName"><span data-i18n="customerNameLabel">الاسم</span><input id="customerName" name="customerName" autocomplete="name" required></label><label for="customerPhone"><span data-i18n="customerPhoneLabel">رقم الجوال</span><input id="customerPhone" name="customerPhone" type="tel" inputmode="tel" autocomplete="tel" required></label><label for="customerCity"><span data-i18n="customerCityLabel">المدينة</span><input id="customerCity" name="customerCity" autocomplete="address-level2"></label><label for="customerAddress"><span data-i18n="customerAddressLabel">العنوان</span><input id="customerAddress" name="customerAddress" autocomplete="street-address"></label></div><label class="order-notes" for="customerNotes"><span data-i18n="customerNotesLabel">ملاحظات (اختياري)</span><textarea id="customerNotes" name="customerNotes"></textarea></label><div class="order-privacy-note"><span data-i18n="orderPrivacy">لن تُرسل بياناتك تلقائيًا. عند النسخ أو المشاركة ستتضمن الرسالة البيانات التي أدخلتها؛ راجع المحتوى واختر الجهة المستلمة بنفسك. لا يوجد دفع إلكتروني.</span> <a class="order-privacy-link" href="policies.html" data-i18n="storeInfo">معلومات المتجر</a></div><div class="order-summary"><label class="order-summary-label" for="orderText"><span data-i18n="orderSummaryLabel">ملخص الطلب</span><textarea id="orderText" readonly></textarea></label><label class="order-confirmation" for="orderConfirmation"><input id="orderConfirmation" name="orderConfirmation" type="checkbox" required><span data-i18n="orderConfirmationLabel">أؤكد أنني راجعت الملخص وأفهم أنه ليس طلبًا مؤكدًا، وأن السعر والتوفر والتوصيل تحتاج إلى تأكيد.</span></label><div class="order-actions"><button type="button" class="btn btn-dark" id="shareOrder" data-i18n="shareOrder">مشاركة الطلب</button><button type="button" class="btn policy-secondary" id="copyOrder" data-i18n="copyOrder">نسخ تفاصيل الطلب</button><button type="button" class="btn policy-secondary" id="doneOrder" data-i18n="done">تم</button></div></div></div></form></div></div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="products.js?v=20261021-audit-release-1"></script><script src="app.js?v=20261021-product-cart-v2"></script>
+  <script src="products.js?v=20261022-catalog-quality"></script><script src="data/product-image-quality.js?v=20261022-quality-filter"></script><script src="app.js?v=20261022-catalog-quality"></script>
   <script src="rocky-assistant.js?v=20261021-audit-release-1"></script>
 </body>
 </html>
