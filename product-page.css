@@ -15,7 +15,7 @@
 .product-main-image:before{content:"";position:absolute;width:78%;aspect-ratio:1;border:1px solid rgba(39,109,180,.12);border-radius:50%;box-shadow:0 0 0 35px rgba(35,112,188,.025),0 0 0 75px rgba(35,112,188,.02);z-index:-1}
 .product-main-image img{width:min(80%,560px);height:auto;max-height:490px;object-fit:contain;filter:drop-shadow(0 28px 24px rgba(14,45,81,.14));position:relative;z-index:1}
 .product-detail-category{position:absolute;left:22px;top:22px;z-index:2;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid #e0e8f1;color:#365878;font-size:10px;font-weight:800;letter-spacing:.1em}
-.product-image-watermark{position:absolute;right:22px;bottom:20px;color:#8296ac;font:800 9px/1 Manrope,sans-serif;letter-spacing:.18em}
+.product-image-watermark{position:absolute;right:22px;bottom:20px;color:#8296ac;font:800 9px/1 Inter,sans-serif;letter-spacing:.18em}
 .product-gallery-caption{display:flex;justify-content:space-between;gap:12px;color:#8494a7;font-size:10px;padding:13px 3px}
 .product-gallery-thumbnails{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,88px));gap:10px;margin:12px 0 2px}
 .product-gallery-thumbnails[hidden]{display:none!important}
@@ -25,19 +25,19 @@
 .product-gallery-thumb img{display:block;width:100%;height:100%;object-fit:contain;border-radius:8px}
 .product-gallery-thumb[hidden]{display:none!important}
 .product-detail-copy{padding:22px 0}
-.product-eyebrow{margin:0 0 12px;color:#367bb8;font:800 10px/1.3 Manrope,"IBM Plex Sans Arabic",sans-serif;letter-spacing:.16em;text-transform:uppercase}
-.detail-model{color:#8393a7;font:800 11px/1.4 Manrope,sans-serif;letter-spacing:.18em;margin:0 0 13px}
+.product-eyebrow{margin:0 0 12px;color:#367bb8;font:800 10px/1.3 Inter,"IBM Plex Sans Arabic",sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.detail-model{color:#8393a7;font:800 11px/1.4 Inter,sans-serif;letter-spacing:.18em;margin:0 0 13px}
 .product-detail-copy h1{font-size:clamp(36px,4vw,58px);line-height:1.09;letter-spacing:-.055em;color:#071a33;margin:0 0 18px;overflow-wrap:anywhere}
 .detail-price{font-size:25px;font-weight:800;letter-spacing:-.03em;color:#071a33;margin:0 0 18px}
 .detail-description{font-size:14px;line-height:1.95;color:#5c7189;max-width:560px;margin:0}
 .detail-separator{height:1px;background:#dfe8f2;margin:27px 0}
 .detail-facts{display:grid;gap:20px}
 .detail-facts article{display:grid;grid-template-columns:34px 1fr;gap:13px;align-items:start}
-.fact-symbol{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#e8f3ff;color:#1766a9;font:800 10px/1 Manrope,sans-serif}
+.fact-symbol{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#e8f3ff;color:#1766a9;font:800 10px/1 Inter,sans-serif}
 .detail-facts h2{font-size:12px;color:#0d2747;margin:0 0 5px}
 .detail-facts p{font-size:11px;line-height:1.8;color:#697e95;margin:0}
 .product-detail-actions{display:grid;gap:10px;margin-top:30px}
-.product-primary-button,.product-secondary-button{min-height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 18px;font:800 12px/1.4 "Manrope","IBM Plex Sans Arabic",sans-serif;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
+.product-primary-button,.product-secondary-button{min-height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 18px;font:800 12px/1.4 "Inter","IBM Plex Sans Arabic",sans-serif;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
 .product-primary-button{border:1px solid #06162f;color:#fff;background:linear-gradient(110deg,#06162f,#104c87);box-shadow:0 10px 26px rgba(4,28,58,.12)}
 .product-primary-button:hover{transform:translateY(-2px);background:linear-gradient(110deg,#09264e,#1169b5)}
 .product-secondary-button{border:1px solid #d6e2ef;background:#fff;color:#294d70}
@@ -52,7 +52,7 @@
 .related-card{min-width:0;background:#fff;border:1px solid #e1eaf4;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px;color:#071a33;transition:transform .2s,box-shadow .2s}
 .related-card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(10,39,75,.08)}
 .related-card img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#f1f6fc;border-radius:12px}
-.related-card small{font:800 9px/1.4 Manrope,sans-serif;letter-spacing:.1em;color:#8092a8}
+.related-card small{font:800 9px/1.4 Inter,sans-serif;letter-spacing:.1em;color:#8092a8}
 .related-card strong{font-size:12px;line-height:1.5}
 .related-card span{font-size:12px;font-weight:800}
 .product-not-found{padding:70px 25px;text-align:center;border:1px solid #e0e9f3;border-radius:24px;background:white}
@@ -79,7 +79,7 @@
 .detail-price-block{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:14px 16px;margin:0 0 18px;border:1px solid #d9e7f5;border-radius:14px;background:#fff}
 .detail-price-label{color:#647a93;font-size:12px;font-weight:800}
 .detail-price-block .detail-price{margin:0;color:#071a33;font-size:28px;line-height:1.2}
-.detail-model{letter-spacing:0;font-family:"IBM Plex Sans Arabic","Manrope",sans-serif;font-size:12px;font-weight:700}
+.detail-model{letter-spacing:0;font-family:"IBM Plex Sans Arabic","Inter",sans-serif;font-size:12px;font-weight:700}
 .related-grid{align-items:stretch}
 .related-card{padding:12px;gap:0;min-width:0;min-height:100%;border-radius:16px;box-shadow:0 5px 20px rgba(8,36,72,.035)}
 .related-card:hover{border-color:#b6d6f5}
@@ -88,7 +88,7 @@
 .related-card-content{display:flex;flex-direction:column;flex:1;min-width:0;padding-top:12px}
 .related-card-model{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:9px;border-bottom:1px solid #edf2f7}
 .related-card-model span,.related-card-price>span{font-size:10px;color:#71859b;font-weight:700}
-.related-card-model b{font:800 10px/1.5 "Manrope","IBM Plex Sans Arabic",sans-serif;color:#294867;direction:ltr;unicode-bidi:plaintext;overflow-wrap:anywhere}
+.related-card-model b{font:800 10px/1.5 "Inter","IBM Plex Sans Arabic",sans-serif;color:#294867;direction:ltr;unicode-bidi:plaintext;overflow-wrap:anywhere}
 .related-card-title{display:block;margin-top:10px;color:#0b2039}
 .related-card-title strong{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.6;font-weight:800;min-height:4.8em}
 .related-card-price{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:auto;margin-bottom:12px;padding-top:12px;border-top:1px solid #e8eef5}
@@ -204,7 +204,7 @@
   border-color:#e5ebf2;
   background:#fff;
   color:#526a83;
-  font-family:var(--rock-font-latin,Manrope,sans-serif);
+  font-family:var(--rock-font-latin,Inter,sans-serif);
   font-size:10px;
   letter-spacing:0;
 }
@@ -269,14 +269,14 @@ html[dir="rtl"] .product-image-watermark{right:auto;left:16px}
 }
 .detail-price-label{font-family:var(--rock-font-ar,"IBM Plex Sans Arabic",sans-serif)}
 .detail-price-block .detail-price{
-  font-family:var(--rock-font-latin,Manrope,sans-serif);
+  font-family:var(--rock-font-latin,Inter,sans-serif);
   font-size:clamp(24px,2.5vw,30px);
   letter-spacing:-.025em;
   font-variant-numeric:tabular-nums;
 }
 .detail-barcode{
   overflow-wrap:anywhere;
-  font-family:var(--rock-font-latin,Manrope,sans-serif);
+  font-family:var(--rock-font-latin,Inter,sans-serif);
   letter-spacing:.02em;
   unicode-bidi:plaintext;
 }
