@@ -1378,3 +1378,14 @@ body.rock-dialog-open{overflow:hidden}
   .modal[aria-hidden="true"],
   .modal.show[aria-hidden="false"]{transition:none!important}
 }
+
+
+/* Checkout handoff: make manual sharing, privacy, and confirmation steps explicit. */
+.order-privacy-note{display:flex;align-items:flex-start;flex-wrap:wrap;gap:4px 7px;line-height:1.8}
+.order-privacy-link{color:var(--blue)!important;font-weight:800;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.order-confirmation{display:flex;align-items:flex-start;gap:10px;margin:14px 0 16px;color:#526980;font-size:11px;line-height:1.85;cursor:pointer}
+.order-confirmation input{flex:0 0 18px;width:18px;height:18px;margin:3px 0 0;accent-color:var(--blue);cursor:pointer}
+.order-confirmation:focus-within{outline:2px solid rgba(24,120,229,.35);outline-offset:4px;border-radius:4px}
+.order-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.order-actions button{min-height:44px}
+@media(max-width:480px){.order-actions{display:grid;grid-template-columns:1fr}.order-actions button{width:100%}.order-confirmation{font-size:10px}}
