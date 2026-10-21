@@ -10,12 +10,12 @@
   root.setAttribute('aria-label', 'ROCKY shopping assistant');
   root.innerHTML = `
     <button class="rocky-launcher" type="button" id="rockyLauncher" aria-expanded="false" aria-controls="rockyPanel" aria-label="افتح مساعد روكي">
-      <img src="assets/brand/rocky-mascot.svg" alt="" width="48" height="48">
+      <img src="assets/brand/rocky-avatar.webp" alt="" width="48" height="48">
       <span class="rocky-launcher-copy"><strong>روكي | ROCKY</strong><small data-rocky-launch-sub>مساعد التسوّق</small></span><span class="rocky-launcher-dot" aria-hidden="true"></span>
     </button>
     <section class="rocky-panel" id="rockyPanel" role="dialog" aria-modal="false" aria-labelledby="rockyTitle" hidden>
       <header class="rocky-head">
-        <img src="assets/brand/rocky-mascot.svg" alt="" width="43" height="43">
+        <img src="assets/brand/rocky-avatar.webp" alt="" width="43" height="43">
         <div class="rocky-head-copy"><strong id="rockyTitle">روكي <span aria-hidden="true">·</span> ROCK</strong><span><i class="rocky-status" aria-hidden="true"></i><span data-rocky-status>جاهز يساعدك تختار</span></span></div>
         <button class="rocky-close" id="rockyClose" type="button" aria-label="إغلاق مساعد روكي">×</button>
       </header>
