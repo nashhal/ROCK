@@ -352,14 +352,23 @@
   $('#menuBtn').onclick=()=>{
     const expanded=$('#mobilePanel').classList.toggle('open');
     $('#menuBtn').setAttribute('aria-expanded',String(expanded));
+    $('#mobilePanel').setAttribute('aria-hidden',String(!expanded));
   };
   document.querySelectorAll('[data-mobile-link]').forEach(a=>a.onclick=()=>{
     $('#mobilePanel').classList.remove('open');
+    $('#mobilePanel').setAttribute('aria-hidden','true');
     $('#menuBtn').setAttribute('aria-expanded','false');
   });
   $('.announcement-close').onclick=()=>$('.announcement').remove();$('#year').textContent=new Date().getFullYear();const productCountNode=$('#heroProductCount');if(productCountNode)productCountNode.textContent=String(products.length);
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeCart();closeModals();$('#mobilePanel').classList.remove('open');return;}
+    if(e.key==='Escape'){
+      closeCart();
+      closeModals();
+      $('#mobilePanel').classList.remove('open');
+      $('#mobilePanel').setAttribute('aria-hidden','true');
+      $('#menuBtn').setAttribute('aria-expanded','false');
+      return;
+    }
     if(e.key==='Tab'){
       const activeDialog = $('#checkoutModal').classList.contains('show') ? $('#checkoutModal') :
         ($('#productModal').classList.contains('show') ? $('#productModal') :
