@@ -183,6 +183,14 @@ const productPage = read('product.html');
 assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not expose a Drive-folder link');
 
 const app = read('app.js');
+// Order handoff must remain explicit: reviewed summary, consent gate, share API and safe copy fallback.
+assert.ok(home.includes('id="orderConfirmation" name="orderConfirmation" type="checkbox" required'), 'Order confirmation checkbox must be required');
+assert.ok(home.includes('id="shareOrder"'), 'Checkout must provide a share action');
+assert.ok(home.includes('class="order-privacy-link" href="policies.html"'), 'Checkout must link to store/privacy information');
+assert.ok(app.includes("async function shareOrder()") && app.includes("navigator.share({title:t('orderHeader'),text})"), 'Checkout share handler is missing');
+assert.ok(app.includes("$('#orderDetailsForm').addEventListener('input'"), 'Order preview must update as customer details are entered');
+assert.ok(app.includes("if(!form.checkValidity()){ form.reportValidity(); return; }"), 'Order sharing and copying must validate required fields');
+assert.ok(read('policy-page.js').includes('destination you choose in the share sheet'), 'Privacy policy must explain the order share destination');
 // Language and mobile navigation operate on all matches, not a single element.
 assert.ok(app.includes("document.querySelectorAll('[data-i18n]').forEach"), 'Language switching must update every translated element');
 assert.ok(app.includes("document.querySelectorAll('[data-i18n-aria]').forEach"), 'Translated accessibility labels must update across the page');
@@ -199,7 +207,7 @@ assert.ok(!home.includes('class="ticker"'), 'Legacy ticker should not return to 
 // Cart, checkout and product-page interaction guards.
 assert.match(home, /id="cartDrawer"[^>]*role="dialog"[^>]*aria-hidden="true"/, 'Cart drawer must be a labelled, initially hidden dialog');
 assert.ok(home.includes('aria-controls="cartDrawer"') && home.includes('aria-expanded="false"'), 'Cart trigger must expose its relationship and closed state');
-for (const key of ['emptyCartText','increaseQty','decreaseQty','closeDialog','customerNameLabel','customerPhoneLabel','customerCityLabel','customerAddressLabel','customerNotesLabel','orderSummaryLabel']) {
+for (const key of ['emptyCartText','increaseQty','decreaseQty','closeDialog','customerNameLabel','customerPhoneLabel','customerCityLabel','customerAddressLabel','customerNotesLabel','orderSummaryLabel','orderConfirmationLabel','shareOrder','shared']) {
   assert.ok(app.includes(`${key}:`), `Cart/checkout translation is missing: ${key}`);
 }
 assert.ok(app.includes("t('emptyCartText')"), 'The cart empty state must use purpose-written localized copy');
