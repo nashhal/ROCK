@@ -83,6 +83,7 @@ test('ROCKY answers a local catalog query and closes with Escape', async ({ page
   await page.locator('#rockyInput').fill('أبغى شاحن');
   await page.locator('#rockyForm button[type="submit"]').click();
   await expect(page.locator('#rockyMessages .rocky-message').nth(2)).toBeVisible();
+  await expect(page.locator('#rockyMessages .rocky-product').first()).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('#rockyPanel')).toBeHidden();
   await expect(page.locator('#rockyLauncher')).toHaveAttribute('aria-expanded', 'false');
@@ -109,8 +110,8 @@ test('order preparation remains local and preserves the catalog model', async ({
   await page.locator('#customerName').fill('Test Customer');
   await page.locator('#customerPhone').fill('0500000000');
   await page.locator('#copyOrder').click();
-  await expect(page.locator('#orderText')).toContainText('Test Customer');
-  await expect(page.locator('#orderText')).toContainText('RKCBL146');
+  await expect(page.locator('#orderText')).toHaveValue(/Test Customer/);
+  await expect(page.locator('#orderText')).toHaveValue(/RKCBL146/);
   await expect(page.locator('.order-privacy-note')).toContainText('لا يوجد دفع إلكتروني');
 });
 
