@@ -11,8 +11,8 @@
     ar: {
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
       sortFeatured:'ترتيب المتجر',sortLow:'السعر: من الأقل للأعلى',sortHigh:'السعر: من الأعلى للأقل',sortName:'الاسم',
-      resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',
-      viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'إضافة إلى السلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',
+      resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',sortBy:'ترتيب حسب',priceLabel:'السعر',modelLabel:'الموديل',modelMissing:'غير محدد',
+      shopIntro:'ابحث باسم المنتج أو الموديل، وقارن الأسعار قبل الاختيار.',viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'أضف للسلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',
       trustProductTitle:'كتالوج حسب الموديل',trustProductText:'تعرّف على موديل ROCK قبل الاختيار.',
       trustPriceTitle:'أسعار واضحة',trustPriceText:'تصفّح الأسعار المعروضة بالريال السعودي.',
       trustOrderTitle:'راجع قبل الإرسال',trustOrderText:'جهّز ملخص الطلب لمراجعته ونسخه.',
@@ -20,13 +20,13 @@
       customerAddressLabel:'العنوان أو نقطة الاستلام',customerNotesLabel:'ملاحظات (اختياري)',orderSummaryLabel:'ملخص الطلب',
       orderPrivacy:'لا يوجد دفع إلكتروني أو إرسال تلقائي في هذه النسخة. لا تدخل بيانات البطاقة البنكية.',
       orderHeader:'طلب ROCK',customer:'العميل',phone:'الجوال',city:'المدينة',address:'العنوان/الاستلام',notes:'ملاحظات',copyFailed:'تعذّر النسخ. حدّد النص وانسخه يدويًا.',
-      announcement:'تقنية يومية بتفاصيل محسوبة',shop:'المتجر',collections:'التصنيفات',story:'عن ROCK',bag:'السلة',eyebrow:'مصمم للاستخدام اليومي',hero1:'أقل ضجيجًا.',hero2:'أكثر ROCK.',heroText:'شحن وصوت وحلول للسيارة وأدوات للحياة اليومية، مختارة في تجربة شراء واحدة واضحة.',shopNow:'تسوق الآن',featuredBtn:'استكشف المختارات',products:'منتجًا',categories:'فئات',currency:'أسعار واضحة',catalog:'الكتالوج',shopTitle:'منتجات للاستخدام الحقيقي',filter:'تصفية',collectionsLabel:'المجموعات',collectionsTitle:'اختر حسب يومك',collectionsNote:'من المكتب إلى الطريق',powerText:'طاقة وشحن',audioText:'صوتك في كل مكان',driveText:'حلول للسيارة',lifeText:'تفاصيل يومية',storyTitle:'تقنية واضحة. حضور مختلف.',storyText:'ROCK ليست مجموعة من الأجهزة المتشابهة. هي طريقة أبسط لاختيار ما تحتاجه: موديل واضح، سعر واضح، وصورة المنتج الحقيقي أمامك.',backTop:'العودة للبداية ↗',clearCart:'تفريغ السلة',bagTitle:'سلتك',total:'الإجمالي',checkout:'تجهيز الطلب',continue:'متابعة التسوق',addCart:'أضف إلى السلة',orderTitle:'طلبك جاهز',orderText:'راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.',copyOrder:'نسخ تفاصيل الطلب',done:'تم',noResults:'لا توجد نتائج',noResultsSub:'جرّب كلمة بحث أو تصنيفًا آخر',added:'تمت الإضافة إلى السلة',cleared:'تم تفريغ السلة',copied:'تم نسخ تفاصيل الطلب',empty:'السلة فارغة',sar:'ر.س'
+      announcement:'تقنية يومية بتفاصيل محسوبة',shop:'المتجر',collections:'التصنيفات',story:'عن ROCK',bag:'السلة',eyebrow:'مصمم للاستخدام اليومي',hero1:'أقل ضجيجًا.',hero2:'أكثر ROCK.',heroText:'شحن وصوت وحلول للسيارة وأدوات للحياة اليومية، مختارة في تجربة شراء واحدة واضحة.',shopNow:'تسوق الآن',featuredBtn:'استكشف المختارات',products:'منتجًا',categories:'فئات',currency:'أسعار واضحة',catalog:'الكتالوج',shopTitle:'تسوّق منتجات ROCK',filter:'تصفية',collectionsLabel:'المجموعات',collectionsTitle:'اختر حسب يومك',collectionsNote:'من المكتب إلى الطريق',powerText:'طاقة وشحن',audioText:'صوتك في كل مكان',driveText:'حلول للسيارة',lifeText:'تفاصيل يومية',storyTitle:'تقنية واضحة. حضور مختلف.',storyText:'ROCK ليست مجموعة من الأجهزة المتشابهة. هي طريقة أبسط لاختيار ما تحتاجه: موديل واضح، سعر واضح، وصورة المنتج الحقيقي أمامك.',backTop:'العودة للبداية ↗',clearCart:'تفريغ السلة',bagTitle:'سلتك',total:'الإجمالي',checkout:'تجهيز الطلب',continue:'متابعة التسوق',addCart:'أضف إلى السلة',orderTitle:'طلبك جاهز',orderText:'راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.',copyOrder:'نسخ تفاصيل الطلب',done:'تم',noResults:'لا توجد نتائج',noResultsSub:'جرّب كلمة بحث أو تصنيفًا آخر',added:'تمت الإضافة إلى السلة',cleared:'تم تفريغ السلة',copied:'تم نسخ تفاصيل الطلب',empty:'السلة فارغة',sar:'ر.س'
     },
     en: {
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',
       sortFeatured:'Store order',sortLow:'Price: low to high',sortHigh:'Price: high to low',sortName:'Name',
-      resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',
-      viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',
+      resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',sortBy:'Sort by',priceLabel:'Price',modelLabel:'Model',modelMissing:'Not specified',
+      shopIntro:'Search by product name or model, compare prices, and choose with confidence.',viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',
       trustProductTitle:'Model-first catalog',trustProductText:'Identify the ROCK model before choosing.',
       trustPriceTitle:'Clear listed prices',trustPriceText:'Browse prices shown in Saudi riyals.',
       trustOrderTitle:'Review before sharing',trustOrderText:'Prepare an order summary to review and copy.',
@@ -34,7 +34,7 @@
       customerAddressLabel:'Address or pickup point',customerNotesLabel:'Notes (optional)',orderSummaryLabel:'Order summary',
       orderPrivacy:'This version has no online payment or automatic order submission. Do not enter bank card details.',
       orderHeader:'ROCK order request',customer:'Customer',phone:'Mobile',city:'City',address:'Address/pickup',notes:'Notes',copyFailed:'Could not copy. Select the text and copy it manually.',
-      announcement:'Everyday technology, considered.',shop:'Shop',collections:'Collections',story:'About ROCK',bag:'Bag',eyebrow:'Built for everyday use',hero1:'Less noise.',hero2:'More ROCK.',heroText:'Power, audio, drive and everyday essentials brought together in one clear shopping experience.',shopNow:'Shop now',featuredBtn:'Explore picks',products:'products',categories:'categories',currency:'clear pricing',catalog:'catalog',shopTitle:'Made for real life',filter:'Filter',collectionsLabel:'collections',collectionsTitle:'Choose your everyday',collectionsNote:'From desk to road',powerText:'Power & charging',audioText:'Sound everywhere',driveText:'For the road',lifeText:'Everyday details',storyTitle:'Clear tech. Distinct presence.',storyText:'ROCK is not a shelf of interchangeable gadgets. It is a simpler way to choose what fits: clear model, clear price, real product imagery.',backTop:'Back to top ↗',clearCart:'Clear bag',bagTitle:'Your bag',total:'Total',checkout:'Prepare order',continue:'Continue shopping',addCart:'Add to bag',orderTitle:'Your order is ready',orderText:'Review the details, then copy the order to send through your preferred channel.',copyOrder:'Copy order details',done:'Done',noResults:'No results',noResultsSub:'Try another search or category.',added:'Added to bag',cleared:'Bag cleared',copied:'Order details copied',empty:'Your bag is empty',sar:'SAR'
+      announcement:'Everyday technology, considered.',shop:'Shop',collections:'Collections',story:'About ROCK',bag:'Bag',eyebrow:'Built for everyday use',hero1:'Less noise.',hero2:'More ROCK.',heroText:'Power, audio, drive and everyday essentials brought together in one clear shopping experience.',shopNow:'Shop now',featuredBtn:'Explore picks',products:'products',categories:'categories',currency:'clear pricing',catalog:'catalog',shopTitle:'Shop ROCK products',filter:'Filter',collectionsLabel:'collections',collectionsTitle:'Choose your everyday',collectionsNote:'From desk to road',powerText:'Power & charging',audioText:'Sound everywhere',driveText:'For the road',lifeText:'Everyday details',storyTitle:'Clear tech. Distinct presence.',storyText:'ROCK is not a shelf of interchangeable gadgets. It is a simpler way to choose what fits: clear model, clear price, real product imagery.',backTop:'Back to top ↗',clearCart:'Clear bag',bagTitle:'Your bag',total:'Total',checkout:'Prepare order',continue:'Continue shopping',addCart:'Add to bag',orderTitle:'Your order is ready',orderText:'Review the details, then copy the order to send through your preferred channel.',copyOrder:'Copy order details',done:'Done',noResults:'No results',noResultsSub:'Try another search or category.',added:'Added to bag',cleared:'Bag cleared',copied:'Order details copied',empty:'Your bag is empty',sar:'SAR'
     }
   };
 
@@ -67,8 +67,12 @@
     });
     $('#langBtn').textContent = state.lang === 'ar' ? 'EN' : 'AR';
     $('#searchInput').placeholder = state.lang === 'ar' ? 'ابحث عن موديل أو منتج' : 'Search model or product';
+    $('#searchInput').setAttribute('aria-label', state.lang === 'ar' ? 'ابحث باسم المنتج أو الموديل' : 'Search by product name or model');
+    $('#sortSelect').setAttribute('aria-label', t('sortBy'));
     $('#minPrice').placeholder = state.lang === 'ar' ? 'من' : 'Min';
     $('#maxPrice').placeholder = state.lang === 'ar' ? 'إلى' : 'Max';
+    $('#minPrice').setAttribute('aria-label', state.lang === 'ar' ? 'أقل سعر بالريال السعودي' : 'Minimum price in Saudi riyals');
+    $('#maxPrice').setAttribute('aria-label', state.lang === 'ar' ? 'أعلى سعر بالريال السعودي' : 'Maximum price in Saudi riyals');
     render();
     renderCart();
   }
@@ -100,22 +104,20 @@
       const card = document.createElement('article');
       card.className = 'product-card';
       card.style.animationDelay = `${Math.min(i, 12) * 25}ms`;
+      const modelText = p.model && p.model !== '—' ? p.model : t('modelMissing');
       card.innerHTML = `
         <a class="product-image product-image-link" href="${detailUrl}" aria-label="${esc(t('viewProduct'))}: ${esc(name(p))}">
-          ${image ? `<img data-product-image loading="lazy" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="480">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
+          ${image ? `<img data-product-image loading="lazy" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="360">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
           <span class="product-tag">${esc(catLabel(p.category))}</span>
         </a>
         <div class="product-info">
-          <div class="product-model">${esc(p.model)}</div>
+          <div class="product-model-row"><span class="product-field-label">${esc(t('modelLabel'))}</span><span class="product-model" dir="ltr">${esc(modelText)}</span></div>
           <a class="product-title-link" href="${detailUrl}"><div class="product-name">${esc(name(p))}</div></a>
-          <div class="product-bottom">
-            <span class="price">${money(p.price)}</span>
-            <div class="product-actions">
-              <button class="mini-btn" data-view="${esc(p.id)}" aria-label="${esc(t('quickView'))}" title="${esc(t('quickView'))}">i</button>
-              <button class="mini-btn primary" data-add="${esc(p.id)}" aria-label="${esc(t('addToBag'))}" title="${esc(t('addToBag'))}">＋</button>
-            </div>
+          <div class="product-price-row"><span class="price-label">${esc(t('priceLabel'))}</span><span class="price">${money(p.price)}</span></div>
+          <div class="product-actions">
+            <button class="product-action-btn product-action-view" data-view="${esc(p.id)}" aria-label="${esc(t('quickView'))}: ${esc(name(p))}" title="${esc(t('quickView'))}"><span>${esc(t('quickView'))}</span><span aria-hidden="true">↗</span></button>
+            <button class="product-action-btn product-action-add" data-add="${esc(p.id)}" aria-label="${esc(t('addToBag'))}: ${esc(name(p))}" title="${esc(t('addToBag'))}"><span>${esc(t('addToBag'))}</span><span aria-hidden="true">＋</span></button>
           </div>
-          <a class="product-detail-link" href="${detailUrl}">${esc(t('details'))} <span aria-hidden="true">↗</span></a>
         </div>`;
       grid.appendChild(card);
       const cardImage = card.querySelector('[data-product-image]');

@@ -73,3 +73,37 @@
 .product-main-image .product-detail-photo-placeholder[hidden]{display:none!important}
 .related-card .product-photo-placeholder{width:100%;aspect-ratio:1/1;min-height:0;border-radius:12px}
 .related-card .product-photo-placeholder strong{font-size:18px}
+
+
+/* ROCK related-product clarity pass */
+.detail-price-block{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:14px 16px;margin:0 0 18px;border:1px solid #d9e7f5;border-radius:14px;background:#fff}
+.detail-price-label{color:#647a93;font-size:12px;font-weight:800}
+.detail-price-block .detail-price{margin:0;color:#071a33;font-size:28px;line-height:1.2}
+.detail-model{letter-spacing:0;font-family:"IBM Plex Sans Arabic","Manrope",sans-serif;font-size:12px;font-weight:700}
+.related-grid{align-items:stretch}
+.related-card{padding:12px;gap:0;min-width:0;min-height:100%;border-radius:16px;box-shadow:0 5px 20px rgba(8,36,72,.035)}
+.related-card:hover{border-color:#b6d6f5}
+.related-card-visual{display:grid;place-items:center;aspect-ratio:4/3;width:100%;overflow:hidden;padding:9px;border-radius:11px;background:#fff;border:1px solid #edf2f7}
+.related-card-visual img{display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;background:#fff;border-radius:0}
+.related-card-content{display:flex;flex-direction:column;flex:1;min-width:0;padding-top:12px}
+.related-card-model{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:9px;border-bottom:1px solid #edf2f7}
+.related-card-model span,.related-card-price>span{font-size:10px;color:#71859b;font-weight:700}
+.related-card-model b{font:800 10px/1.5 "Manrope","IBM Plex Sans Arabic",sans-serif;color:#294867;direction:ltr;unicode-bidi:plaintext;overflow-wrap:anywhere}
+.related-card-title{display:block;margin-top:10px;color:#0b2039}
+.related-card-title strong{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.6;font-weight:800;min-height:4.8em}
+.related-card-price{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:auto;margin-bottom:12px;padding-top:12px;border-top:1px solid #e8eef5}
+.related-card-price strong{font-size:17px;font-weight:800;white-space:nowrap;color:#071a33}
+.related-card-cta{display:flex;align-items:center;justify-content:center;gap:7px;min-height:39px;padding:8px 10px;border:1px solid #d4e3f2;border-radius:10px;background:#f8fbff;color:#17436e;font-size:11px;font-weight:800}
+.related-card-cta:hover{border-color:#8cbce9;background:#eef7ff}
+@media(max-width:560px){
+ .detail-price-block{padding:13px 14px}
+ .detail-price-block .detail-price{font-size:23px}
+ .related-card{padding:9px;border-radius:13px}
+ .related-card-content{padding-top:10px}
+ .related-card-model span,.related-card-price>span{font-size:9px}
+ .related-card-model b{font-size:9px}
+ .related-card-title strong{font-size:11px}
+ .related-card-price strong{font-size:14px}
+ .related-card-cta{font-size:10px;min-height:37px}
+}
+@media(prefers-reduced-motion:reduce){.related-card-cta{transition:none}}

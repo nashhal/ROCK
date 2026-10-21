@@ -303,3 +303,75 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 @media(max-width:760px){
   .product-image{aspect-ratio:4 / 3;padding:8px}
 }
+
+
+/* ROCK catalog clarity pass — readable product hierarchy and explicit actions. */
+.shop-section .section-head > div{max-width:760px}
+.shop-intro{margin:13px 0 0;max-width:620px;color:#62758c;font-size:13px;line-height:1.8}
+.shop-toolbar{align-items:center}
+.shop-tools{align-items:stretch}
+.sort-control{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:42px;padding:0 12px;border:1px solid #d9e3ef;border-radius:12px;background:#fff;color:#526981}
+.sort-control-label{font-size:11px;font-weight:800;white-space:nowrap}
+.sort-control select{min-width:132px;min-height:40px;border:0!important;border-radius:8px!important;padding:0 5px;background:transparent!important;color:#0b2440;font-size:12px;font-weight:700;outline-offset:2px}
+.sort-control:focus-within{border-color:#6db4ff;box-shadow:0 0 0 3px rgba(45,140,255,.08)}
+.product-grid{align-items:stretch;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:18px}
+.product-card{display:flex;flex-direction:column;height:100%;min-width:0;border-color:#dce6f1;border-radius:16px;box-shadow:0 5px 20px rgba(8,36,72,.045)}
+.product-card:hover{border-color:#b6d6f5;box-shadow:0 15px 35px rgba(8,36,72,.09)}
+.product-image{aspect-ratio:4/3;padding:13px;background:#fff}
+.product-image img{width:100%;height:100%;padding:4px;object-fit:contain;object-position:center;background:#fff}
+.product-tag{inset-block-start:11px;inset-inline-start:11px;inset-inline-end:auto;max-width:calc(100% - 22px);font-family:"IBM Plex Sans Arabic","Manrope",sans-serif;letter-spacing:0;font-size:10px;line-height:1.35;padding:6px 10px;color:#254769;background:rgba(255,255,255,.97);border:1px solid #dce8f5;border-radius:999px}
+.product-info{flex:1;min-height:0;gap:0;align-items:stretch;padding:15px}
+.product-model-row{display:flex;align-items:center;justify-content:flex-start;gap:8px;flex-wrap:wrap;min-width:0;padding-bottom:9px;border-bottom:1px solid #edf2f7}
+.product-field-label,.price-label{flex:0 0 auto;color:#75869a;font-size:11px;font-weight:700;line-height:1.5}
+.product-model{min-width:0;color:#294867;font:800 11px/1.5 "Manrope","IBM Plex Sans Arabic",sans-serif;letter-spacing:.025em;overflow-wrap:anywhere;unicode-bidi:plaintext}
+.product-title-link{margin-top:10px}
+.product-name{margin:0;color:#0b2039;font-size:14px;line-height:1.6;font-weight:800;min-height:4.8em;overflow-wrap:anywhere}
+.product-title-link:hover .product-name{color:#0c69be}
+.product-price-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:auto;margin-bottom:12px;padding-top:12px;border-top:1px solid #e8eef5}
+.price{color:#071a33;font-size:19px;font-weight:800;line-height:1.25;white-space:nowrap;font-variant-numeric:tabular-nums}
+.product-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin-top:0}
+.product-action-btn{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:41px;padding:9px 10px;border:1px solid #d6e3f0;border-radius:10px;background:#fff;color:#183a5d;font:800 11px/1.3 "IBM Plex Sans Arabic","Manrope",sans-serif;white-space:nowrap;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+.product-action-btn:hover{transform:translateY(-1px);border-color:#8cbce9}
+.product-action-view{background:#fff;color:#274968}
+.product-action-add{border-color:#0a2d52;background:linear-gradient(120deg,#071a33,#104d88);color:#fff}
+.product-action-add:hover{border-color:#12589b;background:linear-gradient(120deg,#0a2548,#1466ad)}
+.product-action-btn:focus-visible{outline:3px solid rgba(45,140,255,.45);outline-offset:2px}
+.catalog-filter-row{gap:14px}
+.results-summary{font-size:12px;font-weight:800;color:#173d64}
+.price-controls-label{font-size:12px}
+.price-input{font-size:11px}
+.clear-filter{font-size:11px}
+@media(max-width:980px){
+ .shop-intro{font-size:12px}
+ .product-grid{grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px}
+}
+@media(max-width:650px){
+ .shop-section .section-head{align-items:flex-start}
+ .shop-intro{max-width:100%;font-size:12px;line-height:1.75}
+ .shop-tools{width:100%;gap:9px}
+ .sort-control{width:100%;min-height:44px}
+ .sort-control select{flex:1;min-width:0}
+ .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ .product-card{border-radius:13px}
+ .product-image{aspect-ratio:1/1;padding:8px}
+ .product-tag{inset-block-start:8px;inset-inline-start:8px;max-width:calc(100% - 16px);font-size:9px;padding:5px 7px}
+ .product-info{padding:11px}
+ .product-model-row{gap:5px;padding-bottom:7px}
+ .product-field-label,.price-label{font-size:10px}
+ .product-model{font-size:10px}
+ .product-title-link{margin-top:9px}
+ .product-name{font-size:12px;line-height:1.55;min-height:5em}
+ .product-price-row{gap:6px;margin-bottom:10px;padding-top:10px}
+ .price{font-size:16px}
+ .product-actions{grid-template-columns:1fr;gap:6px}
+ .product-action-btn{min-height:37px;padding:8px 7px;font-size:10px}
+ .catalog-filter-row{align-items:center}
+ .results-summary{white-space:normal}
+}
+@media(max-width:360px){
+ .product-grid{grid-template-columns:1fr}
+ .product-image{aspect-ratio:4/3}
+ .product-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .product-action-btn{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.product-action-btn{transition:none}}

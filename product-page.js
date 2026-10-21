@@ -10,7 +10,7 @@
     ar:{
       announcement:'تقنية يومية بتفاصيل محسوبة',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
       productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
-      catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
+      catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',modelLabel:'الموديل',modelMissing:'غير محدد',priceLabel:'السعر',viewProduct:'عرض المنتج',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
       factCompatTitle:'التوافق',factCompatText:'تحقق من توافق المنتج مع جهازك والميزات المدعومة قبل الطلب.',
       factDeliveryTitle:'التوفر والتوصيل',factDeliveryText:'يجب تأكيد المخزون ومدة التوصيل وتكلفته والضمان قبل قبول الطلب.',
       addToBag:'أضف إلى السلة',orderInfo:'معلومات الطلب والخصوصية',
@@ -25,7 +25,7 @@
     en:{
       announcement:'Everyday technology, considered.',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
       productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
-      catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
+      catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',modelLabel:'Model',modelMissing:'Not specified',priceLabel:'Price',viewProduct:'View product',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
       factCompatTitle:'Compatibility',factCompatText:'Confirm device fit and supported features before ordering.',
       factDeliveryTitle:'Availability and delivery',factDeliveryText:'Stock, delivery time, shipping cost and warranty must be confirmed before an order is accepted.',
       addToBag:'Add to bag',orderInfo:'Order and privacy information',
@@ -63,12 +63,21 @@
     const related=products.filter(item=>item.category===product.category&&item.id!==product.id).slice(0,3);
     $('#relatedGrid').innerHTML='';
     related.forEach(item=>{
-      const a=document.createElement('a');a.className='related-card';a.href='product.html?id='+encodeURIComponent(item.id);
+      const detailUrl='product.html?id='+encodeURIComponent(item.id);
+      const card=document.createElement('article');card.className='related-card';
       const image=imagePath(item.image);
-      a.innerHTML=(image?'<img data-related-image loading="lazy" width="360" height="360" src="'+escapeHtml(image)+'" alt="'+escapeHtml(name(item))+'">':'<span class="product-photo-placeholder" role="img" aria-label="'+escapeHtml(t('photoPending'))+'"><strong>ROCK</strong><small>'+escapeHtml(t('photoPending'))+'</small></span>')+'<small>'+escapeHtml(item.model)+'</small><strong>'+escapeHtml(name(item))+'</strong><span>'+escapeHtml(priceText(item.price))+'</span>';
-      const relatedImage=a.querySelector('[data-related-image]');
+      const modelText=item.model&&item.model!=='—'?item.model:t('modelMissing');
+      const photo=image?'<img data-related-image loading="lazy" width="360" height="270" src="'+escapeHtml(image)+'" alt="'+escapeHtml(name(item))+'">':'<span class="product-photo-placeholder" role="img" aria-label="'+escapeHtml(t('photoPending'))+'"><strong>ROCK</strong><small>'+escapeHtml(t('photoPending'))+'</small></span>';
+      card.innerHTML='<a class="related-card-visual" href="'+detailUrl+'" aria-label="'+escapeHtml(t('viewProduct'))+': '+escapeHtml(name(item))+'">'+photo+'</a>'+
+        '<div class="related-card-content">'+
+          '<div class="related-card-model"><span>'+escapeHtml(t('modelLabel'))+'</span><b dir="ltr">'+escapeHtml(modelText)+'</b></div>'+
+          '<a class="related-card-title" href="'+detailUrl+'"><strong>'+escapeHtml(name(item))+'</strong></a>'+
+          '<div class="related-card-price"><span>'+escapeHtml(t('priceLabel'))+'</span><strong>'+escapeHtml(priceText(item.price))+'</strong></div>'+
+          '<a class="related-card-cta" href="'+detailUrl+'">'+escapeHtml(t('viewProduct'))+' <span aria-hidden="true">↗</span></a>'+
+        '</div>';
+      const relatedImage=card.querySelector('[data-related-image]');
       if(relatedImage) relatedImage.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='product-photo-placeholder';ph.setAttribute('role','img');ph.setAttribute('aria-label',t('photoPending'));const mark=document.createElement('strong');mark.textContent='ROCK';const note=document.createElement('small');note.textContent=t('photoPending');ph.append(mark,note);relatedImage.replaceWith(ph)},{once:true});
-      $('#relatedGrid').appendChild(a);
+      $('#relatedGrid').appendChild(card);
     });
     $('#relatedSection').hidden=related.length===0;
   }
@@ -124,7 +133,7 @@
       galleryThumbs.appendChild(button);
     });
     $('#detailCategory').textContent=category(product.category);
-    $('#detailModel').textContent=product.model;
+    $('#detailModel').textContent=t('modelLabel')+': '+(product.model&&product.model!=='—'?product.model:t('modelMissing'));
     $('#detailModelCaption').textContent=product.model;
     $('#detailName').textContent=name(product);
     $('#detailPrice').textContent=priceText(product.price);$('#detailBarcode').textContent=product.barcode?t('barcodeLabel')+': '+product.barcode:'';
