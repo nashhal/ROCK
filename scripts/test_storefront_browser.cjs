@@ -51,7 +51,10 @@ async function waitForCatalog(page) {
     assert.equal(await page.locator('#heroProductCount').textContent(), String(approvedIds.length), 'Hero count must match approved product photos');
     const listedIds = await page.locator('#productGrid [data-add]').evaluateAll(nodes => nodes.map(node => node.dataset.add));
     assert.deepEqual(listedIds, approvedIds, 'Only products with clear white-background images should appear in the catalog');
-    assert.ok(await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)),
+    await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.forEach(image => { image.loading = 'eager'; }));
+    await page.waitForFunction(() => [...document.querySelectorAll('#productGrid [data-product-image]')].every(image => image.complete),
+      { timeout: 15000 });
+    assert.ok(await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.every(image => image.naturalWidth > 0)),
       'Every shown product card must have a successfully loaded image');
     await visible(page, '.brand img', 'The original ROCK logo should remain visible');
     const logo = await page.locator('.brand img').evaluate(el => ({ complete: el.complete, width: el.naturalWidth }));
