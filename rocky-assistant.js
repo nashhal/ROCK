@@ -1,4 +1,4 @@
-/* ROCKY Assistant — local catalog search; no external API or paid service required. */
+/* ROCKY Assistant — bilingual catalog expert, Saudi Arabic glossary, no invented specifications. */
 (() => {
   'use strict';
   if (document.getElementById('rockyWidget')) return;
@@ -34,7 +34,7 @@
         <input class="rocky-input" id="rockyInput" name="question" type="text" autocomplete="off" maxlength="180" placeholder="مثلاً: شاحن أقل من 50 ريال">
         <button class="rocky-send" type="submit" aria-label="إرسال السؤال">↑</button>
       </form>
-      <div class="rocky-disclaimer" data-rocky-note>روكي يبحث في كتالوج المتجر الحالي؛ قد تكون بعض المواصفات غير متوفرة.</div>
+      <div class="rocky-disclaimer" data-rocky-note>روكي يعرف أسماء المنتجات وموديلاتها وأسعارها وتصنيفاتها المسجلة في الكتالوج. لا يفترض توافقًا أو مواصفات غير موثقة.</div>
     </section>`;
   document.body.appendChild(root);
 
@@ -48,13 +48,13 @@
 
   const copy = {
     ar: {
-      launch:'مساعد التسوّق', status:'جاهز يساعدك تختار', welcome:'يا هلا! أنا روكي. قل لي وش تدور عليه، وأطلع لك المنتجات الموجودة في كتالوج ROCK.',
+      launch:'مساعد التسوّق', status:'جاهز يساعدك تختار', welcome:'يا هلا! أنا روكي، خبير منتجات ROCK. أساعدك تفهم الموديلات وتقارن الخيارات من الكتالوج، وبقول لك بصراحة إذا معلومة مو متوفرة.',
       greet:'يا هلا والله! حيّاك في ROCK. وش ودّك تلاقي اليوم؟',
-      ask:'اكتب اسم المنتج أو الموديل أو نوع الإكسسوار، وببحث لك في كتالوج ROCK.',
-      noResults:'ما لقيت تطابق واضح في الكتالوج الحالي. جرّب اسم الموديل أو نوع المنتج، أو تصفّح المتجر كامل.',
-      showResults:'لقيت لك هالخيارات من كتالوج ROCK:',
-      compare:'هذي مقارنة سريعة حسب المعلومات المسجلة في الكتالوج. المواصفات غير الموجودة ما راح أفترضها:',
-      addSuccess:'تمت الإضافة للسلة.',
+      ask:'اسألني عن أي منتج أو موديل من ROCK، أو قل لي ميزانيتك واستخدامك. أبحث في الكتالوج وأقارن الموجود بدون ما أخمّن مواصفات ناقصة.',
+      noResults:'ما لقيت تطابق واضح في كتالوج ROCK الحالي. جرّب اسم الموديل أو مرادف ثاني مثل كيبل/كابل أو سماعة/إيربودز. وإذا المواصفة مو مسجّلة عندي، ما راح أخمّنها.',
+      showResults:'أبشر، هذي الخيارات اللي لقيتها في كتالوج ROCK:',
+      compare:'خلّنا نقارن الموجود في الكتالوج نقطة بنقطة. أي مواصفة غير مسجّلة بوضح إنها غير متوفرة بدل ما أفترضها:',
+      addSuccess:'تمت الإضافة للسلة، أبشر.',
       addFailed:'ما قدرت أضيف المنتج للسلة. حدّث الصفحة وجرّب مرة ثانية.',
       input:'مثلاً: شاحن أقل من 50 ريال', label:'اكتب سؤالك', close:'إغلاق مساعد روكي',
       view:'عرض المنتج', add:'أضف للسلة', model:'الموديل', price:'السعر', comparePrompt:'للمقارنة، حدّد موديلين أو اكتب نوع المنتج اللي تقارن بينه.',
@@ -62,12 +62,12 @@
       shortcut:[['أبغى شاحن','أبحث عن كابل'],['السماعات','قارن منتجين']]
     },
     en: {
-      launch:'Shopping assistant', status:'Here to help you choose', welcome:'Hi! I’m Rocky. Tell me what you need and I’ll search the products listed in the ROCK catalog.',
-      greet:'Hey there, welcome to ROCK. What are you looking for today?',
-      ask:'Enter a product name, model, or accessory type and I’ll search the ROCK catalog.',
-      noResults:'I couldn’t find a clear match in the current catalog. Try a model number or product type, or browse the full store.',
-      showResults:'Here are matching items from the ROCK catalog:',
-      compare:'A quick comparison using only details recorded in the catalog. I won’t assume missing specifications:',
+      launch:'Shopping assistant', status:'Here to help you choose', welcome:'Hi! I’m Rocky, your ROCK product guide. I can explain listed models and compare catalog options. I’ll be clear whenever a detail isn’t available.',
+      greet:'Welcome to ROCK — A New Dawn. What are you shopping for today: a charger, cable, power bank, audio, or a car accessory?',
+      ask:'Ask about any ROCK product or model, or tell me your budget and use case. I’ll search the catalog and compare listed details without guessing missing specs.',
+      noResults:'I couldn’t find a clear match in the current ROCK catalog. Try a model number or another product term. I won’t guess specifications that aren’t listed.',
+      showResults:'Here are the matching options I found in the ROCK catalog:',
+      compare:'Let’s compare the details recorded in the catalog. I’ll mark any unlisted specification as unavailable rather than assume it:',
       addSuccess:'Added to your bag.', addFailed:'I could not add the item. Refresh the page and try again.',
       input:'For example: charger under 50 SAR', label:'Type your question', close:'Close Rocky assistant',
       view:'View product', add:'Add to bag', model:'Model', price:'Price', comparePrompt:'For a comparison, enter two model numbers or the product type.',
@@ -87,6 +87,10 @@
   function categoryOf(query) {
     const q = normalize(query);
     const rules = [
+      ['audio', ['ايربودز','اير بودز','ايرب드ز','بلوتوث','هيدفون','هيدفونز','هيدست','سماعه','سماعات','سماعة','سماعات','اذن','لاسلكي','لاسلكيه','صوت','ايرفون','earbuds','earphones','headphones','headset','bluetooth','wireless earbuds','speaker','speakers']],
+      ['car', ['سياره','السياره','سيارات','للسياره','للسيارات','سيارتي','شاحن سياره','شاحن سيارة','حامل جوال للسياره','حامل سيارة','سياره','car charger','car mount','car accessory','automotive']],
+      ['lifestyle', ['حامل جوال','حامل','ستاند','قاعده','قاعدة','مسكه','مسكة','قبضة','حامل مكتبي','مكتب','ستاند جوال','grip','stand','holder','mount']],
+      ['power', ['شاحن','شواحن','شحن','كيبل','كيابل','كابل','كابلات','سلك','اسلاك','أسلاك','وصلة','وصله','باور بانك','باوربانك','بطارية متنقلة','بطاريه متنقله','رأس شاحن','راس شاحن','adaptor','adapter','charger','cable','charging','usb c','type c','lightning','power bank']],
       ['audio', ['سماعه','سماعات','سماعه اذن','ايربودز','اير بودز','سماعه لاسلكيه','هيدفون','headphone','earphone','earbud','audio','pods','sound']],
       ['car', ['سياره','السياره','سياره','سيارات','شاحن سياره','حامل جوال','للسياره','car charger','car mount','drive']],
       ['lifestyle', ['حامل','ستاند','قاعده','مسكه','حامل جوال','lifestyle','everyday']],
@@ -148,6 +152,29 @@
     if (ranked.length && !category && words.length && ranked[0].score <= 1) return [];
     return ranked.map(item => item.p);
   }
+
+  // Bilingual product vocabulary: normalize common Saudi/Gulf and English shopping terms.
+  const ROCK_GLOSSARY = {
+    'شاحن':['شاحن','شواحن','راس شاحن','رأس شاحن','ادابتر','محول كهرباء','charger','wall charger','adapter'],
+    'كيبل':['كيبل','كيابل','كابل','كابلات','سلك','وصلة','وصله','cable','cord','charging cable'],
+    'باور بانك':['باور بانك','باوربانك','بطارية متنقلة','بطاريه متنقله','شاحن متنقل','power bank','portable charger'],
+    'سماعات':['سماعات','سماعه','سماعة','ايربودز','اير بودز','ايرفون','هيدفون','سماعات اذن','earbuds','earphones','headphones','audio'],
+    'السيارة':['سيارة','سياره','للسيارة','للسياره','شاحن سيارة','شاحن سياره','حامل سيارة','حامل سياره','car charger','car mount'],
+    'حامل':['حامل','ستاند','قاعدة','قاعده','مسكة','مسكه','holder','stand','mount','grip'],
+    'السعر':['سعر','بكم','كم سعره','كم سعرها','price','cost'],
+    'الموديل':['موديل','رقم الموديل','باركود','model','sku','barcode'],
+    'المقارنة':['قارن','مقارنة','الفرق','وش الفرق','compare','comparison','difference'],
+    'الميزانية':['ميزانية','ميزانيتي','بحدود','اقل من','أقل من','تحت','فوق','بين','budget','under','below','between']
+  };
+  function glossaryHelp(question) {
+    const q=normalize(question);
+    const entries=Object.entries(ROCK_GLOSSARY).filter(([label,words])=>words.some(word=>q.includes(normalize(word))));
+    if(!entries.length)return '';
+    return english()
+      ? 'I understood these shopping terms: '+entries.map(([label])=>label).join(', ')+'. I use them to search the actual catalog.'
+      : 'فهمت من كلامك: '+entries.map(([label])=>label).join('، ')+'. أستخدم هالمعاني عشان أبحث في الكتالوج الفعلي.';
+  }
+
   function node(tag, className, text) {
     const el = document.createElement(tag);
     if (className) el.className = className;
@@ -206,12 +233,12 @@
     addMessage(question,'user');
     const q = normalize(question);
     if (isGreeting(question)) { addMessage(t('greet'),'bot'); return; }
-    const compareMode = /قارن|مقارنه|الفرق|compare|comparison/.test(q);
+    const compareMode = /قارن|مقارنه|مقارنه|الفرق|وش الفرق|compare|comparison|difference/.test(q);
     const results = rankProducts(question);
     if (!results.length) {
       const category = categoryOf(question);
       if (compareMode) addMessage(t('comparePrompt'),'bot');
-      else if (/توصيه|اقترح|وش اختار|what should|recommend|best/.test(q) && category) {
+      else if (/توصيه|اقترح|وش اختار|وش تنصح|وش الافضل|ابي الافضل|افضل شي|يناسبني|ميزانيتي|recommend|best|suggest|which should/.test(q) && category) {
         addMessage(t('showResults'),'bot'); addProductCards(PRODUCTS.filter(p=>p.category===category).slice(0,3),false);
       } else addMessage(t('noResults'),'bot');
       return;
@@ -250,6 +277,7 @@
       button.dataset.query = list[index] || button.dataset.query;
     });
     root.setAttribute('aria-label', en ? 'ROCKY shopping assistant' : 'مساعد التسوّق روكي');
+    root.querySelectorAll('.rocky-product').forEach(card=>{card.dir=en?'ltr':'rtl';});
   }
 
   launcher.addEventListener('click', () => panel.hidden ? openPanel() : closePanel());
