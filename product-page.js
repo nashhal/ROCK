@@ -8,6 +8,7 @@
   let lang = getStored('rock-lang', 'ar') === 'en' ? 'en' : 'ar';
   const i18n = {
     ar:{
+      openMenu:'فتح القائمة',switchLanguage:'تغيير اللغة',viewCart:'عرض السلة',navigationMenu:'قائمة التنقل',
       announcement:'ROCK | ملحقات تقنية ليومك',brandTagline:'ملحقات تقنية ليومك',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
       productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
       catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',modelLabel:'الموديل',modelMissing:'غير محدد',priceLabel:'السعر',viewProduct:'عرض المنتج',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
@@ -23,6 +24,7 @@
       catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',sar:'ر.س',added:'تمت الإضافة إلى السلة',addError:'تعذر حفظ السلة في هذا المتصفح'
     },
     en:{
+      openMenu:'Open menu',switchLanguage:'Switch language',viewCart:'View cart',navigationMenu:'Navigation menu',
       announcement:'ROCK | Everyday tech essentials',brandTagline:'Everyday tech essentials',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
       productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
       catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',modelLabel:'Model',modelMissing:'Not specified',priceLabel:'Price',viewProduct:'View product',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
@@ -48,6 +50,7 @@
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
     document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});
+    document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAria)));
     $('#langBtn').textContent=lang==='ar'?'EN':'AR';
   }
   function readCart(){
@@ -190,6 +193,26 @@
     toast(t('added'));
     window.setTimeout(()=>{window.location.href='./?cart=1';},350);
   }
+  const productMenu=$('#productMenuBtn');
+  const productMobilePanel=$('#productMobilePanel');
+  productMenu.addEventListener('click',()=>{
+    const expanded=productMobilePanel.classList.toggle('open');
+    productMenu.setAttribute('aria-expanded',String(expanded));
+    productMobilePanel.setAttribute('aria-hidden',String(!expanded));
+  });
+  productMobilePanel.querySelectorAll('[data-mobile-link]').forEach(link=>link.addEventListener('click',()=>{
+    productMobilePanel.classList.remove('open');
+    productMobilePanel.setAttribute('aria-hidden','true');
+    productMenu.setAttribute('aria-expanded','false');
+  }));
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape' && productMobilePanel.classList.contains('open')){
+      productMobilePanel.classList.remove('open');
+      productMobilePanel.setAttribute('aria-hidden','true');
+      productMenu.setAttribute('aria-expanded','false');
+      productMenu.focus();
+    }
+  });
   $('#langBtn').addEventListener('click',()=>{lang=lang==='ar'?'en':'ar';setStored('rock-lang',lang);applyLanguage();renderProduct();renderRelated()});
   $('#detailAddButton').addEventListener('click',addToBag);
   $('#footerYear').textContent=String(new Date().getFullYear());
