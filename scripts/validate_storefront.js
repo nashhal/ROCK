@@ -135,6 +135,10 @@ assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not
 const app = read('app.js');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
+assert.ok(app.includes("$('.modal').forEach(modal=>modal.classList.remove('show'))"), 'Modal close function must close all modal elements');
+assert.ok(!app.includes("$(' .modal'.trim())"), 'Malformed modal selector found');
+assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Collection cards must have click handlers');
+assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
 assert.match(app, /Maximum quantity reached|الحد الأقصى للكمية/, 'Cart must enforce its quantity limit');
 
 for (const file of ['styles.css', 'premium-refresh.css', 'product-page.css', 'rocky-assistant.css']) {
