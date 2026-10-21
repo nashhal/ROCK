@@ -146,6 +146,12 @@ for (const file of ['index.html', 'product.html', 'policies.html']) {
   const html = read(file);
   assert.equal((html.match(/white-modern\.css/gi) || []).length, 1, `${file} must load the white-modern stylesheet exactly once`);
 }
+const sharedDesignStyles = ['index.html', 'product.html', 'policies.html'].map(file => {
+  const match = read(file).match(/href="(white-modern\.css\?v=[^"]+)"/);
+  assert.ok(match, `Versioned white-modern stylesheet reference missing in ${file}`);
+  return match[1];
+});
+assert.equal(new Set(sharedDesignStyles).size, 1, 'All pages must use the same cache version for the shared design stylesheet');
 
 const policies = read('policies.html');
 assert.equal((policies.match(/premium-refresh\.css/gi) || []).length, 1, 'Policies page must load the refresh CSS only once');
