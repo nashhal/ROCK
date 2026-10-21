@@ -62,3 +62,18 @@
  .rocky-launcher,.rocky-panel,.rocky-messages{transition:none;animation:none;scroll-behavior:auto}
  .rocky-launcher:hover{transform:none}
 }
+
+
+/* ROCKY — refined brand assistant, calm and unobtrusive */
+.rocky-launcher{box-shadow:0 8px 26px rgba(3,18,38,.22);border:2px solid rgba(56,168,255,.65);transition:transform .2s ease,box-shadow .2s ease}
+.rocky-launcher:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(3,18,38,.27)}
+.rocky-panel{border:1px solid rgba(56,168,255,.22);box-shadow:0 24px 70px rgba(3,15,32,.28);border-radius:22px;overflow:hidden}
+.rocky-header{background:linear-gradient(135deg,#07172b,#0a315a)}
+.rocky-messages{scrollbar-width:thin;scrollbar-color:#b9c9da transparent}
+.rocky-message,.rocky-bubble{line-height:1.7}
+.rocky-product{border:1px solid #e4eaf2;border-radius:13px;background:#fff;transition:border-color .18s ease,transform .18s ease}
+.rocky-product:hover{border-color:#9dcfff;transform:translateY(-1px)}
+.rocky-product-img{object-fit:contain;background:#fff;border-radius:9px}
+.rocky-panel button{min-height:40px;border-radius:10px;font-weight:700}
+.rocky-panel input{min-height:44px;border-radius:12px}
+@media(max-width:480px){.rocky-panel{border-radius:18px;max-height:min(78dvh,680px)}}
