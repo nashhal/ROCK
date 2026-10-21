@@ -249,7 +249,7 @@
     render();
   };
   $('#categoryChips').querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{$$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.cat=b.dataset.cat;render()});
-  $$('.collection-card').forEach(b=>{state.cat=b.dataset.collection;$$('#categoryChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===state.cat));document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()});
+  $$('.collection-card').forEach(b=>b.onclick=()=>{state.cat=b.dataset.collection;$$('#categoryChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===state.cat));document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()});
   $('#viewFeatured').onclick=()=>{state.sort='featured';$('#sortSelect').value='featured';document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()};
   $('#closingShop').onclick=()=>document.querySelector('#shop').scrollIntoView({behavior:'smooth'});
   $('#scrollTopBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
