@@ -56,6 +56,13 @@ const productMatch = productsSource.match(/const\s+ROCK_PRODUCTS\s*=\s*(\[[\s\S]
 assert.ok(productMatch, 'Could not parse ROCK_PRODUCTS catalog');
 const products = JSON.parse(productMatch[1]);
 assert.equal(products.length, 41, 'The original 41-product catalog must remain intact');
+const qualitySource = read('data/product-image-quality.js');
+const qualityMatch = qualitySource.match(/globalThis\\.ROCK_PRODUCT_IMAGE_QUALITY\\s*=\\s*(\\{[\\s\\S]*\\});/);
+assert.ok(qualityMatch, 'Generated product-photo quality manifest is missing or invalid');
+const quality = JSON.parse(qualityMatch[1]);
+const visibleIds = new Set(quality.visibleIds);
+assert.ok(visibleIds.size > 0, 'At least one product must have a clear white-background photo');
+assert.ok([...visibleIds].every(id => products.some(product => product.id === id)), 'Photo manifest references an unknown product');
 
 const ids = new Set();
 const expectedImagePath = /^assets\/products\/[a-z0-9-]+\.webp$/i;
@@ -252,9 +259,13 @@ assert.match(read('premium-refresh.css'), /prefers-reduced-motion:\s*reduce/i, '
 const sitemap = read('sitemap.xml');
 for (const product of products) {
   const url = `https://nashhal.github.io/ROCK/product.html?id=${encodeURIComponent(product.id)}`;
-  assert.ok(sitemap.includes(`<loc>${url}</loc>`), `Product missing from sitemap: ${product.id}`);
+  if (visibleIds.has(product.id)) {
+    assert.ok(sitemap.includes(`<loc>${url}</loc>`), `Visible product missing from sitemap: ${product.id}`);
+  } else {
+    assert.ok(!sitemap.includes(`<loc>${url}</loc>`), `Hidden low-quality product must not remain in sitemap: ${product.id}`);
+  }
 }
 assert.ok(sitemap.includes('<loc>https://nashhal.github.io/ROCK/</loc>'), 'Homepage missing from sitemap');
 assert.ok(read('robots.txt').includes('Sitemap: https://nashhal.github.io/ROCK/sitemap.xml'), 'Sitemap missing from robots.txt');
 
-console.log(`ROCK validation passed: ${products.length} products, all local gallery images, HTML assets, CSP, sitemap and accessibility guards.`);
+console.log(`ROCK validation passed: ${visibleIds.size} visible product photos out of ${products.length} catalog items, all local gallery images, HTML assets, CSP, sitemap and accessibility guards.`);
