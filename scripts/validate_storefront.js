@@ -153,10 +153,10 @@ const productPage = read('product.html');
 assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not expose a Drive-folder link');
 
 const app = read('app.js');
-// Language and mobile navigation operate on collections, so they must use the all-matches selector.
-assert.ok(app.includes("$('[data-i18n]').forEach"), 'Language switching must update every translated element');
-assert.ok(app.includes("$('[data-i18n-aria]').forEach"), 'Translated accessibility labels must update across the page');
-assert.ok(app.includes("$('[data-mobile-link]').forEach"), 'Mobile navigation must bind every menu link');
+// Language and mobile navigation operate on all matches, not a single element.
+assert.ok(app.includes("document.querySelectorAll('[data-i18n]').forEach"), 'Language switching must update every translated element');
+assert.ok(app.includes("document.querySelectorAll('[data-i18n-aria]').forEach"), 'Translated accessibility labels must update across the page');
+assert.ok(app.includes("document.querySelectorAll('[data-mobile-link]').forEach"), 'Mobile navigation must bind every menu link');
 assert.ok(!app.includes("$('[data-i18n]').forEach"), 'A single-element selector cannot be used with forEach for translations');
 assert.ok(!app.includes("$('[data-i18n-aria]').forEach"), 'A single-element selector cannot be used with forEach for accessible labels');
 assert.ok(!app.includes("$('[data-mobile-link]').forEach"), 'A single-element selector cannot be used with forEach for mobile navigation');
