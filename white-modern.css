@@ -1662,3 +1662,6 @@ html[dir="ltr"] #productGrid .product-action-btn{font-family:var(--rock-font-lat
   #productGrid .product-action-btn{min-height:37px!important;font-size:10px!important}
 }
 @media(prefers-reduced-motion:reduce){#productGrid .product-card,#productGrid .product-image img,#productGrid .product-action-btn{transition:none!important}}
+
+/* Respect fail-closed visibility when a product has no approved photo. */
+.visual-card[hidden],.hero-visual[hidden]{display:none!important}
