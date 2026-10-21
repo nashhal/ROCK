@@ -36,6 +36,12 @@ jobs:
           node --check policy-page.js
           node --check scripts/validate_storefront.js
           node scripts/validate_storefront.js
+      - name: Install browser regression-test runner
+        run: npm install --no-save --no-package-lock @playwright/test
+      - name: Install Chromium for browser tests
+        run: npx playwright install --with-deps chromium
+      - name: Run storefront browser regression tests
+        run: npx playwright test
 
   deploy:
     name: Deploy to GitHub Pages
