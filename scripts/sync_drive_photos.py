@@ -199,6 +199,44 @@ def image_to_webp(data: bytes, output: Path) -> bool:
         return False
 
 
+
+def white_edge_score(data: bytes) -> float:
+    """Return the fraction of sampled outer-edge pixels that render near-white."""
+    try:
+        with Image.open(io.BytesIO(data)) as original:
+            image = ImageOps.exif_transpose(original).convert("RGBA")
+            image.thumbnail((96, 96), Image.Resampling.LANCZOS)
+            if image.width < 8 or image.height < 8:
+                return 0.0
+            # Transparent product cut-outs render on white in the storefront.
+            canvas = Image.new("RGBA", image.size, (255, 255, 255, 255))
+            canvas.alpha_composite(image)
+            rgb = canvas.convert("RGB")
+            width, height = rgb.size
+            border = max(2, min(width, height) // 12)
+            pixels = rgb.load()
+            samples: list[tuple[int, int, int]] = []
+            for x in range(width):
+                for y in range(border):
+                    samples.append(pixels[x, y])
+                for y in range(height - border, height):
+                    samples.append(pixels[x, y])
+            for y in range(border, height - border):
+                for x in range(border):
+                    samples.append(pixels[x, y])
+                for x in range(width - border, width):
+                    samples.append(pixels[x, y])
+            if not samples:
+                return 0.0
+            near_white = sum(
+                1 for red, green, blue in samples
+                if min(red, green, blue) >= 228 and max(red, green, blue) - min(red, green, blue) <= 24
+            )
+            return near_white / len(samples)
+    except Exception:
+        return 0.0
+
+
 def read_products() -> tuple[str, list[dict], int, int]:
     source = PRODUCTS_JS.read_text(encoding="utf-8")
     prefix = re.search(r"const\s+ROCK_PRODUCTS\s*=\s*", source)
@@ -234,7 +272,16 @@ def sync_product(product: dict) -> tuple[str, int, str]:
             last_error = error
     if not downloaded:
         return product_id, 0, locals().get("last_error", "no downloadable images")
-    # Keep the first photo at the stable product image path; use numbered siblings for the gallery.
+    # Prefer a photo with a clean white or transparent edge for the product-listing tile.
+    # If none is sufficiently white, preserve the supplier's original photo order.
+    scores = [white_edge_score(data) for data, _filename in downloaded]
+    if scores:
+        best_index = max(range(len(scores)), key=scores.__getitem__)
+        if scores[best_index] >= 0.65:
+            best_score = scores[best_index]
+            downloaded.insert(0, downloaded.pop(best_index))
+            log(f"  {product_id}: selected a white-background listing image ({best_score:.0%} white edge)")
+    # Keep the selected primary photo at the stable product image path; use numbered siblings for the gallery.
     paths: list[str] = []
     for index, (data, _filename) in enumerate(downloaded, start=1):
         suffix = "" if index == 1 else f"-{index:02d}"
