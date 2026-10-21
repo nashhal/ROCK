@@ -141,7 +141,19 @@
   }
   function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function add(id){
-    const row=state.cart.find(x=>x.id===id); if(row)row.qty++; else state.cart.push({id,qty:1}); persist(); renderCart(); toast(t('added')); openCart();
+    const product = products.find(item => item.id === id);
+    if (!product) return;
+    const row = state.cart.find(item => item.id === id);
+    if (row && row.qty >= 99) {
+      toast(state.lang === 'ar' ? 'وصلت إلى الحد الأقصى للكمية' : 'Maximum quantity reached');
+      return;
+    }
+    if (row) row.qty += 1;
+    else state.cart.push({ id, qty: 1 });
+    persist();
+    renderCart();
+    toast(t('added'));
+    openCart();
   }
   function persist(){storageSet('rock-cart',JSON.stringify(state.cart));updateCount()}
   function updateCount(){const n=state.cart.reduce((s,i)=>s+i.qty,0);$('#cartCount').textContent=n}
@@ -158,7 +170,7 @@
   function openModal(id){$('#'+id).classList.add('show');$('#overlay').classList.add('show')}
   function closeModals(){
     const orderWasOpen = $('#checkoutModal').classList.contains('show');
-    $('.modal').forEach(modal=>modal.classList.remove('show'));
+    $(' .modal'.trim()).forEach(modal=>modal.classList.remove('show'));
     $('#overlay').classList.remove('show');
     if(orderWasOpen){
       $('#orderDetailsForm').reset();
