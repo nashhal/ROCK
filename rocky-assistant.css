@@ -77,3 +77,10 @@
 .rocky-panel button{min-height:40px;border-radius:10px;font-weight:700}
 .rocky-panel input{min-height:44px;border-radius:12px}
 @media(max-width:480px){.rocky-panel{border-radius:18px;max-height:min(78dvh,680px)}}
+
+/* Bidirectional layout and bilingual font support for Rocky */
+.rocky-widget{font-family:"IBM Plex Sans Arabic","Manrope",sans-serif}
+.rocky-widget[dir="ltr"] .rocky-panel,.rocky-widget[dir="ltr"] .rocky-intro,.rocky-widget[dir="ltr"] .rocky-messages,.rocky-widget[dir="ltr"] .rocky-foot{direction:ltr;text-align:left}
+.rocky-widget[dir="rtl"] .rocky-panel,.rocky-widget[dir="rtl"] .rocky-intro,.rocky-widget[dir="rtl"] .rocky-messages,.rocky-widget[dir="rtl"] .rocky-foot{direction:rtl;text-align:right}
+.rocky-widget[dir="ltr"] .rocky-launcher-copy,.rocky-widget[dir="ltr"] .rocky-head-copy{text-align:left}
+.rocky-widget[dir="rtl"] .rocky-launcher-copy,.rocky-widget[dir="rtl"] .rocky-head-copy{text-align:right}
