@@ -1,5 +1,5 @@
 /* ROCKY shopping assistant — lightweight, local-first storefront UI */
-.rocky-widget{position:fixed;inset-inline-end:22px;bottom:22px;z-index:55;font-family:"IBM Plex Sans Arabic","Manrope",sans-serif;color:#0a1830}
+.rocky-widget{position:fixed;inset-inline-end:22px;bottom:22px;z-index:55;font-family:"IBM Plex Sans Arabic","Inter",sans-serif;color:#0a1830}
 .rocky-launcher{display:flex;align-items:center;gap:10px;min-height:64px;padding:6px 17px 6px 7px;border:1px solid rgba(111,173,239,.4);border-radius:999px;background:linear-gradient(135deg,#07172b,#0b2c50);color:#fff;box-shadow:0 12px 36px rgba(3,21,46,.28);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
 .rocky-launcher:hover{transform:translateY(-2px);box-shadow:0 16px 42px rgba(3,21,46,.34)}
 .rocky-launcher:focus-visible,.rocky-widget button:focus-visible,.rocky-widget a:focus-visible,.rocky-widget input:focus-visible{outline:3px solid #086dc7;outline-offset:3px}
@@ -32,7 +32,7 @@
 .rocky-product-img img{display:block;width:100%;height:100%;object-fit:contain}
 .rocky-product-placeholder{font-size:9px;font-weight:800;color:#45627f}
 .rocky-product-info{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
-.rocky-product-model{font:800 9px/1.4 "Manrope",sans-serif;letter-spacing:.06em;color:#71849a}
+.rocky-product-model{font:800 9px/1.4 "Inter",sans-serif;letter-spacing:.06em;color:#71849a}
 .rocky-product-name{font-size:11px;line-height:1.5;font-weight:700;color:#132e4c}
 .rocky-product-desc{font-size:10px;color:#75869a;line-height:1.5}
 .rocky-product-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
@@ -79,7 +79,7 @@
 @media(max-width:480px){.rocky-panel{border-radius:18px;max-height:min(78dvh,680px)}}
 
 /* Bidirectional layout and bilingual font support for Rocky */
-.rocky-widget{font-family:"IBM Plex Sans Arabic","Manrope",sans-serif}
+.rocky-widget{font-family:"IBM Plex Sans Arabic","Inter",sans-serif}
 .rocky-widget[dir="ltr"] .rocky-panel,.rocky-widget[dir="ltr"] .rocky-intro,.rocky-widget[dir="ltr"] .rocky-messages,.rocky-widget[dir="ltr"] .rocky-foot{direction:ltr;text-align:left}
 .rocky-widget[dir="rtl"] .rocky-panel,.rocky-widget[dir="rtl"] .rocky-intro,.rocky-widget[dir="rtl"] .rocky-messages,.rocky-widget[dir="rtl"] .rocky-foot{direction:rtl;text-align:right}
 .rocky-widget[dir="ltr"] .rocky-launcher-copy,.rocky-widget[dir="ltr"] .rocky-head-copy{text-align:left}

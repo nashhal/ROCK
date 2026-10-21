@@ -12,7 +12,7 @@ const requiredFiles = [
   'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
-  'scripts/sync_drive_photos.py', 'scripts/test_storefront_browser.cjs', 'assets/brand/rock-logo.svg',
+  'scripts/sync_drive_photos.py', 'scripts/product_image_quality.py', 'scripts/test_product_image_quality.py', 'scripts/test_storefront_browser.cjs', 'data/product-image-quality.js', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
   'robots.txt', 'sitemap.xml'
 ];
@@ -46,7 +46,12 @@ const productPageHtml = read('product.html');
 assert.ok(productPageCss.includes('.product-page-body .site-header{'), 'Product page must explicitly align its header with the shared design system');
 assert.ok(productPageCss.includes('.product-nav a{'), 'Product navigation needs explicit readable colors on the light header');
 assert.ok(productPageCss.includes('prefers-reduced-motion:reduce'), 'Product page must respect reduced-motion preferences');
-assert.ok(productPageHtml.includes('product-page.css?v=20261021-white-header-v3'), 'Product page stylesheet cache key must be refreshed');
+assert.ok(productPageHtml.includes('product-page.css?v=20261022-catalog-quality'), 'Product page stylesheet cache key must be refreshed');
+for (const page of ['index.html', 'product.html']) {
+  const html = read(page);
+  assert.ok(html.includes('data/product-image-quality.js?v=20261022-dawn-refresh-v1'), `Photo quality manifest must load in ${page}`);
+  assert.ok(html.indexOf('data/product-image-quality.js') < html.lastIndexOf(page === 'index.html' ? 'app.js?' : 'product-page.js?'), `Photo quality manifest must load before catalog rendering in ${page}`);
+}
 const browserTest = read('scripts/test_storefront_browser.cjs');
 assert.ok(browserTest.includes('Product navigation text must remain readable on the light header'), 'Browser regression must verify product header contrast');
 assert.ok(browserTest.includes('Product detail add-to-cart should preserve one cart line'), 'Browser regression must cover product detail add-to-cart');
@@ -56,6 +61,15 @@ const productMatch = productsSource.match(/const\s+ROCK_PRODUCTS\s*=\s*(\[[\s\S]
 assert.ok(productMatch, 'Could not parse ROCK_PRODUCTS catalog');
 const products = JSON.parse(productMatch[1]);
 assert.equal(products.length, 41, 'The original 41-product catalog must remain intact');
+const qualitySource = read('data/product-image-quality.js');
+const qualityMarker = 'globalThis.ROCK_PRODUCT_IMAGE_QUALITY = ';
+const qualityStart = qualitySource.indexOf(qualityMarker);
+const qualityEnd = qualitySource.lastIndexOf(';');
+assert.ok(qualityStart >= 0 && qualityEnd > qualityStart, 'Generated product-photo quality manifest is missing or invalid');
+const quality = JSON.parse(qualitySource.slice(qualityStart + qualityMarker.length, qualityEnd));
+const visibleIds = new Set(quality.visibleIds);
+assert.ok(visibleIds.size > 0, 'At least one product must have a clear white-background photo');
+assert.ok([...visibleIds].every(id => products.some(product => product.id === id)), 'Photo manifest references an unknown product');
 
 const ids = new Set();
 const expectedImagePath = /^assets\/products\/[a-z0-9-]+\.webp$/i;
@@ -171,10 +185,10 @@ for (const [page, script] of [['product.html','product-page.js'],['policies.html
   const html = read(page);
   const copy = read(script);
   assert.ok(html.includes('data-i18n="brandTagline"'), `${page} must use the shared translatable brand tagline`);
-  assert.ok(copy.includes("brandTagline:'ملحقات تقنية ليومك'"), `${script} missing the Arabic brand tagline`);
-  assert.ok(copy.includes("brandTagline:'Everyday tech essentials'"), `${script} missing the English brand tagline`);
-  assert.ok(copy.includes("announcement:'ROCK | ملحقات تقنية ليومك'"), `${script} announcement copy is inconsistent`);
-  assert.ok(copy.includes("announcement:'ROCK | Everyday tech essentials'"), `${script} English announcement copy is inconsistent`);
+  assert.ok(copy.includes("brandTagline:'فجر جديد مع روك'"), `${script} missing the Arabic brand tagline`);
+  assert.ok(copy.includes("brandTagline:'A new dawn with ROCK'"), `${script} missing the English brand tagline`);
+  assert.ok(copy.includes("announcement:'ROCK | فجر جديد مع روك'"), `${script} announcement copy is inconsistent`);
+  assert.ok(copy.includes("announcement:'ROCK | A new dawn with ROCK'"), `${script} English announcement copy is inconsistent`);
 }
 
 const policies = read('policies.html');
@@ -252,9 +266,13 @@ assert.match(read('premium-refresh.css'), /prefers-reduced-motion:\s*reduce/i, '
 const sitemap = read('sitemap.xml');
 for (const product of products) {
   const url = `https://nashhal.github.io/ROCK/product.html?id=${encodeURIComponent(product.id)}`;
-  assert.ok(sitemap.includes(`<loc>${url}</loc>`), `Product missing from sitemap: ${product.id}`);
+  if (visibleIds.has(product.id)) {
+    assert.ok(sitemap.includes(`<loc>${url}</loc>`), `Visible product missing from sitemap: ${product.id}`);
+  } else {
+    assert.ok(!sitemap.includes(`<loc>${url}</loc>`), `Hidden low-quality product must not remain in sitemap: ${product.id}`);
+  }
 }
 assert.ok(sitemap.includes('<loc>https://nashhal.github.io/ROCK/</loc>'), 'Homepage missing from sitemap');
 assert.ok(read('robots.txt').includes('Sitemap: https://nashhal.github.io/ROCK/sitemap.xml'), 'Sitemap missing from robots.txt');
 
-console.log(`ROCK validation passed: ${products.length} products, all local gallery images, HTML assets, CSP, sitemap and accessibility guards.`);
+console.log(`ROCK validation passed: ${visibleIds.size} visible product photos out of ${products.length} catalog items, all local gallery images, HTML assets, CSP, sitemap and accessibility guards.`);
