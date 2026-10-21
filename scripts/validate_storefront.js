@@ -129,7 +129,7 @@ assert.equal(JSON.parse(jsonLd[1]).name, 'ROCK', 'Homepage JSON-LD is invalid');
 
 for (const file of ['index.html', 'product.html', 'policies.html']) {
   const html = read(file);
-  assert.equal((html.match(/white-modern\\.css/gi) || []).length, 1, `${file} must load the white-modern stylesheet exactly once`);
+  assert.equal((html.match(/white-modern\.css/gi) || []).length, 1, `${file} must load the white-modern stylesheet exactly once`);
 }
 
 const policies = read('policies.html');
