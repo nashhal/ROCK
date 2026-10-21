@@ -9,7 +9,7 @@ const root = process.cwd();
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const requiredFiles = [
   'index.html', 'product.html', 'policies.html', '404.html',
-  'styles.css', 'premium-refresh.css', 'product-page.css',
+  'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
   'scripts/sync_drive_photos.py', 'assets/brand/rock-logo.svg',
@@ -127,6 +127,11 @@ const jsonLd = home.match(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/s
 assert.ok(jsonLd, 'Homepage JSON-LD missing');
 assert.equal(JSON.parse(jsonLd[1]).name, 'ROCK', 'Homepage JSON-LD is invalid');
 
+for (const file of ['index.html', 'product.html', 'policies.html']) {
+  const html = read(file);
+  assert.equal((html.match(/white-modern\.css/gi) || []).length, 1, `${file} must load the white-modern stylesheet exactly once`);
+}
+
 const policies = read('policies.html');
 assert.equal((policies.match(/premium-refresh\.css/gi) || []).length, 1, 'Policies page must load the refresh CSS only once');
 const productPage = read('product.html');
@@ -141,7 +146,7 @@ assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Col
 assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
 assert.match(app, /Maximum quantity reached|الحد الأقصى للكمية/, 'Cart must enforce its quantity limit');
 
-for (const file of ['styles.css', 'premium-refresh.css', 'product-page.css', 'rocky-assistant.css']) {
+for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css', 'rocky-assistant.css']) {
   const css = read(file);
   assert.ok(!/\[\.\.\.\]/.test(css), `Truncated CSS placeholder found in ${file}`);
   cssBraceBalance(css, file);
