@@ -1347,3 +1347,34 @@ html[dir="ltr"] .product-page-body .product-detail-copy h1{
   .product-page-body .related-card,
   #cartItems .qty button{transition:none!important}
 }
+
+
+/* Dialog and hidden-state semantics: off-canvas content must not remain tabbable. */
+[hidden]{display:none!important}
+body.rock-dialog-open{overflow:hidden}
+#cartDrawer[aria-hidden="true"]{
+  visibility:hidden;
+  pointer-events:none;
+  transition:transform .35s var(--rock-ease),visibility 0s linear .35s;
+}
+#cartDrawer.open[aria-hidden="false"]{
+  visibility:visible;
+  pointer-events:auto;
+  transition-delay:0s;
+}
+.modal[aria-hidden="true"]{
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .22s var(--rock-ease),visibility 0s linear .22s;
+}
+.modal.show[aria-hidden="false"]{
+  visibility:visible;
+  pointer-events:auto;
+  transition-delay:0s;
+}
+@media(prefers-reduced-motion:reduce){
+  #cartDrawer[aria-hidden="true"],
+  #cartDrawer.open[aria-hidden="false"],
+  .modal[aria-hidden="true"],
+  .modal.show[aria-hidden="false"]{transition:none!important}
+}
