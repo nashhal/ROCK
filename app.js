@@ -64,7 +64,7 @@
     document.title = t('pageTitle');
     document.documentElement.lang = state.lang;
     document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-    $('[data-i18n]').forEach(el => {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.dataset.i18n;
       if (key === 'shopNow') {
         const textNode = [...el.childNodes].find(node => node.nodeType === Node.TEXT_NODE);
@@ -74,7 +74,7 @@
         el.textContent = t(key);
       }
     });
-    $('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
     $('#langBtn').textContent = state.lang === 'ar' ? 'EN' : 'AR';
     $('#searchInput').placeholder = state.lang === 'ar' ? 'ابحث عن موديل أو منتج' : 'Search model or product';
     $('#searchInput').setAttribute('aria-label', state.lang === 'ar' ? 'ابحث باسم المنتج أو الموديل' : 'Search by product name or model');
@@ -270,7 +270,7 @@
     const expanded=$('#mobilePanel').classList.toggle('open');
     $('#menuBtn').setAttribute('aria-expanded',String(expanded));
   };
-  $('[data-mobile-link]').forEach(a=>a.onclick=()=>{
+  document.querySelectorAll('[data-mobile-link]').forEach(a=>a.onclick=()=>{
     $('#mobilePanel').classList.remove('open');
     $('#menuBtn').setAttribute('aria-expanded','false');
   });
