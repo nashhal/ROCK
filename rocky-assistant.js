@@ -56,7 +56,7 @@
       compare:'هذي مقارنة سريعة حسب المعلومات المسجلة في الكتالوج. المواصفات غير الموجودة ما راح أفترضها:',
       addSuccess:'تمت الإضافة للسلة.',
       addFailed:'ما قدرت أضيف المنتج للسلة. حدّث الصفحة وجرّب مرة ثانية.',
-      input:'مثلاً: شاحن بحدود 50 ريال', label:'اكتب سؤالك', close:'إغلاق مساعد روكي',
+      input:'مثلاً: شاحن أقل من 50 ريال', label:'اكتب سؤالك', close:'إغلاق مساعد روكي',
       view:'عرض المنتج', add:'أضف للسلة', model:'الموديل', price:'السعر', comparePrompt:'للمقارنة، حدّد موديلين أو اكتب نوع المنتج اللي تقارن بينه.',
       greetingWords:['هلا','هلا والله','السلام عليكم','مرحبا','مرحبتين','يا هلا','hello','hi'],
       shortcut:[['أبغى شاحن','أبحث عن كابل'],['السماعات','قارن منتجين']]
@@ -162,7 +162,7 @@
       info.appendChild(node('span','rocky-product-model',product.model || 'ROCK'));
       info.appendChild(node('span','rocky-product-name',english() ? product.nameEn : product.nameAr));
       info.appendChild(node('span','rocky-product-desc',`${t('price')}: ${Number(product.price).toLocaleString(english()?'en-US':'ar-SA',{maximumFractionDigits:2})} ${english()?'SAR':'ر.س'}`));
-      if (compareMode && product.descriptionEn) info.appendChild(node('span','rocky-product-desc',product.descriptionEn));
+      if (compareMode && product.descriptionEn && english()) info.appendChild(node('span','rocky-product-desc',product.descriptionEn));
       const actions = node('div','rocky-product-actions');
       const link = node('a','rocky-product-view',t('view'));
       link.href = 'product.html?id=' + encodeURIComponent(product.id);
