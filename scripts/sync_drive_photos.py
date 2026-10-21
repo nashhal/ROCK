@@ -325,11 +325,16 @@ def sync_product(product: dict) -> tuple[str, int, str]:
     scores = [white_edge_score(data) for data, _filename in downloaded]
     best_index = max(range(len(scores)), key=scores.__getitem__)
     best_score = scores[best_index]
+    existing_white_score = white_edge_score(existing_data) if existing_data is not None else 0.0
     keep_existing_white = (
         existing_data is not None
         and existing_path is not None
-        and white_edge_score(existing_data) >= 0.65
-        and best_score < 0.65
+        and existing_white_score >= 0.65
+        # Do not replace an already-clean listing packshot with a nearly-equal
+        # but less informative image such as a specification sheet. Reuse the
+        # local primary photo when it is within five percentage points of the
+        # best supplier candidate; galleries can still be refreshed below.
+        and (best_score < 0.65 or existing_white_score >= best_score - 0.05)
     )
 
     paths: list[str] = []
