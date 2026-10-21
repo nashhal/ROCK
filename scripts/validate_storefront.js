@@ -14,7 +14,7 @@ const requiredFiles = [
   'rocky-assistant.js', 'rocky-assistant.css',
   'scripts/sync_drive_photos.py', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
-  'robots.txt', 'sitemap.xml'
+  'robots.txt', 'sitemap.xml', 'playwright.config.cjs', 'tests/storefront.spec.cjs'
 ];
 
 for (const file of requiredFiles) {
