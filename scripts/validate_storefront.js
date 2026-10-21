@@ -12,7 +12,7 @@ const requiredFiles = [
   'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
-  'scripts/sync_drive_photos.py', 'assets/brand/rock-logo.svg',
+  'scripts/sync_drive_photos.py', 'scripts/test_storefront_browser.cjs', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
   'robots.txt', 'sitemap.xml'
 ];
@@ -20,6 +20,11 @@ const requiredFiles = [
 for (const file of requiredFiles) {
   assert.ok(fs.existsSync(path.join(root, file)), `Required file is missing: ${file}`);
 }
+
+const workflow = read('.github/workflows/pages.yml');
+assert.ok(workflow.includes('browser-regression:'), 'Browser regression job is missing');
+assert.ok(workflow.includes('node scripts/test_storefront_browser.cjs'), 'Browser regression script is not run in CI');
+assert.ok(workflow.includes('needs: [validate, browser-regression]'), 'Deployment must wait for code and browser validation');
 
 // Guard the shared design system and its stylesheet wiring against accidental removal.
 const designSystem = read('white-modern.css');
