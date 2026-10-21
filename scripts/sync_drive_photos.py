@@ -237,6 +237,33 @@ def white_edge_score(data: bytes) -> float:
         return 0.0
 
 
+MIN_PRODUCT_IMAGE_SIDE = 100
+MIN_PRODUCT_IMAGE_ASPECT = 0.35
+MAX_PRODUCT_IMAGE_ASPECT = 2.5
+
+
+def image_dimensions(data: bytes) -> tuple[int, int] | None:
+    """Return EXIF-corrected image dimensions, or None for non-images."""
+    try:
+        with Image.open(io.BytesIO(data)) as original:
+            image = ImageOps.exif_transpose(original)
+            return image.width, image.height
+    except Exception:
+        return None
+
+
+def is_usable_product_image(data: bytes) -> bool:
+    """Reject thumbnails and malformed panoramic/vertical strips before sync."""
+    dimensions = image_dimensions(data)
+    if not dimensions:
+        return False
+    width, height = dimensions
+    if min(width, height) < MIN_PRODUCT_IMAGE_SIDE or height <= 0:
+        return False
+    aspect = width / height
+    return MIN_PRODUCT_IMAGE_ASPECT <= aspect <= MAX_PRODUCT_IMAGE_ASPECT
+
+
 def read_products() -> tuple[str, list[dict], int, int]:
     source = PRODUCTS_JS.read_text(encoding="utf-8")
     prefix = re.search(r"const\s+ROCK_PRODUCTS\s*=\s*", source)
@@ -253,6 +280,19 @@ def sync_product(product: dict) -> tuple[str, int, str]:
     drive_id, is_folder = parse_drive_url(url)
     if not drive_id:
         return product_id, 0, "no Drive photo link"
+
+    # Keep a safe, locally stored primary photo available throughout synchronization.
+    image_rel = str(product.get("image") or "")
+    existing_path = ROOT / image_rel if image_rel.startswith("assets/products/") else None
+    existing_data = None
+    if existing_path and existing_path.is_file():
+        try:
+            candidate = existing_path.read_bytes()
+            if is_usable_product_image(candidate):
+                existing_data = candidate
+        except OSError:
+            pass
+
     session = get_session()
     if is_folder:
         candidates = folder_file_candidates(session, drive_id)
@@ -260,47 +300,73 @@ def sync_product(product: dict) -> tuple[str, int, str]:
         candidates = [(drive_id, "linked file")]
     if not candidates:
         return product_id, 0, "Drive folder yielded no image candidates"
+
     downloaded: list[tuple[bytes, str]] = []
+    last_error = "no usable product images found"
     for file_id, filename in candidates:
         data, error = download_drive_file(session, file_id)
         if data:
+            dimensions = image_dimensions(data)
+            if not is_usable_product_image(data):
+                shape = f"{dimensions[0]}x{dimensions[1]}" if dimensions else "unknown dimensions"
+                log(f"  {product_id}: ignored malformed image ({shape})")
+                last_error = f"ignored malformed supplier image ({shape})"
+                continue
             downloaded.append((data, filename))
             if len(downloaded) >= MAX_IMAGES_PER_PRODUCT:
                 break
         else:
-            # Non-images (e.g. PDFs) are ignored quietly unless no images can be found.
             last_error = error
+
     if not downloaded:
-        return product_id, 0, locals().get("last_error", "no downloadable images")
-    # Prefer a photo with a clean white or transparent edge for the product-listing tile.
-    # If none is sufficiently white, preserve the supplier's original photo order.
+        # Never replace an existing good image with a video, thumbnail, or narrow strip.
+        return product_id, 0, last_error
+
     scores = [white_edge_score(data) for data, _filename in downloaded]
-    if scores:
-        best_index = max(range(len(scores)), key=scores.__getitem__)
-        if scores[best_index] >= 0.65:
-            best_score = scores[best_index]
-            downloaded.insert(0, downloaded.pop(best_index))
-            log(f"  {product_id}: selected a white-background listing image ({best_score:.0%} white edge)")
-    # Keep the selected primary photo at the stable product image path; use numbered siblings for the gallery.
+    best_index = max(range(len(scores)), key=scores.__getitem__)
+    best_score = scores[best_index]
+    keep_existing_white = (
+        existing_data is not None
+        and existing_path is not None
+        and white_edge_score(existing_data) >= 0.65
+        and best_score < 0.65
+    )
+
     paths: list[str] = []
-    for index, (data, _filename) in enumerate(downloaded, start=1):
+    if keep_existing_white:
+        # Keep the verified white-background local packshot as the listing image.
+        paths.append(image_rel)
+        log(f"  {product_id}: kept existing white-background listing image")
+        gallery = downloaded
+        first_gallery_index = 2
+    else:
+        # Prefer the cleanest white/transparent supplier photo as the primary image.
+        downloaded.insert(0, downloaded.pop(best_index))
+        if best_score >= 0.65:
+            log(f"  {product_id}: selected a white-background listing image ({best_score:.0%} white edge)")
+        gallery = downloaded
+        first_gallery_index = 1
+
+    for index, (data, _filename) in enumerate(gallery, start=first_gallery_index):
         suffix = "" if index == 1 else f"-{index:02d}"
         output = PRODUCT_DIR / f"{product_id}{suffix}.webp"
         if image_to_webp(data, output):
             paths.append(f"assets/products/{output.name}")
+
     if not paths:
         return product_id, 0, "images could not be converted"
-    # Remove stale gallery images owned by this sync script after successful retrieval.
+
+    # Remove stale numbered gallery images only after a successful, usable sync.
     for old in PRODUCT_DIR.glob(f"{product_id}-[0-9][0-9].webp"):
         if f"assets/products/{old.name}" not in paths:
             try:
                 old.unlink()
             except OSError:
                 pass
+
     product["image"] = paths[0]
     product["images"] = paths
     return product_id, len(paths), ""
-
 
 def main() -> int:
     PRODUCT_DIR.mkdir(parents=True, exist_ok=True)
