@@ -1,20 +1,68 @@
 /* ROCK White Modern — white-first storefront with the original navy/electric-blue identity.
    Additive layer: keeps the existing product catalogue, filtering, cart and language logic intact. */
 :root{
-  --navy:#071a33;
-  --ink:#10233c;
-  --blue:#1878e5;
-  --line:#e4eaf2;
-  --paper:#f6f9fd;
-  --white:#fff;
-  --muted:#718096;
-  --radius:22px;
-  --ease:cubic-bezier(.2,.75,.25,1);
+  /* Core brand */
+  --rock-navy:#071a33;
+  --rock-ink:#10233c;
+  --rock-blue:#1878e5;
+  --rock-line:#e4eaf2;
+  --rock-paper:#f6f9fd;
+  --rock-white:#fff;
+  --rock-muted:#718096;
+
+  /* Typography: shared scale, separate Arabic and Latin stacks */
+  --rock-font-ar:"IBM Plex Sans Arabic","Manrope",Arial,sans-serif;
+  --rock-font-latin:"Manrope","IBM Plex Sans Arabic",Arial,sans-serif;
+  --rock-text-xs:.75rem;
+  --rock-text-sm:.875rem;
+  --rock-text-base:1rem;
+  --rock-text-lg:1.125rem;
+  --rock-leading-heading:1.2;
+  --rock-leading-body:1.65;
+  --rock-leading-ar:1.85;
+
+  /* Spacing scale */
+  --rock-space-1:.25rem;
+  --rock-space-2:.5rem;
+  --rock-space-3:.75rem;
+  --rock-space-4:1rem;
+  --rock-space-5:1.25rem;
+  --rock-space-6:1.5rem;
+  --rock-space-8:2rem;
+  --rock-space-10:2.5rem;
+  --rock-space-12:3rem;
+  --rock-space-16:4rem;
+  --rock-space-20:5rem;
+  --rock-space-24:6rem;
+  --rock-content-width:77.5rem;
+  --rock-page-gutter:clamp(1.125rem,4vw,3.5rem);
+
+  /* Shared components and interactions */
+  --rock-radius-sm:10px;
+  --rock-radius-md:16px;
+  --rock-radius-lg:22px;
+  --rock-radius-pill:999px;
+  --rock-shadow-card:0 4px 17px rgba(15,44,76,.035);
+  --rock-focus-ring:3px solid rgba(24,120,229,.55);
+  --rock-motion-fast:160ms;
+  --rock-motion-standard:220ms;
+  --rock-ease:cubic-bezier(.2,.75,.25,1);
+
+  /* Compatibility aliases while legacy components are migrated */
+  --navy:var(--rock-navy);
+  --ink:var(--rock-ink);
+  --blue:var(--rock-blue);
+  --line:var(--rock-line);
+  --paper:var(--rock-paper);
+  --white:var(--rock-white);
+  --muted:var(--rock-muted);
+  --radius:var(--rock-radius-lg);
+  --ease:var(--rock-ease);
   color-scheme:light;
 }
 html{scroll-behavior:smooth;scroll-padding-top:100px;background:#fff}
-body{background:#fff!important;color:var(--ink)!important;font-family:"Manrope","IBM Plex Sans Arabic",Arial,sans-serif;-webkit-font-smoothing:antialiased}
-html[dir="rtl"] body{font-family:"IBM Plex Sans Arabic","Manrope",Arial,sans-serif}
+body{background:#fff!important;color:var(--ink)!important;font-family:var(--rock-font-latin);font-size:var(--rock-text-base);line-height:var(--rock-leading-body);-webkit-font-smoothing:antialiased}
+html[dir="rtl"] body{font-family:var(--rock-font-ar);line-height:var(--rock-leading-ar)}
 button,input,select,textarea{font:inherit}
 button,a{-webkit-tap-highlight-color:transparent}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(24,120,229,.55)!important;outline-offset:3px}
@@ -333,4 +381,62 @@ html[dir="rtl"] .site-footer .footer-meta{text-align:left}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+
+/* ROCK Design System v1
+   Typography and spacing foundation. Keep these shared rules here while
+   legacy selectors are migrated page by page; do not add another override sheet. */
+:where(h1,h2,h3,h4,h5,h6){line-height:var(--rock-leading-heading);text-wrap:balance}
+:where(p,li,dd){text-wrap:pretty}
+html[dir="rtl"] :where(h1,h2,h3,h4,h5,h6){letter-spacing:normal;line-height:1.35}
+html[dir="rtl"] .hero h1{
+  max-width:18ch;
+  font-size:clamp(2rem,4.4vw,3.75rem);
+  line-height:1.28;
+  letter-spacing:normal;
+}
+html[dir="ltr"] .hero h1{
+  font-size:clamp(2.75rem,6vw,5.25rem);
+  line-height:1.06;
+}
+html[dir="rtl"] .hero h1 em{margin-top:var(--rock-space-2);letter-spacing:normal}
+html[dir="rtl"] .hero-copy>p{
+  max-width:38rem;
+  font-size:clamp(.95rem,1.4vw,1.05rem);
+  line-height:var(--rock-leading-ar);
+}
+html[dir="rtl"] .section-head h2{
+  font-size:clamp(1.625rem,3.4vw,2.65rem);
+  line-height:1.35;
+  letter-spacing:normal;
+}
+html[dir="rtl"] .policy-intro h1,
+html[dir="rtl"] .product-detail-copy h1,
+html[dir="rtl"] .product-detail-title,
+html[dir="rtl"] .related-section-heading{
+  line-height:1.35;
+  letter-spacing:normal;
+}
+html[dir="rtl"] .product-name{
+  min-height:3.5rem;
+  font-size:.92rem;
+  line-height:1.75;
+  letter-spacing:normal;
+}
+html[dir="rtl"] .product-description,
+html[dir="rtl"] .product-detail-description,
+html[dir="rtl"] .detail-description,
+html[dir="rtl"] .policy-card p{
+  line-height:var(--rock-leading-ar);
+}
+.shop-section,.collections,.story{
+  padding-block:clamp(var(--rock-space-16),7vw,var(--rock-space-24));
+}
+.section-head{margin-bottom:var(--rock-space-8)}
+.collection-grid{gap:var(--rock-space-3)}
+.product-actions{gap:var(--rock-space-2)}
+@media(max-width:640px){
+  html[dir="rtl"] .hero h1{font-size:clamp(2rem,8.5vw,3rem);max-width:100%}
+  .section-head{gap:var(--rock-space-4);margin-bottom:var(--rock-space-6)}
 }
