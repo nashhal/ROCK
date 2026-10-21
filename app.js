@@ -171,19 +171,19 @@
   function openCart(){
     const drawer=$('#cartDrawer');
     if(!drawer.classList.contains('open')) cartReturnFocus=document.activeElement && document.activeElement!==document.body?document.activeElement:$('#cartBtn');
-    drawer.removeAttribute('inert');drawer.removeAttribute('inert');drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
+    drawer.removeAttribute('inert');drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
     $('#closeCart').focus({preventScroll:true});
   }
   function closeCart(restore=true){
     const drawer=$('#cartDrawer');const wasOpen=drawer.classList.contains('open');
-    drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');drawer.setAttribute('inert','');drawer.setAttribute('inert','');
+    drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');drawer.setAttribute('inert','');
     if(!$$('.modal.show').length)$('#overlay').classList.remove('show');
     if(wasOpen&&restore){const target=cartReturnFocus||$('#cartBtn');cartReturnFocus=null;restoreFocus(target);}
   }
   function openModal(id,returnFocus=null){
     const modal=$('#'+id);
     if(!modal.classList.contains('show'))modalReturnFocus=returnFocus||(document.activeElement&&document.activeElement!==document.body?document.activeElement:$('#cartBtn'));
-    modal.removeAttribute('inert');modal.removeAttribute('inert');modal.classList.add('show');modal.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
+    modal.removeAttribute('inert');modal.classList.add('show');modal.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
     const target=modal.querySelector('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href]');
     if(target)target.focus({preventScroll:true});
   }
