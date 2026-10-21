@@ -29,7 +29,8 @@ html[dir="ltr"] .announcement-close{left:14px;right:auto}
 .site-header,.product-page-body .site-header,.policy-page .site-header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.93)!important;border-bottom:1px solid rgba(222,231,242,.95)!important;box-shadow:0 5px 22px rgba(14,43,77,.045)!important;backdrop-filter:blur(18px)}
 .header-inner{max-width:1320px;height:78px;padding-inline:clamp(18px,4vw,56px);gap:clamp(16px,3vw,42px)}
 .brand{width:94px;flex-shrink:0}
-.brand img,.product-page-body .brand img,.policy-page .brand img{filter:none!important}
+/* The source ROCK SVG is white artwork on transparency. Tint it to navy on light surfaces so it stays visible without changing the logo artwork. */
+.brand img,.product-page-body .brand img,.policy-page .brand img{filter:brightness(0) saturate(100%) invert(8%) sepia(25%) saturate(2442%) hue-rotate(182deg) brightness(92%) contrast(103%)!important}
 .desktop-nav{gap:clamp(16px,2.6vw,34px)}
 .desktop-nav a,.mobile-panel a,.product-nav a,.policy-nav a{color:#52657b!important;font-size:12px;font-weight:700;transition:color .18s ease}
 .desktop-nav a:hover,.mobile-panel a:hover,.product-nav a:hover,.policy-nav a:hover{color:var(--blue)!important}
@@ -159,7 +160,7 @@ html[dir="ltr"] .product-tag{left:12px;right:auto}
 .circle-arrow:hover{background:var(--blue)!important;transform:translateY(-2px)}
 .site-footer,.product-footer{display:flex;align-items:center;justify-content:space-between;gap:22px;max-width:none;padding:36px max(24px,calc((100vw - 1240px)/2));border-top:1px solid #e8edf4!important;background:#fff!important;color:#6e7e91!important}
 .footer-brand{display:flex;align-items:center;gap:12px;width:auto;color:#718096!important;font-size:10px}
-.footer-brand img,.product-footer-brand img{width:86px;filter:none!important}
+.footer-brand img,.product-footer-brand img{width:86px;filter:brightness(0) saturate(100%) invert(8%) sepia(25%) saturate(2442%) hue-rotate(182deg) brightness(92%) contrast(103%)!important}
 .footer-links{display:flex;gap:22px;color:#667990!important;font-size:11px;font-weight:700}
 .footer-links a:hover,.product-footer a:hover{color:var(--blue)!important}
 .footer-meta{color:#8b99a9!important;font-size:10px}
