@@ -21,6 +21,21 @@ for (const file of requiredFiles) {
   assert.ok(fs.existsSync(path.join(root, file)), `Required file is missing: ${file}`);
 }
 
+// Guard the shared design system and its stylesheet wiring against accidental removal.
+const designSystem = read('white-modern.css');
+assert.ok(designSystem.includes('ROCK Design System v1'), 'Shared ROCK design-system section is missing');
+for (const token of [
+  '--rock-font-ar', '--rock-font-latin', '--rock-text-base',
+  '--rock-leading-ar', '--rock-space-4', '--rock-content-width',
+  '--rock-radius-md', '--rock-focus-ring'
+]) {
+  assert.ok(designSystem.includes(`${token}:`), `Design-system token is missing: ${token}`);
+}
+assert.match(designSystem, /html\\[dir="rtl"\\]\\s+\\.hero h1/, 'Arabic hero typography refinement is missing');
+for (const page of ['index.html', 'product.html', 'policies.html']) {
+  assert.match(read(page), /white-modern\\.css\\?v=[^"]+/, `Versioned design stylesheet link is missing in ${page}`);
+}
+
 const productsSource = read('products.js');
 const productMatch = productsSource.match(/const\s+ROCK_PRODUCTS\s*=\s*(\[[\s\S]*?\]);/);
 assert.ok(productMatch, 'Could not parse ROCK_PRODUCTS catalog');
