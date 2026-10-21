@@ -1,5 +1,9 @@
 (() => {
-  const products = Array.isArray(globalThis.ROCK_PRODUCTS) ? globalThis.ROCK_PRODUCTS : [];
+  const catalogProducts = Array.isArray(globalThis.ROCK_PRODUCTS) ? globalThis.ROCK_PRODUCTS : [];
+  const photoQuality = globalThis.ROCK_PRODUCT_IMAGE_QUALITY;
+  const approvedPhotoIds = new Set(photoQuality && Array.isArray(photoQuality.visibleIds) ? photoQuality.visibleIds : []);
+  // Hidden products should not remain accessible through direct product links.
+  const products = catalogProducts.filter(item => approvedPhotoIds.has(item.id));
   const $ = selector => document.querySelector(selector);
   const params = new URLSearchParams(window.location.search);
   const product = products.find(item => item.id === params.get('id'));
