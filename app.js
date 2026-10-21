@@ -66,6 +66,27 @@
   function catLabel(c){return ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[c]||c}
   function money(v){const n=Number(v);const shown=Number.isInteger(n)?String(n):n.toFixed(2);return `${shown} ${t('sar')}`}
 
+  function updateHeroProducts(){
+    const preferredIds=['pods700','rkch765'];
+    const featured=preferredIds.map(id=>products.find(product=>product.id===id)).filter(Boolean);
+    for(const product of products){
+      if(featured.length>=2)break;
+      if(!featured.some(item=>item.id===product.id))featured.push(product);
+    }
+    const cards=$('.hero-visual .visual-card');
+    cards.forEach((card,index)=>{
+      const product=featured[index];
+      if(!product){card.hidden=true;return}
+      const image=card.querySelector('img');
+      const label=card.querySelector('span');
+      if(image){image.src=safeImage(product.image);image.alt=name(product);image.loading='eager'}
+      if(label)label.textContent=product.model&&product.model!=='—'?product.model:(product.barcode||'ROCK');
+      card.hidden=false;
+    });
+    const visual=$('.hero-visual');
+    if(visual)visual.hidden=featured.length===0;
+  }
+
   function applyLanguage(){
     document.title = t('pageTitle');
     document.documentElement.lang = state.lang;
@@ -82,6 +103,7 @@
     });
     document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
     $('#langBtn').textContent = state.lang === 'ar' ? 'EN' : 'AR';
+    updateHeroProducts();
     $('#searchInput').placeholder = state.lang === 'ar' ? 'ابحث عن موديل أو منتج' : 'Search model or product';
     $('#searchInput').setAttribute('aria-label', state.lang === 'ar' ? 'ابحث باسم المنتج أو الموديل' : 'Search by product name or model');
     $('#sortSelect').setAttribute('aria-label', t('sortBy'));
