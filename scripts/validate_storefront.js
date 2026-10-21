@@ -14,7 +14,7 @@ const requiredFiles = [
   'rocky-assistant.js', 'rocky-assistant.css',
   'scripts/sync_drive_photos.py', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
-  'robots.txt', 'sitemap.xml'
+  'robots.txt', 'sitemap.xml', 'playwright.config.cjs', 'tests/storefront.spec.cjs'
 ];
 
 for (const file of requiredFiles) {
@@ -115,6 +115,9 @@ for (const file of htmlFiles) {
 
 const home = read('index.html');
 assert.match(home, /<html\b[^>]*lang="ar"[^>]*dir="rtl"/i, 'Homepage must declare Arabic RTL');
+assert.match(home, /id="cartDrawer"[^>]*aria-hidden="true"[^>]*inert/i, 'Cart drawer must be hidden from assistive technology while closed');
+assert.match(home, /id="mobilePanel"[^>]*inert/i, 'Closed mobile menu must be inert');
+assert.match(home, /id="productModal"[^>]*aria-hidden="true"[^>]*inert/i, 'Quick-view dialog must be inert while closed');
 const cspMatch = home.match(/Content-Security-Policy"\s+content="([^"]+)"/i);
 assert.ok(cspMatch, 'Homepage CSP meta tag missing');
 for (const directive of [
@@ -135,10 +138,10 @@ assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not
 const app = read('app.js');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
-assert.ok(app.includes("$('.modal').forEach(modal=>modal.classList.remove('show'))"), 'Modal close function must close all modal elements');
+assert.ok(app.includes("$$('.modal').forEach(modal=>{modal.classList.remove('show')"), 'Modal close function must close all modal elements');
 assert.ok(!app.includes("$(' .modal'.trim())"), 'Malformed modal selector found');
-assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Collection cards must have click handlers');
-assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
+assert.ok(app.includes("$$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Collection cards must have click handlers');
+assert.ok(app.includes("$$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
 assert.match(app, /Maximum quantity reached|الحد الأقصى للكمية/, 'Cart must enforce its quantity limit');
 
 for (const file of ['styles.css', 'premium-refresh.css', 'product-page.css', 'rocky-assistant.css']) {
@@ -148,6 +151,7 @@ for (const file of ['styles.css', 'premium-refresh.css', 'product-page.css', 'ro
 }
 assert.match(read('premium-refresh.css'), /\.product-image\{[^}]*background:\s*#fff/i, 'Catalog tiles must keep a white image background');
 assert.match(read('premium-refresh.css'), /:focus-visible\{outline:3px solid #086dc7/i, 'Keyboard focus indicator missing');
+assert.match(read('styles.css'), /\.qty button\{width:32px;height:32px;min-width:32px;min-height:32px;/, 'Cart quantity touch targets must be at least 32px');
 assert.match(read('premium-refresh.css'), /prefers-reduced-motion:\s*reduce/i, 'Reduced-motion support missing');
 
 const sitemap = read('sitemap.xml');

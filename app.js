@@ -6,6 +6,9 @@
   function storageSet(key, value){ try { localStorage.setItem(key, value); return true; } catch { return false; } }
   const initialLang = storageGet('rock-lang', 'ar');
   const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', minPrice: '', maxPrice: '', cart: safeCart(), activeProduct: null };
+  let cartReturnFocus = null;
+  let modalReturnFocus = null;
+  function restoreFocus(target){ if(target && target.isConnected && typeof target.focus === 'function') target.focus({preventScroll:true}); }
 
   const copy = {
     ar: {
@@ -158,24 +161,39 @@
   function persist(){storageSet('rock-cart',JSON.stringify(state.cart));updateCount()}
   function updateCount(){const n=state.cart.reduce((s,i)=>s+i.qty,0);$('#cartCount').textContent=n}
   function renderCart(){
-    updateCount(); const wrap=$('#cartItems');
+    updateCount(); const wrap=$('#cartItems'); const clearButton=$('#clearCartBtn'); if(clearButton)clearButton.disabled=!state.cart.length;
     if(!state.cart.length){wrap.innerHTML=`<div class="empty-state"><strong>${t('empty')}</strong><span>${t('noResultsSub')}</span></div>`;$('#cartTotal').textContent=money(0);$('#checkoutBtn').disabled=true;return}
     $('#checkoutBtn').disabled=false; let total=0; wrap.innerHTML='';
-    state.cart.forEach(item=>{const p=products.find(x=>x.id===item.id);if(!p)return; total+=p.price*item.qty; const row=document.createElement('div');row.className='cart-row';const cartImage=safeImage(p.image);row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}<div><h4>${esc(name(p))}</h4><p>${esc(p.model)} · ${money(p.price)}</p><div class="qty"><button data-dec="${p.id}">−</button><span>${item.qty}</span><button data-inc="${p.id}">+</button></div></div><strong>${money(p.price*item.qty)}</strong>`;const cartImg=row.querySelector('[data-cart-image]');if(cartImg)cartImg.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='cart-image-placeholder';ph.textContent='ROCK';cartImg.replaceWith(ph)},{once:true});wrap.appendChild(row)});
+    state.cart.forEach(item=>{const p=products.find(x=>x.id===item.id);if(!p)return; total+=p.price*item.qty; const row=document.createElement('div');row.className='cart-row';const cartImage=safeImage(p.image);row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}<div><h4>${esc(name(p))}</h4><p>${esc(p.model)} · ${money(p.price)}</p><div class="qty"><button data-dec="${p.id}" aria-label="${esc(state.lang==='ar'?'تقليل كمية '+name(p):'Decrease quantity of '+name(p))}">−</button><span>${item.qty}</span><button data-inc="${p.id}" aria-label="${esc(state.lang==='ar'?'زيادة كمية '+name(p):'Increase quantity of '+name(p))}">+</button></div></div><strong>${money(p.price*item.qty)}</strong>`;const cartImg=row.querySelector('[data-cart-image]');if(cartImg)cartImg.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='cart-image-placeholder';ph.textContent='ROCK';cartImg.replaceWith(ph)},{once:true});wrap.appendChild(row)});
     wrap.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>changeQty(b.dataset.dec,-1));wrap.querySelectorAll('[data-inc]').forEach(b=>b.onclick=()=>changeQty(b.dataset.inc,1));$('#cartTotal').textContent=money(total);
   }
   function changeQty(id,d){const row=state.cart.find(x=>x.id===id);if(!row)return;row.qty=Math.min(99,row.qty+d);if(row.qty<=0)state.cart=state.cart.filter(x=>x.id!==id);persist();renderCart()}
-  function openCart(){ $('#cartDrawer').classList.add('open');$('#overlay').classList.add('show'); }
-  function closeCart(){ $('#cartDrawer').classList.remove('open');$('#overlay').classList.remove('show'); }
-  function openModal(id){$('#'+id).classList.add('show');$('#overlay').classList.add('show')}
-  function closeModals(){
-    const orderWasOpen = $('#checkoutModal').classList.contains('show');
-    $$('.modal').forEach(modal=>modal.classList.remove('show'));
-    $('#overlay').classList.remove('show');
-    if(orderWasOpen){
-      $('#orderDetailsForm').reset();
-      $('#orderText').value='';
-    }
+  function openCart(){
+    const drawer=$('#cartDrawer');
+    if(!drawer.classList.contains('open')) cartReturnFocus=document.activeElement && document.activeElement!==document.body?document.activeElement:$('#cartBtn');
+    drawer.removeAttribute('inert');drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
+    $('#closeCart').focus({preventScroll:true});
+  }
+  function closeCart(restore=true){
+    const drawer=$('#cartDrawer');const wasOpen=drawer.classList.contains('open');
+    drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');drawer.setAttribute('inert','');
+    if(!$$('.modal.show').length)$('#overlay').classList.remove('show');
+    if(wasOpen&&restore){const target=cartReturnFocus||$('#cartBtn');cartReturnFocus=null;restoreFocus(target);}
+  }
+  function openModal(id,returnFocus=null){
+    const modal=$('#'+id);
+    if(!modal.classList.contains('show'))modalReturnFocus=returnFocus||(document.activeElement&&document.activeElement!==document.body?document.activeElement:$('#cartBtn'));
+    modal.removeAttribute('inert');modal.classList.add('show');modal.setAttribute('aria-hidden','false');$('#overlay').classList.add('show');
+    const target=modal.querySelector('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href]');
+    if(target)target.focus({preventScroll:true});
+  }
+  function closeModals(restore=true){
+    const wasOpen=$$('.modal.show').length>0;
+    const orderWasOpen=$('#checkoutModal').classList.contains('show');
+    $$('.modal').forEach(modal=>{modal.classList.remove('show');modal.setAttribute('aria-hidden','true');modal.setAttribute('inert','');});
+    if(!$('#cartDrawer').classList.contains('open'))$('#overlay').classList.remove('show');
+    if(orderWasOpen){$('#orderDetailsForm').reset();$('#orderText').value='';}
+    if(wasOpen&&restore){const target=modalReturnFocus||$('#cartBtn');modalReturnFocus=null;restoreFocus(target);}
   }
   function openProduct(id){
     const p=products.find(x=>x.id===id); if(!p)return; state.activeProduct=p;
@@ -188,11 +206,12 @@
   }
   function checkout(){
     if(!state.cart.length) return;
+    const returnTarget=cartReturnFocus||$('#cartBtn');
     $('#orderDetailsForm').reset();
     $('#orderText').value = buildOrderText(false);
-    closeCart();
-    openModal('checkoutModal');
-    $('#customerName').focus();
+    closeCart(false);cartReturnFocus=null;
+    openModal('checkoutModal',returnTarget);
+    $('#customerName').focus({preventScroll:true});
   }
   function buildOrderText(includeCustomer=true){
     let total = 0;
@@ -252,14 +271,15 @@
   $$('.collection-card').forEach(b=>b.onclick=()=>{state.cat=b.dataset.collection;$$('#categoryChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===state.cat));document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()});
   $('#viewFeatured').onclick=()=>{state.sort='featured';$('#sortSelect').value='featured';document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()};
   $('#closingShop').onclick=()=>document.querySelector('#shop').scrollIntoView({behavior:'smooth'});
-  $('#scrollTopBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
-  $('#clearCartBtn').onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
-  $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{if(state.activeProduct)add(state.activeProduct.id);closeModals()};
+  const scrollTopButton=$('#scrollTopBtn');if(scrollTopButton)scrollTopButton.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+  const clearCartButton=$('#clearCartBtn');if(clearCartButton)clearCartButton.onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
+  $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{const id=state.activeProduct&&state.activeProduct.id;closeModals();if(id)add(id)};
   $$('[data-close-modal]').forEach(b=>b.onclick=closeModals);
-  $('#menuBtn').onclick=()=>$('#mobilePanel').classList.toggle('open');$$('[data-mobile-link]').forEach(a=>a.onclick=()=>$('#mobilePanel').classList.remove('open'));
+  function setMobileMenu(open){const panel=$('#mobilePanel');panel.classList.toggle('open',open);$('#menuBtn').setAttribute('aria-expanded',String(open));if(open)panel.removeAttribute('inert');else panel.setAttribute('inert','');}
+  $('#menuBtn').setAttribute('aria-expanded','false');$('#menuBtn').onclick=()=>setMobileMenu(!$('#mobilePanel').classList.contains('open'));$$('[data-mobile-link]').forEach(a=>a.onclick=()=>setMobileMenu(false));
   $('.announcement-close').onclick=()=>$('.announcement').remove();$('#year').textContent=new Date().getFullYear();const productCountNode=$('#heroProductCount');if(productCountNode)productCountNode.textContent=String(products.length);
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeCart();closeModals();$('#mobilePanel').classList.remove('open');return;}
+    if(e.key==='Escape'){if($$('.modal.show').length)closeModals();else if($('#cartDrawer').classList.contains('open'))closeCart();setMobileMenu(false);return;}
     if(e.key==='Tab'){
       const activeDialog = $('#checkoutModal').classList.contains('show') ? $('#checkoutModal') :
         ($('#productModal').classList.contains('show') ? $('#productModal') :
@@ -268,7 +288,8 @@
       const nodes = [...activeDialog.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled),textarea:not(:disabled),select:not(:disabled)')].filter(el=>el.offsetParent!==null);
       if(!nodes.length) return;
       const first=nodes[0], last=nodes[nodes.length-1];
-      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+      if(!activeDialog.contains(document.activeElement)){e.preventDefault();(e.shiftKey?last:first).focus();}
+      else if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
       else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
     }
   });
