@@ -12,7 +12,7 @@ const requiredFiles = [
   'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
-  'scripts/sync_drive_photos.py', 'scripts/test_storefront_browser.cjs', 'assets/brand/rock-logo.svg',
+  'scripts/sync_drive_photos.py', 'scripts/product_image_quality.py', 'scripts/test_product_image_quality.py', 'scripts/test_storefront_browser.cjs', 'data/product-image-quality.js', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
   'robots.txt', 'sitemap.xml'
 ];
@@ -46,7 +46,12 @@ const productPageHtml = read('product.html');
 assert.ok(productPageCss.includes('.product-page-body .site-header{'), 'Product page must explicitly align its header with the shared design system');
 assert.ok(productPageCss.includes('.product-nav a{'), 'Product navigation needs explicit readable colors on the light header');
 assert.ok(productPageCss.includes('prefers-reduced-motion:reduce'), 'Product page must respect reduced-motion preferences');
-assert.ok(productPageHtml.includes('product-page.css?v=20261021-white-header-v3'), 'Product page stylesheet cache key must be refreshed');
+assert.ok(productPageHtml.includes('product-page.css?v=20261022-catalog-quality'), 'Product page stylesheet cache key must be refreshed');
+for (const page of ['index.html', 'product.html']) {
+  const html = read(page);
+  assert.ok(html.includes('data/product-image-quality.js?v=20261022-quality-filter'), `Photo quality manifest must load in ${page}`);
+  assert.ok(html.indexOf('data/product-image-quality.js') < html.lastIndexOf(page === 'index.html' ? 'app.js?' : 'product-page.js?'), `Photo quality manifest must load before catalog rendering in ${page}`);
+}
 const browserTest = read('scripts/test_storefront_browser.cjs');
 assert.ok(browserTest.includes('Product navigation text must remain readable on the light header'), 'Browser regression must verify product header contrast');
 assert.ok(browserTest.includes('Product detail add-to-cart should preserve one cart line'), 'Browser regression must cover product detail add-to-cart');
