@@ -73,7 +73,7 @@
       if(featured.length>=2)break;
       if(!featured.some(item=>item.id===product.id))featured.push(product);
     }
-    const cards=$('.hero-visual .visual-card');
+    const cards=$$('.hero-visual .visual-card');
     cards.forEach((card,index)=>{
       const product=featured[index];
       if(!product){card.hidden=true;return}
