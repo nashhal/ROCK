@@ -233,8 +233,8 @@
     drawer.classList.remove('open');
     drawer.setAttribute('aria-hidden','true');
     $('#cartBtn').setAttribute('aria-expanded','false');
-    if(!$('.modal.show').length$('#overlay').classList.remove('show');
-    if(!$('.modal.show').lengthdocument.body.classList.remove('rock-dialog-open');
+    if(!$$('.modal.show').length)$('#overlay').classList.remove('show');
+    if(!$$('.modal.show').length)document.body.classList.remove('rock-dialog-open');
     const target=cartReturnFocus;
     cartReturnFocus=null;
     if(restoreFocus&&target&&target.isConnected&&typeof target.focus==='function')target.focus({preventScroll:true});
@@ -251,7 +251,7 @@
     if(closeButton)closeButton.focus({preventScroll:true});
   }
   function closeModals(restoreFocus=true){
-    const opened=$('.modal.show');
+    const opened=$$('.modal.show');
     if(!opened.length)return;
     const orderWasOpen=opened.some(modal=>modal.id==='checkoutModal');
     opened.forEach(modal=>{
