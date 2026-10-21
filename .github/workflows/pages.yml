@@ -35,12 +35,51 @@ jobs:
           node --check product-page.js
           node --check policy-page.js
           node --check scripts/validate_storefront.js
+          node --check scripts/test_storefront_browser.cjs
           node scripts/validate_storefront.js
+
+  browser-regression:
+    name: Browser regression and screenshots
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: npm install --no-save --no-package-lock playwright@1.64.0
+      - name: Install Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Run responsive browser checks
+        run: |
+          python -m http.server 4173 --bind 127.0.0.1 > /tmp/rock-storefront-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --silent --fail http://127.0.0.1:4173/ > /dev/null
+          node scripts/test_storefront_browser.cjs
+      - name: Upload browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rock-storefront-browser-review-${{ github.run_number }}
+          path: .artifacts/storefront/
+          if-no-files-found: ignore
+          retention-days: 14
 
   deploy:
     name: Deploy to GitHub Pages
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: validate
+    needs: [validate, browser-regression]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -63,6 +102,7 @@ jobs:
           node --check product-page.js
           node --check policy-page.js
           node --check scripts/validate_storefront.js
+          node --check scripts/test_storefront_browser.cjs
           node scripts/validate_storefront.js
       - name: Configure Pages
         uses: actions/configure-pages@v5
