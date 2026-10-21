@@ -31,9 +31,9 @@ for (const token of [
 ]) {
   assert.ok(designSystem.includes(`${token}:`), `Design-system token is missing: ${token}`);
 }
-assert.match(designSystem, /html\\[dir="rtl"\\]\\s+\\.hero h1/, 'Arabic hero typography refinement is missing');
+assert.match(designSystem, /html\[dir="rtl"\]\s+\.hero h1/, 'Arabic hero typography refinement is missing');
 for (const page of ['index.html', 'product.html', 'policies.html']) {
-  assert.match(read(page), /white-modern\\.css\\?v=[^"]+/, `Versioned design stylesheet link is missing in ${page}`);
+  assert.match(read(page), /white-modern\.css\?v=[^"]+/, `Versioned design stylesheet link is missing in ${page}`);
 }
 
 const productsSource = read('products.js');
