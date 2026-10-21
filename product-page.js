@@ -184,6 +184,21 @@
   $('#langBtn').addEventListener('click',()=>{lang=lang==='ar'?'en':'ar';setStored('rock-lang',lang);applyLanguage();renderProduct();renderRelated()});
   $('#detailAddButton').addEventListener('click',addToBag);
   $('#footerYear').textContent=String(new Date().getFullYear());
+  window.addEventListener('rock:assistant-add', event => {
+    const detail = event.detail;
+    if (!detail || typeof detail.respond !== 'function') return;
+    const item = products.find(candidate => candidate.id === detail.id);
+    if (!item) { detail.respond(false); return; }
+    const cart = readCart();
+    const row = cart.find(candidate => candidate.id === item.id);
+    if (row && row.qty >= 99) { detail.respond(false); toast(lang === 'ar' ? 'وصلت للحد الأقصى للكمية' : 'Maximum quantity reached'); return; }
+    if (row) row.qty += 1; else cart.push({ id: item.id, qty: 1 });
+    if (!setStored('rock-cart', JSON.stringify(cart))) { detail.respond(false); return; }
+    $('#cartCount').textContent = String(cart.reduce((sum, candidate) => sum + candidate.qty, 0));
+    toast(t('added'));
+    detail.respond(true);
+  });
+
   applyLanguage();
   renderProduct();
   $('#cartCount').textContent=String(readCart().reduce((sum,item)=>sum+item.qty,0));
