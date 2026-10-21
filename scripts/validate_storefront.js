@@ -223,9 +223,10 @@ assert.ok(productCss.includes('#cartDrawer[aria-hidden="true"]'), 'Closed cart m
 assert.ok(productCss.includes('.modal[aria-hidden="true"]'), 'Closed modals must not remain interactive');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
-assert.ok(app.includes("const opened=$('.modal.show')"), 'Modal close function must identify every open modal');
+assert.ok(app.includes("const opened=$('.modal.show')"), 'Modal close function must collect every open modal');
 assert.ok(app.includes("modal.setAttribute('aria-hidden','true')"), 'Closing a modal must hide it from assistive technology');
-assert.ok(app.includes("if(!$('#cartDrawer').classList.contains('open'))"), 'Modal close must preserve the overlay when the cart remains open');
+assert.ok(app.includes("if(!$('.modal.show').length)$('#overlay').classList.remove('show')"), 'Closing the cart must preserve the overlay while another modal remains open');
+assert.ok(app.includes("if(!$('.modal.show').length)document.body.classList.remove('rock-dialog-open')"), 'Closing the cart must preserve dialog scroll lock while another modal remains open');
 assert.ok(!app.includes("$(' .modal'.trim())"), 'Malformed modal selector found');
 assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Collection cards must have click handlers');
 assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
