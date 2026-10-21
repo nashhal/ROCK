@@ -76,8 +76,14 @@ def analyze_image(relative_path: str) -> dict:
     if strict_white < MIN_STRICT_WHITE_FRACTION:
         return {**result, "visible": False, "reason": "background_not_white"}
 
-    # A blank/washed-out image is not a usable packshot, even if its border is white.
-    edge_mean = ImageStat.Stat(sample.convert("L").filter(ImageFilter.FIND_EDGES)).mean[0]
+    # Ignore the outer image frame: edge filters can otherwise mistake the canvas border
+    # of a completely blank image for useful product detail.
+    edge_map = sample.convert("L").filter(ImageFilter.FIND_EDGES)
+    inset = 5
+    if edge_map.width <= inset * 2 or edge_map.height <= inset * 2:
+        return {**result, "visible": False, "reason": "insufficient_detail"}
+    interior_edges = edge_map.crop((inset, inset, edge_map.width - inset, edge_map.height - inset))
+    edge_mean = ImageStat.Stat(interior_edges).mean[0]
     result["edgeMean"] = round(edge_mean, 2)
     if edge_mean < MIN_EDGE_MEAN:
         return {**result, "visible": False, "reason": "insufficient_detail"}
