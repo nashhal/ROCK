@@ -31,7 +31,7 @@
       <div class="rocky-messages" id="rockyMessages" role="log" aria-live="polite" aria-relevant="additions text"></div>
       <form class="rocky-foot" id="rockyForm">
         <label class="rocky-sr-only" for="rockyInput" data-rocky-input-label>اكتب سؤالك</label>
-        <input class="rocky-input" id="rockyInput" name="question" type="text" autocomplete="off" maxlength="180" placeholder="مثلاً: شاحن بحدود 50 ريال">
+        <input class="rocky-input" id="rockyInput" name="question" type="text" autocomplete="off" maxlength="180" placeholder="مثلاً: شاحن أقل من 50 ريال">
         <button class="rocky-send" type="submit" aria-label="إرسال السؤال">↑</button>
       </form>
       <div class="rocky-disclaimer" data-rocky-note>روكي يبحث في كتالوج المتجر الحالي؛ قد تكون بعض المواصفات غير متوفرة.</div>
