@@ -57,7 +57,7 @@ assert.ok(productMatch, 'Could not parse ROCK_PRODUCTS catalog');
 const products = JSON.parse(productMatch[1]);
 assert.equal(products.length, 41, 'The original 41-product catalog must remain intact');
 const qualitySource = read('data/product-image-quality.js');
-const qualityMatch = qualitySource.match(/globalThis\\.ROCK_PRODUCT_IMAGE_QUALITY\\s*=\\s*(\\{[\\s\\S]*\\});/);
+const qualityMatch = qualitySource.match(/globalThis\.ROCK_PRODUCT_IMAGE_QUALITY\s*=\s*(\{[\s\S]*\});/);
 assert.ok(qualityMatch, 'Generated product-photo quality manifest is missing or invalid');
 const quality = JSON.parse(qualityMatch[1]);
 const visibleIds = new Set(quality.visibleIds);
