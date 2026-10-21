@@ -33,6 +33,10 @@ def main() -> int:
         asset_dir.mkdir(parents=True)
         clear_white = asset_dir / "clear.webp"
         clear_white.write_bytes(image_bytes())
+        transparent = asset_dir / "transparent.webp"
+        transparent_image = Image.new("RGBA", (400, 400), (255, 255, 255, 0))
+        ImageDraw.Draw(transparent_image).rounded_rectangle((110, 80, 290, 320), radius=25, fill=(20, 45, 80, 255), outline=(5, 10, 20, 255), width=5)
+        transparent_image.save(transparent, format="WEBP", quality=92)
         nonwhite = asset_dir / "dark.webp"
         nonwhite.write_bytes(image_bytes(background=(35, 45, 60)))
         blurry = asset_dir / "blank.webp"
@@ -45,6 +49,8 @@ def main() -> int:
         with patch("product_image_quality.ROOT", root):
             good = analyze_image("assets/products/clear.webp")
             assert good["visible"], f"Clear white packshot should pass: {good}"
+            transparent_result = analyze_image("assets/products/transparent.webp")
+            assert transparent_result["visible"], f"Transparent cut-out should pass when composited on white: {transparent_result}"
             assert not analyze_image("assets/products/dark.webp")["visible"], "Dark background must be hidden"
             assert analyze_image("assets/products/dark.webp")["reason"] == "background_not_white"
             assert not analyze_image("assets/products/blank.webp")["visible"], "Blank image must be hidden"
