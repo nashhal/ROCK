@@ -152,6 +152,15 @@ const sharedDesignStyles = ['index.html', 'product.html', 'policies.html'].map(f
   return match[1];
 });
 assert.equal(new Set(sharedDesignStyles).size, 1, 'All pages must use the same cache version for the shared design stylesheet');
+for (const [page, script] of [['product.html','product-page.js'],['policies.html','policy-page.js']]) {
+  const html = read(page);
+  const copy = read(script);
+  assert.ok(html.includes('data-i18n="brandTagline"'), `${page} must use the shared translatable brand tagline`);
+  assert.ok(copy.includes("brandTagline:'ملحقات تقنية ليومك'"), `${script} missing the Arabic brand tagline`);
+  assert.ok(copy.includes("brandTagline:'Everyday tech essentials'"), `${script} missing the English brand tagline`);
+  assert.ok(copy.includes("announcement:'ROCK | ملحقات تقنية ليومك'"), `${script} announcement copy is inconsistent`);
+  assert.ok(copy.includes("announcement:'ROCK | Everyday tech essentials'"), `${script} English announcement copy is inconsistent`);
+}
 
 const policies = read('policies.html');
 assert.equal((policies.match(/premium-refresh\.css/gi) || []).length, 1, 'Policies page must load the refresh CSS only once');
