@@ -13,7 +13,7 @@
 html{scroll-padding-top:90px}
 body{background:#f7f9fc;color:var(--ink)}
 button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(45,140,255,.48);outline-offset:3px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #086dc7;outline-offset:3px}
 .announcement{position:relative;height:35px;background:linear-gradient(90deg,#06142a,#0b3974 58%,#075db1);font-size:10px;letter-spacing:.12em}
 .announcement span:first-child{font-weight:800;opacity:.9}
 .announcement-close{color:rgba(255,255,255,.75)}
@@ -267,7 +267,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .price-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .price-controls-label{font-size:11px;font-weight:800;color:#49637f;margin-inline-end:2px}
 .price-input{display:flex;align-items:center;gap:7px;color:#70849b;font-size:10px;font-weight:700}
-.price-input input{width:90px;height:36px;border:1px solid #d9e4f0;border-radius:10px;padding:0 10px;color:#071a33;background:#fff;outline:0;font:700 11px/1 Manrope,"IBM Plex Sans Arabic",sans-se[...]
+.price-input input{width:90px;height:36px;border:1px solid #d9e4f0;border-radius:10px;padding:0 10px;color:#071a33;background:#fff;outline:0;font:700 11px/1 Manrope,"IBM Plex Sans Arabic",sans-serif}
 .price-input input:focus{border-color:#398bd7;box-shadow:0 0 0 3px rgba(45,140,255,.08)}
 .clear-filter{border:1px solid #d9e4f0;background:#fff;color:#45617e;border-radius:999px;padding:9px 14px;font-size:10px;font-weight:800;transition:background .18s,border-color .18s,color .18s}
 .clear-filter:hover:not(:disabled){background:#edf5ff;border-color:#a8c8e8;color:#084e91}
@@ -335,7 +335,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .product-action-view{background:#fff;color:#274968}
 .product-action-add{border-color:#0a2d52;background:linear-gradient(120deg,#071a33,#104d88);color:#fff}
 .product-action-add:hover{border-color:#12589b;background:linear-gradient(120deg,#0a2548,#1466ad)}
-.product-action-btn:focus-visible{outline:3px solid rgba(45,140,255,.45);outline-offset:2px}
+.product-action-btn:focus-visible{outline:3px solid #086dc7;outline-offset:2px}
 .catalog-filter-row{gap:14px}
 .results-summary{font-size:12px;font-weight:800;color:#173d64}
 .price-controls-label{font-size:12px}
@@ -386,7 +386,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 }
 html{scroll-behavior:smooth;scroll-padding-top:96px}
 body{font-size:15px;line-height:1.7;letter-spacing:0}
-body[dir="rtl"]{font-family:"IBM Plex Sans Arabic","Manrope",sans-serif;letter-spacing:0}
+html[dir="rtl"] body{font-family:"IBM Plex Sans Arabic","Manrope",sans-serif;letter-spacing:0}
 h1,h2,h3,h4,.hero-title,.section-title{letter-spacing:-.025em;line-height:1.18;text-wrap:balance}
 p{line-height:1.8}
 button,a,input,select,textarea{font-family:inherit}
@@ -410,10 +410,13 @@ button,a,input,select,textarea{font-family:inherit}
 .product-actions{gap:8px}
 .product-action-btn,.product-card button{min-height:43px;border-radius:11px;font-size:12px;font-weight:700;transition:background .18s ease,border-color .18s ease,transform .18s ease}
 .product-action-btn:active,.product-card button:active{transform:scale(.98)}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(56,168,255,.58);outline-offset:3px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #086dc7;outline-offset:3px}
 input,select,textarea{border-radius:11px}
 input::placeholder,textarea::placeholder{color:#8b98a8}
 footer,.site-footer{border-top:1px solid rgba(255,255,255,.1)}
 @media(min-width:1100px){.product-grid{gap:22px}.product-card-body,.product-info{padding:18px}}
 @media(max-width:700px){.product-grid{gap:11px}.product-card{border-radius:14px}.product-card-body,.product-info{padding:11px}.product-title,.product-name{font-size:13px}.product-price,.price-value{font-size:18px}.product-action-btn,.product-card button{min-height:40px;font-size:11px}.hero{min-height:0;padding-top:46px;padding-bottom:48px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Accessibility refinements */
+.announcement-close{display:grid;place-items:center;width:32px;height:32px;line-height:1;padding:0}
