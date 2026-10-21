@@ -41,6 +41,16 @@ for (const page of ['index.html', 'product.html', 'policies.html']) {
   assert.ok(read(page).includes('white-modern.css?v='), `Versioned design stylesheet link is missing in ${page}`);
 }
 
+const productPageCss = read('product-page.css');
+const productPageHtml = read('product.html');
+assert.ok(productPageCss.includes('.product-page-body .site-header{'), 'Product page must explicitly align its header with the shared design system');
+assert.ok(productPageCss.includes('.product-nav a{'), 'Product navigation needs explicit readable colors on the light header');
+assert.ok(productPageCss.includes('prefers-reduced-motion:reduce'), 'Product page must respect reduced-motion preferences');
+assert.ok(productPageHtml.includes('product-page.css?v=20261021-white-header-v3'), 'Product page stylesheet cache key must be refreshed');
+const browserTest = read('scripts/test_storefront_browser.cjs');
+assert.ok(browserTest.includes('Product navigation text must remain readable on the light header'), 'Browser regression must verify product header contrast');
+assert.ok(browserTest.includes('Product detail add-to-cart should preserve one cart line'), 'Browser regression must cover product detail add-to-cart');
+
 const productsSource = read('products.js');
 const productMatch = productsSource.match(/const\s+ROCK_PRODUCTS\s*=\s*(\[[\s\S]*?\]);/);
 assert.ok(productMatch, 'Could not parse ROCK_PRODUCTS catalog');
