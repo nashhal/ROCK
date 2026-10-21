@@ -153,6 +153,18 @@ const productPage = read('product.html');
 assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not expose a Drive-folder link');
 
 const app = read('app.js');
+// Language and mobile navigation operate on collections, so they must use the all-matches selector.
+assert.ok(app.includes("$('[data-i18n]').forEach"), 'Language switching must update every translated element');
+assert.ok(app.includes("$('[data-i18n-aria]').forEach"), 'Translated accessibility labels must update across the page');
+assert.ok(app.includes("$('[data-mobile-link]').forEach"), 'Mobile navigation must bind every menu link');
+assert.ok(!app.includes("$('[data-i18n]').forEach"), 'A single-element selector cannot be used with forEach for translations');
+assert.ok(!app.includes("$('[data-i18n-aria]').forEach"), 'A single-element selector cannot be used with forEach for accessible labels');
+assert.ok(!app.includes("$('[data-mobile-link]').forEach"), 'A single-element selector cannot be used with forEach for mobile navigation');
+for (const key of ['pageTitle','openMenu','search','viewCart','closeAnnouncement','shopProducts','switchLanguage','powerLabel','audioLabel','driveLabel','lifeLabel','brandTagline','closingTitle','closingAccent']) {
+  assert.ok(app.includes(`${key}:`), `Homepage translation is missing: ${key}`);
+}
+assert.ok(home.includes('data-i18n="powerLabel"') && home.includes('data-i18n="audioLabel"'), 'Homepage category labels must be translatable');
+assert.ok(!home.includes('class="ticker"'), 'Legacy ticker should not return to the homepage');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
 assert.ok(app.includes("$('.modal').forEach(modal=>modal.classList.remove('show'))"), 'Modal close function must close all modal elements');
