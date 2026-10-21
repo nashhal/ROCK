@@ -271,8 +271,8 @@
   $$('.collection-card').forEach(b=>b.onclick=()=>{state.cat=b.dataset.collection;$$('#categoryChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===state.cat));document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()});
   $('#viewFeatured').onclick=()=>{state.sort='featured';$('#sortSelect').value='featured';document.querySelector('#shop').scrollIntoView({behavior:'smooth'});render()};
   $('#closingShop').onclick=()=>document.querySelector('#shop').scrollIntoView({behavior:'smooth'});
-  $('#scrollTopBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
-  $('#clearCartBtn').onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
+  const scrollTopButton=$('#scrollTopBtn');if(scrollTopButton)scrollTopButton.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+  const clearCartButton=$('#clearCartBtn');if(clearCartButton)clearCartButton.onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
   $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{const id=state.activeProduct&&state.activeProduct.id;closeModals();if(id)add(id)};
   $$('[data-close-modal]').forEach(b=>b.onclick=closeModals);
   function setMobileMenu(open){const panel=$('#mobilePanel');panel.classList.toggle('open',open);$('#menuBtn').setAttribute('aria-expanded',String(open));if(open)panel.removeAttribute('inert');else panel.setAttribute('inert','');}
