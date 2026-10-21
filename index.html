@@ -33,7 +33,7 @@
 
   <header class="site-header" id="top">
     <div class="header-inner">
-      <button class="icon-btn menu-btn" id="menuBtn" aria-label="فتح القائمة" data-i18n-aria="openMenu" aria-expanded="false" aria-controls="mobilePanel"><span></span><span></span></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="فتح القائمة" data-i18n-aria="openMenu" aria-expanded="false" aria-controls="mobilePanel"><span></span><span></span></button>
       <a class="brand" href="#top" aria-label="ROCK"><img src="assets/brand/rock-logo.svg" alt="ROCK"></a>
       <nav class="desktop-nav" id="desktopNav">
         <a href="#shop" data-nav="shop" data-i18n="shop">المتجر</a>
@@ -43,14 +43,14 @@
       <div class="header-actions">
         <button class="text-btn" id="langBtn" data-i18n-aria="switchLanguage" aria-label="تغيير اللغة">EN</button>
         <button class="icon-btn" id="searchBtn" aria-label="بحث" data-i18n-aria="search">⌕</button>
-        <button class="cart-btn" id="cartBtn" aria-label="عرض السلة" data-i18n-aria="viewCart"><span data-i18n="bag">السلة</span><b id="cartCount" aria-live="polite" aria-atomic="true">0</b></button>
+        <button class="cart-btn" id="cartBtn" type="button" aria-label="عرض السلة" data-i18n-aria="viewCart" aria-controls="cartDrawer" aria-expanded="false"><span data-i18n="bag">السلة</span><b id="cartCount" aria-live="polite" aria-atomic="true">0</b></button>
       </div>
     </div>
-    <div class="mobile-panel" id="mobilePanel">
+    <nav class="mobile-panel" id="mobilePanel" aria-label="قائمة التنقل" data-i18n-aria="navigationMenu" aria-hidden="true">
       <a href="#shop" data-mobile-link data-i18n="shop">المتجر</a>
       <a href="#collections" data-mobile-link data-i18n="collections">التصنيفات</a>
       <a href="#story" data-mobile-link data-i18n="story">عن ROCK</a>
-    </div>
+    </nav>
   </header>
 
   <main>
@@ -131,10 +131,10 @@
   <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span data-i18n="brandTagline">ملحقات تقنية ليومك</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">المتجر</a><a href="#collections" data-i18n="collections">التصنيفات</a><a href="#story" data-i18n="story">عن ROCK</a></div><div class="footer-meta">&copy; <span id="year"></span> ROCK</div></footer>
 
   <div class="overlay" id="overlay"></div>
-  <aside class="cart-drawer" id="cartDrawer" aria-label="السلة"><div class="drawer-head"><div><span>ROCK</span><h3 data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart" aria-label="إغلاق">×</button></div><div class="drawer-body"><div id="cartItems"></div><div class="drawer-foot"><div><strong id="cartTotal">0 SAR</strong></div><div><button class="btn" id="continueBtn" data-i18n="continue">متابعة التسوق</button><button class="btn btn-dark" id="checkoutBtn" data-i18n="checkout">جهّز الطلب</button></div></div></div></aside>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-label="السلة" data-i18n-aria="viewCart" aria-hidden="true" tabindex="-1"><div class="drawer-head"><div><span>ROCK</span><h3 id="cartTitle" data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart" type="button" aria-label="إغلاق" data-i18n-aria="closeDialog">×</button></div><div class="drawer-body"><div id="cartItems"></div><div class="drawer-foot"><div><strong id="cartTotal" aria-live="polite" aria-atomic="true">0 SAR</strong></div><div><button class="btn" id="continueBtn" data-i18n="continue">متابعة التسوق</button><button class="btn btn-dark" id="checkoutBtn" data-i18n="checkout">جهّز الطلب</button></div></div></div></aside>
 
-  <div class="modal" id="productModal"><div class="modal-card product-modal-card"><button class="close-btn" data-close-modal aria-label="إغلاق">×</button><div class="modal-image"><img id="modalImage" alt=""></div><div class="modal-copy"><div id="modalModel"></div><h3 id="modalName"></h3><div id="modalPrice"></div><div><button id="modalAdd" class="btn btn-dark" data-i18n="addToBag">إضافة إلى السلة</button></div></div></div></div>
-  <div class="modal" id="checkoutModal"><div class="modal-card checkout-card" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle"><button class="close-btn" data-close-modal aria-label="إغلاق">×</button><form id="orderDetailsForm"><div class="checkout-shell"><h2 id="orderModalTitle" data-i18n="orderHeader">طلب ROCK</h2><div class="order-fields"><label for="customerName">الاسم<input id="customerName" name="customerName" required></label><label for="customerPhone">رقم الجوال<input id="customerPhone" name="customerPhone" required></label><label for="customerCity">المدينة<input id="customerCity" name="customerCity"></label><label for="customerAddress">العنوان<input id="customerAddress" name="customerAddress"></label></div><label class="order-notes" for="customerNotes">ملاحظات<textarea id="customerNotes" name="customerNotes"></textarea></label><div class="order-privacy-note" data-i18n="orderPrivacy">لا يوجد دفع إلكتروني أو إرسال تلقائي في هذه النسخة. لا تدخل بيانات البطاقة البنكية.</div><div class="order-summary"><label class="order-summary-label" for="orderText">ملخص الطلب<textarea id="orderText" readonly></textarea></label><div class="order-actions"><button type="button" class="btn btn-dark" id="copyOrder" data-i18n="copyOrder">نسخ النص</button><button type="button" class="btn policy-secondary" id="doneOrder" data-i18n="done">تم</button></div></div></div></form></div></div>
+  <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalName" aria-hidden="true"><div class="modal-card product-modal-card"><button class="close-btn" type="button" data-close-modal aria-label="إغلاق" data-i18n-aria="closeDialog">×</button><div class="modal-image"><img id="modalImage" alt=""></div><div class="modal-copy"><div id="modalModel"></div><h3 id="modalName"></h3><div id="modalPrice"></div><div><button id="modalAdd" class="btn btn-dark" data-i18n="addToBag">إضافة إلى السلة</button></div></div></div></div>
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle" aria-hidden="true"><div class="modal-card checkout-card"><button class="close-btn" type="button" data-close-modal aria-label="إغلاق" data-i18n-aria="closeDialog">×</button><form id="orderDetailsForm"><div class="checkout-shell"><h2 id="orderModalTitle" data-i18n="orderHeader">طلب ROCK</h2><div class="order-fields"><label for="customerName"><span data-i18n="customerNameLabel">الاسم</span><input id="customerName" name="customerName" autocomplete="name" required></label><label for="customerPhone"><span data-i18n="customerPhoneLabel">رقم الجوال</span><input id="customerPhone" name="customerPhone" type="tel" inputmode="tel" autocomplete="tel" required></label><label for="customerCity"><span data-i18n="customerCityLabel">المدينة</span><input id="customerCity" name="customerCity" autocomplete="address-level2"></label><label for="customerAddress"><span data-i18n="customerAddressLabel">العنوان</span><input id="customerAddress" name="customerAddress" autocomplete="street-address"></label></div><label class="order-notes" for="customerNotes"><span data-i18n="customerNotesLabel">ملاحظات (اختياري)</span><textarea id="customerNotes" name="customerNotes"></textarea></label><div class="order-privacy-note" data-i18n="orderPrivacy">لا يوجد دفع إلكتروني أو إرسال تلقائي في هذه النسخة. لا تدخل بيانات البطاقة البنكية.</div><div class="order-summary"><label class="order-summary-label" for="orderText"><span data-i18n="orderSummaryLabel">ملخص الطلب</span><textarea id="orderText" readonly></textarea></label><div class="order-actions"><button type="button" class="btn btn-dark" id="copyOrder" data-i18n="copyOrder">نسخ النص</button><button type="button" class="btn policy-secondary" id="doneOrder" data-i18n="done">تم</button></div></div></div></form></div></div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="products.js?v=20261021-audit-release-1"></script><script src="app.js?v=20261021-homepage-v2"></script>
