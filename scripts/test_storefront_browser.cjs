@@ -101,6 +101,39 @@ async function waitForCatalog(page) {
     assert.equal((await page.locator('label[for="orderText"] span').textContent()).trim(), 'Order summary');
     await noHorizontalOverflow(page, 'mobile checkout');
     await page.screenshot({ path: path.join(artifactDir, '04-checkout-mobile.png'), fullPage: false });
+
+    // Order details update live; nothing is shared until the customer confirms the summary.
+    await page.locator('#customerName').fill('ROCK Test Customer');
+    await page.locator('#customerPhone').fill('0501234567');
+    await page.locator('#customerCity').fill('Jeddah');
+    await page.locator('#customerAddress').fill('Pickup point');
+    await page.locator('#customerNotes').fill('Playwright test note');
+    assert.ok((await page.locator('#orderText').inputValue()).includes('ROCK Test Customer'),
+      'Order preview should update as customer fields are entered');
+    assert.equal(await page.locator('#orderConfirmation').isChecked(), false,
+      'Order confirmation must be unchecked by default');
+    await page.locator('#shareOrder').click();
+    assert.equal(await page.locator('#orderConfirmation').evaluate(el => el.validity.valueMissing), true,
+      'Sharing must require explicit confirmation that this is not a confirmed order');
+    assert.equal(await page.evaluate(() => window.__rockSharedOrder === undefined), true,
+      'Invalid order summary must not open the share sheet');
+    await page.locator('#orderConfirmation').check();
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'share', { configurable: true, value: async payload => { window.__rockSharedOrder = payload; } });
+      Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async text => { window.__rockCopiedOrder = text; } } });
+    });
+    await page.locator('#shareOrder').click();
+    await page.waitForFunction(() => Boolean(window.__rockSharedOrder && window.__rockSharedOrder.text));
+    assert.ok(await page.evaluate(() => window.__rockSharedOrder.text.includes('ROCK Test Customer')),
+      'Share payload should include the reviewed customer details');
+    assert.ok(await page.evaluate(() => window.__rockSharedOrder.text.includes('Playwright test note')),
+      'Share payload should include optional order notes');
+    await page.evaluate(() => { Object.defineProperty(navigator, 'share', { configurable: true, value: undefined }); });
+    await page.locator('#shareOrder').click();
+    await page.waitForFunction(() => typeof window.__rockCopiedOrder === 'string');
+    assert.ok(await page.evaluate(() => window.__rockCopiedOrder.includes('ROCK Test Customer')),
+      'If the browser does not support native sharing, the order should fall back to copying');
+
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#checkoutModal').getAttribute('aria-hidden'), 'true',
       'Escape should close the checkout dialog');
@@ -155,7 +188,7 @@ async function waitForCatalog(page) {
     await page.screenshot({ path: path.join(artifactDir, '07-product-added-cart-desktop.png'), fullPage: false });
 
     assert.deepEqual(errors, [], 'Unexpected JavaScript page errors: ' + errors.join(' | '));
-    console.log('ROCK browser regression passed: homepage, mobile navigation, language switch, category filter, cart quantities/subtotal, checkout localization, and product details.');
+    console.log('ROCK browser regression passed: homepage, navigation, language, filters, cart totals, live order preview, explicit confirmation, share sheet and copy fallback, and product details.');
     console.log('Screenshots saved under ' + artifactDir);
   } finally {
     await context.close();
