@@ -259,6 +259,23 @@
     }
   });
 
+  window.addEventListener('rock:assistant-add', event => {
+    const detail = event.detail;
+    if (!detail || typeof detail.respond !== 'function') return;
+    const product = products.find(item => item.id === detail.id);
+    if (!product) { detail.respond(false); return; }
+    const nextCart = state.cart.map(item => ({ id: item.id, qty: item.qty }));
+    const row = nextCart.find(item => item.id === product.id);
+    if (row && row.qty >= 99) { detail.respond(false); toast(state.lang === 'ar' ? 'وصلت للحد الأقصى للكمية' : 'Maximum quantity reached'); return; }
+    if (row) row.qty += 1; else nextCart.push({ id: product.id, qty: 1 });
+    if (!storageSet('rock-cart', JSON.stringify(nextCart))) { detail.respond(false); return; }
+    state.cart = nextCart;
+    renderCart();
+    toast(t('added'));
+    openCart();
+    detail.respond(true);
+  });
+
   applyLanguage();
   const params = new URLSearchParams(window.location.search);
   if(params.get('cart') === '1'){ openCart(); window.history.replaceState({}, '', window.location.pathname + window.location.hash); }
