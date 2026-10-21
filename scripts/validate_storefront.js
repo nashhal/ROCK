@@ -209,7 +209,6 @@ assert.ok(app.includes("document.body.classList.add('rock-dialog-open')"), 'Open
 for (const id of ['customerNameLabel','customerPhoneLabel','customerCityLabel','customerAddressLabel','customerNotesLabel','orderSummaryLabel']) {
   assert.ok(home.includes(`data-i18n="${id}"`), `Checkout form label must be localized: ${id}`);
 }
-const productPageHtml = read('product.html');
 const productScript = read('product-page.js');
 assert.ok(productPageHtml.includes('id="productMenuBtn"') && productPageHtml.includes('id="productMobilePanel"'), 'Product page must include mobile navigation controls');
 assert.ok(productScript.includes("productMobilePanel.querySelectorAll('[data-mobile-link]')"), 'Product mobile menu must close when a link is selected');
