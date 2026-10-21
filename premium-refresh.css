@@ -426,3 +426,8 @@ footer,.site-footer{border-top:1px solid rgba(255,255,255,.1)}
 
 /* Respect native hidden state even when component styles define display. */
 [hidden] { display: none !important; }
+
+/* Clear the basket without making the primary checkout action less prominent. */
+.cart-clear-btn{display:block;width:max-content;min-height:36px;margin:0 0 14px auto;padding:8px 12px;border:1px solid #d6e3f0;border-radius:10px;background:#fff;color:#45617e;font:700 11px/1.3 "IBM Plex Sans Arabic","Manrope",sans-serif;cursor:pointer;}
+.cart-clear-btn:hover:not(:disabled){border-color:#9ec4e9;background:#f3f8fe;color:#173d64;}
+.cart-clear-btn:disabled{opacity:.45;cursor:not-allowed;}
