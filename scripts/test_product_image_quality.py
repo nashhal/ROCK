@@ -39,6 +39,8 @@ def main() -> int:
         transparent_image.save(transparent, format="WEBP", quality=92)
         nonwhite = asset_dir / "dark.webp"
         nonwhite.write_bytes(image_bytes(background=(35, 45, 60)))
+        pale_spec = asset_dir / "specification.webp"
+        pale_spec.write_bytes(image_bytes(background=(232, 250, 250)))
         blurry = asset_dir / "blank.webp"
         blurry.write_bytes(image_bytes(draw_object=False))
         small = asset_dir / "small.webp"
@@ -53,6 +55,9 @@ def main() -> int:
             assert transparent_result["visible"], f"Transparent cut-out should pass when composited on white: {transparent_result}"
             assert not analyze_image("assets/products/dark.webp")["visible"], "Dark background must be hidden"
             assert analyze_image("assets/products/dark.webp")["reason"] == "background_not_white"
+            specification = analyze_image("assets/products/specification.webp")
+            assert not specification["visible"], f"Pale specification-style panels must be hidden: {specification}"
+            assert specification["reason"] == "background_not_white"
             assert not analyze_image("assets/products/blank.webp")["visible"], "Blank image must be hidden"
             assert analyze_image("assets/products/blank.webp")["reason"] == "insufficient_detail"
             assert not analyze_image("assets/products/small.webp")["visible"], "Small thumbnail must be hidden"
