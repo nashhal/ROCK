@@ -6,6 +6,8 @@
   function storageSet(key, value){ try { localStorage.setItem(key, value); return true; } catch { return false; } }
   const initialLang = storageGet('rock-lang', 'ar');
   const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', minPrice: '', maxPrice: '', cart: safeCart(), activeProduct: null };
+  let cartReturnFocus = null;
+  let modalReturnFocus = null;
 
   const copy = {
     ar: {
@@ -168,24 +170,105 @@
   function persist(){storageSet('rock-cart',JSON.stringify(state.cart));updateCount()}
   function updateCount(){const n=state.cart.reduce((s,i)=>s+i.qty,0);$('#cartCount').textContent=n}
   function renderCart(){
-    updateCount(); const wrap=$('#cartItems');
-    if(!state.cart.length){wrap.innerHTML=`<div class="empty-state"><strong>${t('empty')}</strong><span>${t('noResultsSub')}</span></div>`;$('#cartTotal').textContent=money(0);$('#checkoutBtn').disabled=true;return}
-    $('#checkoutBtn').disabled=false; let total=0; wrap.innerHTML='';
-    state.cart.forEach(item=>{const p=products.find(x=>x.id===item.id);if(!p)return; total+=p.price*item.qty; const row=document.createElement('div');row.className='cart-row';const cartImage=safeImage(p.image);row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}<div><h4>${esc(name(p))}</h4><p>${esc(p.model)} · ${money(p.price)}</p><div class="qty"><button data-dec="${p.id}">−</button><span>${item.qty}</span><button data-inc="${p.id}">+</button></div></div><strong>${money(p.price*item.qty)}</strong>`;const cartImg=row.querySelector('[data-cart-image]');if(cartImg)cartImg.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='cart-image-placeholder';ph.textContent='ROCK';cartImg.replaceWith(ph)},{once:true});wrap.appendChild(row)});
-    wrap.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>changeQty(b.dataset.dec,-1));wrap.querySelectorAll('[data-inc]').forEach(b=>b.onclick=()=>changeQty(b.dataset.inc,1));$('#cartTotal').textContent=money(total);
+    updateCount();
+    const wrap=$('#cartItems');
+    if(!state.cart.length){
+      wrap.innerHTML=`<div class="empty-state"><strong>${t('empty')}</strong><span>${t('emptyCartText')}</span></div>`;
+      $('#cartTotal').textContent=money(0);
+      $('#checkoutBtn').disabled=true;
+      return;
+    }
+
+    $('#checkoutBtn').disabled=false;
+    let total=0;
+    wrap.innerHTML='';
+    state.cart.forEach(item=>{
+      const p=products.find(x=>x.id===item.id);
+      if(!p)return;
+      total+=p.price*item.qty;
+      const row=document.createElement('div');
+      row.className='cart-row';
+      const cartImage=safeImage(p.image);
+      const decreaseLabel=esc(t('decreaseQty')+' '+name(p));
+      const increaseLabel=esc(t('increaseQty')+' '+name(p));
+      row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}" loading="lazy" width="76" height="76">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}
+        <div>
+          <h4>${esc(name(p))}</h4>
+          <p>${esc(p.model)} · ${money(p.price)}</p>
+          <div class="qty">
+            <button type="button" data-dec="${esc(p.id)}" aria-label="${decreaseLabel}">−</button>
+            <span aria-live="polite" aria-atomic="true">${item.qty}</span>
+            <button type="button" data-inc="${esc(p.id)}" aria-label="${increaseLabel}" ${item.qty>=99?'disabled':''}>+</button>
+          </div>
+        </div>
+        <strong>${money(p.price*item.qty)}</strong>`;
+      const cartImg=row.querySelector('[data-cart-image]');
+      if(cartImg)cartImg.addEventListener('error',()=>{
+        const placeholder=document.createElement('span');
+        placeholder.className='cart-image-placeholder';
+        placeholder.textContent='ROCK';
+        cartImg.replaceWith(placeholder);
+      },{once:true});
+      wrap.appendChild(row);
+    });
+    wrap.querySelectorAll('[data-dec]').forEach(button=>button.onclick=()=>changeQty(button.dataset.dec,-1));
+    wrap.querySelectorAll('[data-inc]').forEach(button=>button.onclick=()=>changeQty(button.dataset.inc,1));
+    $('#cartTotal').textContent=money(total);
   }
   function changeQty(id,d){const row=state.cart.find(x=>x.id===id);if(!row)return;row.qty=Math.min(99,row.qty+d);if(row.qty<=0)state.cart=state.cart.filter(x=>x.id!==id);persist();renderCart()}
-  function openCart(){ $('#cartDrawer').classList.add('open');$('#overlay').classList.add('show'); }
-  function closeCart(){ $('#cartDrawer').classList.remove('open');$('#overlay').classList.remove('show'); }
-  function openModal(id){$('#'+id).classList.add('show');$('#overlay').classList.add('show')}
-  function closeModals(){
-    const orderWasOpen = $('#checkoutModal').classList.contains('show');
-    $$('.modal').forEach(modal=>modal.classList.remove('show'));
-    $('#overlay').classList.remove('show');
+  function openCart(){
+    const drawer=$('#cartDrawer');
+    if(!drawer.classList.contains('open'))cartReturnFocus=document.activeElement;
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden','false');
+    $('#cartBtn').setAttribute('aria-expanded','true');
+    $('#overlay').classList.add('show');
+    document.body.classList.add('rock-dialog-open');
+    $('#closeCart').focus({preventScroll:true});
+  }
+  function closeCart(restoreFocus=true){
+    const drawer=$('#cartDrawer');
+    const wasOpen=drawer.classList.contains('open');
+    if(!wasOpen)return;
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true');
+    $('#cartBtn').setAttribute('aria-expanded','false');
+    if(!$('.modal.show').length)$('#overlay').classList.remove('show');
+    if(!$('.modal.show').length)document.body.classList.remove('rock-dialog-open');
+    const target=cartReturnFocus;
+    cartReturnFocus=null;
+    if(restoreFocus&&target&&target.isConnected&&typeof target.focus==='function')target.focus({preventScroll:true});
+  }
+  function openModal(id){
+    const modal=$('#'+id);
+    if(!modal)return;
+    modalReturnFocus=document.activeElement;
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+    $('#overlay').classList.add('show');
+    document.body.classList.add('rock-dialog-open');
+    const closeButton=modal.querySelector('[data-close-modal]');
+    if(closeButton)closeButton.focus({preventScroll:true});
+  }
+  function closeModals(restoreFocus=true){
+    const opened=$('.modal.show');
+    if(!opened.length)return;
+    const orderWasOpen=opened.some(modal=>modal.id==='checkoutModal');
+    opened.forEach(modal=>{
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+    });
+    if(!$('#cartDrawer').classList.contains('open')){
+      $('#overlay').classList.remove('show');
+      document.body.classList.remove('rock-dialog-open');
+    }
     if(orderWasOpen){
       $('#orderDetailsForm').reset();
       $('#orderText').value='';
     }
+    const target=modalReturnFocus;
+    modalReturnFocus=null;
+    if(restoreFocus&&target&&target.isConnected&&typeof target.focus==='function')target.focus({preventScroll:true});
   }
   function openProduct(id){
     const p=products.find(x=>x.id===id); if(!p)return; state.activeProduct=p;
