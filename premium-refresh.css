@@ -375,3 +375,45 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
  .product-action-btn{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.product-action-btn{transition:none}}
+
+
+/* ROCK PRECISION — 2026 design system refinement */
+:root{
+ --navy:#07172b;--ink:#0b1b30;--blue:#38a8ff;--line:#e3eaf2;
+ --paper:#f4f7fb;--white:#fff;--muted:#63748a;--radius:18px;
+ --rock-space-1:6px;--rock-space-2:10px;--rock-space-3:16px;--rock-space-4:24px;
+ --rock-shadow:0 14px 38px rgba(7,23,43,.07);
+}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{font-size:15px;line-height:1.7;letter-spacing:0}
+body[dir="rtl"]{font-family:"IBM Plex Sans Arabic","Manrope",sans-serif;letter-spacing:0}
+h1,h2,h3,h4,.hero-title,.section-title{letter-spacing:-.025em;line-height:1.18;text-wrap:balance}
+p{line-height:1.8}
+button,a,input,select,textarea{font-family:inherit}
+.site-header{box-shadow:0 5px 24px rgba(4,16,32,.09)}
+.desktop-nav a,.mobile-panel a{font-size:13px}
+.hero{background:#07172b}
+.hero-title{font-weight:800;max-width:12ch}
+.hero p,.hero-copy,.section-description{max-width:58ch;color:inherit;opacity:.82}
+.section-title{font-weight:800}
+.collection-card,.category-card,.trust-card{border-radius:18px;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.collection-card:hover,.category-card:hover{transform:translateY(-3px);box-shadow:var(--rock-shadow)}
+.product-grid{gap:20px}
+.product-card{border:1px solid #e4eaf2;border-radius:18px;background:#fff;box-shadow:0 2px 8px rgba(7,23,43,.025);overflow:hidden;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.product-card:hover{transform:translateY(-3px);border-color:#c8d8e9;box-shadow:0 14px 32px rgba(7,23,43,.09)}
+.product-image{background:#fff!important;border-bottom:1px solid #edf1f6}
+.product-image img{object-fit:contain!important;padding:12px;mix-blend-mode:multiply}
+.product-card-body,.product-info{padding:16px}
+.product-title,.product-name{font-size:15px;line-height:1.55;font-weight:700;color:#0b1b30}
+.product-model,.product-meta{font-size:12px;color:#63748a}
+.product-price,.price-value{font-size:21px;font-weight:800;letter-spacing:-.025em;color:#07172b}
+.product-actions{gap:8px}
+.product-action-btn,.product-card button{min-height:43px;border-radius:11px;font-size:12px;font-weight:700;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.product-action-btn:active,.product-card button:active{transform:scale(.98)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(56,168,255,.58);outline-offset:3px}
+input,select,textarea{border-radius:11px}
+input::placeholder,textarea::placeholder{color:#8b98a8}
+footer,.site-footer{border-top:1px solid rgba(255,255,255,.1)}
+@media(min-width:1100px){.product-grid{gap:22px}.product-card-body,.product-info{padding:18px}}
+@media(max-width:700px){.product-grid{gap:11px}.product-card{border-radius:14px}.product-card-body,.product-info{padding:11px}.product-title,.product-name{font-size:13px}.product-price,.price-value{font-size:18px}.product-action-btn,.product-card button{min-height:40px;font-size:11px}.hero{min-height:0;padding-top:46px;padding-bottom:48px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
