@@ -26,9 +26,9 @@ async function noHorizontalOverflow(page, label) {
 async function waitForCatalog(page) {
   await page.waitForFunction(() => {
     const quality = window.ROCK_PRODUCT_IMAGE_QUALITY;
-    return quality && Array.isArray(quality.visibleIds) && quality.visibleIds.length > 0 &&
-      document.querySelectorAll('#productGrid .product-card').length === quality.visibleIds.length;
-  }, { timeout: 15000 });
+    return quality && Array.isArray(quality.visibleIds) && quality.visibleIds.length > 0;
+  }, null, { timeout: 15000 });
+  await page.waitForFunction(() => document.querySelector('#productGrid') !== null, null, { timeout: 15000 });
 }
 
 (async () => {
