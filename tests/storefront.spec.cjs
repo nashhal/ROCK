@@ -82,7 +82,7 @@ test('ROCKY answers a local catalog query and closes with Escape', async ({ page
   await expect(page.locator('#rockyPanel')).toBeVisible();
   await page.locator('#rockyInput').fill('أبغى شاحن');
   await page.locator('#rockyForm button[type="submit"]').click();
-  await expect(page.locator('#rockyMessages .rocky-message').count()).resolves.toBeGreaterThanOrEqual(2);
+  await expect(page.locator('#rockyMessages .rocky-message').nth(1)).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('#rockyPanel')).toBeHidden();
   await expect(page.locator('#rockyLauncher')).toHaveAttribute('aria-expanded', 'false');
