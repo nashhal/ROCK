@@ -161,7 +161,7 @@
   function persist(){storageSet('rock-cart',JSON.stringify(state.cart));updateCount()}
   function updateCount(){const n=state.cart.reduce((s,i)=>s+i.qty,0);$('#cartCount').textContent=n}
   function renderCart(){
-    updateCount(); const wrap=$('#cartItems');
+    updateCount(); const wrap=$('#cartItems'); const clearButton=$('#clearCartBtn'); if(clearButton)clearButton.disabled=!state.cart.length;
     if(!state.cart.length){wrap.innerHTML=`<div class="empty-state"><strong>${t('empty')}</strong><span>${t('noResultsSub')}</span></div>`;$('#cartTotal').textContent=money(0);$('#checkoutBtn').disabled=true;return}
     $('#checkoutBtn').disabled=false; let total=0; wrap.innerHTML='';
     state.cart.forEach(item=>{const p=products.find(x=>x.id===item.id);if(!p)return; total+=p.price*item.qty; const row=document.createElement('div');row.className='cart-row';const cartImage=safeImage(p.image);row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}<div><h4>${esc(name(p))}</h4><p>${esc(p.model)} · ${money(p.price)}</p><div class="qty"><button data-dec="${p.id}" aria-label="${esc(state.lang==='ar'?'تقليل كمية '+name(p):'Decrease quantity of '+name(p))}">−</button><span>${item.qty}</span><button data-inc="${p.id}" aria-label="${esc(state.lang==='ar'?'زيادة كمية '+name(p):'Increase quantity of '+name(p))}">+</button></div></div><strong>${money(p.price*item.qty)}</strong>`;const cartImg=row.querySelector('[data-cart-image]');if(cartImg)cartImg.addEventListener('error',()=>{const ph=document.createElement('span');ph.className='cart-image-placeholder';ph.textContent='ROCK';cartImg.replaceWith(ph)},{once:true});wrap.appendChild(row)});
