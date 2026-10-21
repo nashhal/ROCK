@@ -420,3 +420,6 @@ footer,.site-footer{border-top:1px solid rgba(255,255,255,.1)}
 
 /* Accessibility refinements */
 .announcement-close{display:grid;place-items:center;width:32px;height:32px;line-height:1;padding:0}
+
+/* Focus contrast on dark brand surfaces; light content panels retain the dark-blue ring. */
+.hero button:focus-visible,.hero a:focus-visible,.announcement button:focus-visible,.closing-banner button:focus-visible,.site-footer a:focus-visible{outline-color:#65b8ff}
