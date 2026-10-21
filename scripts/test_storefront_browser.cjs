@@ -107,13 +107,27 @@ async function waitForCatalog(page) {
     assert.equal(await page.locator('body').evaluate(el => el.classList.contains('rock-dialog-open')), false,
       'Closing dialogs should restore background scrolling');
 
-    // Product details: correct data, mobile menu, and responsive layout.
+    // Product details: consistent header contrast, correct data, language switch, and responsive layout.
     await page.goto(baseURL + '/product.html?id=rkch720', { waitUntil: 'networkidle' });
     await visible(page, '#productLayout', 'A valid product id should show product details');
     assert.match(await page.locator('#detailName').textContent(), /ROCK RKCH720 20W GaN Wall Charger/);
     assert.equal((await page.locator('#detailPrice').textContent()).trim(), '15 SAR');
+    const productHeader = await page.locator('.site-header').evaluate(el => getComputedStyle(el).backgroundColor);
+    assert.match(productHeader, /rgba?\(255,\s*255,\s*255/, 'Product page header should use the shared white-first surface');
+    const productNavColor = await page.locator('.product-nav a').first().evaluate(el => getComputedStyle(el).color);
+    assert.notEqual(productNavColor, 'rgb(255, 255, 255)', 'Product navigation text must remain readable on the light header');
+    const productLogo = await page.locator('.product-page-body .brand img').evaluate(el => ({ complete: el.complete, width: el.naturalWidth }));
+    assert.ok(productLogo.complete && productLogo.width > 0, 'Product page logo should load after its navy tint is applied');
     await noHorizontalOverflow(page, 'mobile product page');
     await page.screenshot({ path: path.join(artifactDir, '05-product-mobile.png'), fullPage: true });
+
+    await page.locator('#langBtn').click();
+    assert.equal(await page.locator('html').getAttribute('lang'), 'en', 'Product page language switch should update document language');
+    assert.equal(await page.locator('html').getAttribute('dir'), 'ltr', 'Product page English mode should use LTR direction');
+    assert.equal((await page.locator('.product-nav a').first().textContent()).trim(), 'Shop',
+      'Product page navigation should translate when the language changes');
+    await page.locator('#langBtn').click();
+    assert.equal(await page.locator('html').getAttribute('dir'), 'rtl', 'Product page should return to RTL when Arabic is selected');
 
     await visible(page, '#productMenuBtn', 'Product page should have a mobile navigation button');
     await page.locator('#productMenuBtn').click();
@@ -129,6 +143,15 @@ async function waitForCatalog(page) {
     await noHorizontalOverflow(page, 'desktop product page');
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ path: path.join(artifactDir, '06-product-desktop.png'), fullPage: true });
+
+    // A product detail add-to-cart must preserve the item and quantity before returning to the cart.
+    await page.locator('#detailAddButton').click();
+    await page.waitForURL(url => url.pathname.endsWith('/') && url.searchParams.get('cart') === '1', { timeout: 5000 });
+    await visible(page, '#cartDrawer.open', 'Adding from product detail should return to an open cart');
+    assert.equal(await page.locator('#cartItems .cart-row').count(), 1, 'Product detail add-to-cart should preserve one cart line');
+    assert.equal(await page.locator('#cartCount').textContent(), '1', 'Product detail add-to-cart should update the cart count');
+    await noHorizontalOverflow(page, 'cart opened from product detail');
+    await page.screenshot({ path: path.join(artifactDir, '07-product-added-cart-desktop.png'), fullPage: false });
 
     assert.deepEqual(errors, [], 'Unexpected JavaScript page errors: ' + errors.join(' | '));
     console.log('ROCK browser regression passed: homepage, mobile navigation, language switch, category filter, cart quantities/subtotal, checkout localization, and product details.');
