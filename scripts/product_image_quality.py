@@ -18,6 +18,7 @@ MIN_SIDE = 280
 MIN_ASPECT = 0.35
 MAX_ASPECT = 2.5
 MIN_WHITE_EDGE_SCORE = 0.80
+MIN_STRICT_WHITE_FRACTION = 0.52
 MIN_EDGE_MEAN = 1.15
 
 
@@ -64,9 +65,18 @@ def analyze_image(relative_path: str) -> dict:
     if white_score < MIN_WHITE_EDGE_SCORE:
         return {**result, "visible": False, "reason": "background_not_white"}
 
-    # A blank/washed-out image is not a usable packshot, even if its border is white.
     sample = image.copy()
     sample.thumbnail((128, 128), Image.Resampling.LANCZOS)
+    pixels = list(sample.getdata())
+    strict_white = sum(
+        1 for red, green, blue in pixels
+        if min(red, green, blue) >= 242 and max(red, green, blue) - min(red, green, blue) <= 12
+    ) / max(1, len(pixels))
+    result["strictWhiteFraction"] = round(strict_white, 3)
+    if strict_white < MIN_STRICT_WHITE_FRACTION:
+        return {**result, "visible": False, "reason": "background_not_white"}
+
+    # A blank/washed-out image is not a usable packshot, even if its border is white.
     edge_mean = ImageStat.Stat(sample.convert("L").filter(ImageFilter.FIND_EDGES)).mean[0]
     result["edgeMean"] = round(edge_mean, 2)
     if edge_mean < MIN_EDGE_MEAN:
@@ -91,6 +101,7 @@ def build_manifest(products: list[dict]) -> dict:
         "criteria": {
             "minSide": MIN_SIDE,
             "minWhiteEdgeScore": MIN_WHITE_EDGE_SCORE,
+            "minStrictWhiteFraction": MIN_STRICT_WHITE_FRACTION,
             "minEdgeMean": MIN_EDGE_MEAN,
             "aspectRatio": [MIN_ASPECT, MAX_ASPECT],
         },
