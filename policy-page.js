@@ -5,7 +5,7 @@
   let lang = getStored('rock-lang','ar') === 'en' ? 'en' : 'ar';
   const words = {
     ar:{
-      announcement:'ROCK — فجر جديد',shop:'المتجر',collections:'التصنيفات',bag:'السلة',home:'الرئيسية',backToShop:'العودة إلى المتجر',
+      announcement:'ROCK | ملحقات تقنية ليومك',brandTagline:'ملحقات تقنية ليومك',shop:'المتجر',collections:'التصنيفات',bag:'السلة',home:'الرئيسية',backToShop:'العودة إلى المتجر',
       pageTitle:'معلومات المتجر والخصوصية',pageIntro:'معلومات واضحة حول النسخة الحالية من ROCK وطريقة إعداد الطلب.',
       notice:'مهم: هذه النسخة لا تستقبل الطلبات تلقائيًا ولا تنفذ الدفع الإلكتروني. نسخ ملخص الطلب لا يعني تأكيد توفر المنتج أو قبول الطلب.',
       orderingTitle:'إعداد الطلب',orderingText:'يمكنك مراجعة السلة وإعداد ملخص يتضمن العناصر وبيانات التواصل التي تدخلها. عند النسخ، يُنقل الملخص إلى حافظة جهازك لتشاركه بنفسك. لا يوجد إرسال تلقائي إلى ROCK في هذه النسخة.',
@@ -17,7 +17,7 @@
       sampleProduct:'عرض مثال لصفحة منتج'
     },
     en:{
-      announcement:'ROCK — A New Dawn',shop:'Shop',collections:'Collections',bag:'Bag',home:'Home',backToShop:'Back to shop',
+      announcement:'ROCK | Everyday tech essentials',brandTagline:'Everyday tech essentials',shop:'Shop',collections:'Collections',bag:'Bag',home:'Home',backToShop:'Back to shop',
       pageTitle:'Store information & privacy',pageIntro:'Clear information about the current ROCK storefront and its order-preparation flow.',
       notice:'Important: this version does not receive orders automatically or process online payments. Copying an order summary does not confirm stock or acceptance.',
       orderingTitle:'Preparing an order',orderingText:'You can review your bag and prepare a summary with the items and contact details you enter. Copying moves the summary to your device clipboard for you to share manually. This version does not submit it to ROCK automatically.',

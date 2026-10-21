@@ -12,7 +12,7 @@ const requiredFiles = [
   'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
-  'scripts/sync_drive_photos.py', 'assets/brand/rock-logo.svg',
+  'scripts/sync_drive_photos.py', 'scripts/test_storefront_browser.cjs', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
   'robots.txt', 'sitemap.xml'
 ];
@@ -20,6 +20,36 @@ const requiredFiles = [
 for (const file of requiredFiles) {
   assert.ok(fs.existsSync(path.join(root, file)), `Required file is missing: ${file}`);
 }
+
+const workflow = read('.github/workflows/pages.yml');
+assert.ok(workflow.includes('browser-regression:'), 'Browser regression job is missing');
+assert.ok(workflow.includes('node scripts/test_storefront_browser.cjs'), 'Browser regression script is not run in CI');
+assert.ok(workflow.includes('needs: [validate, browser-regression]'), 'Deployment must wait for code and browser validation');
+
+// Guard the shared design system and its stylesheet wiring against accidental removal.
+const designSystem = read('white-modern.css');
+assert.ok(designSystem.includes('ROCK Design System v1'), 'Shared ROCK design-system section is missing');
+for (const token of [
+  '--rock-font-ar', '--rock-font-latin', '--rock-text-base',
+  '--rock-leading-ar', '--rock-space-4', '--rock-content-width',
+  '--rock-radius-md', '--rock-focus-ring'
+]) {
+  assert.ok(designSystem.includes(`${token}:`), `Design-system token is missing: ${token}`);
+}
+assert.ok(designSystem.includes('html[dir="rtl"] .hero h1'), 'Arabic hero typography refinement is missing');
+for (const page of ['index.html', 'product.html', 'policies.html']) {
+  assert.ok(read(page).includes('white-modern.css?v='), `Versioned design stylesheet link is missing in ${page}`);
+}
+
+const productPageCss = read('product-page.css');
+const productPageHtml = read('product.html');
+assert.ok(productPageCss.includes('.product-page-body .site-header{'), 'Product page must explicitly align its header with the shared design system');
+assert.ok(productPageCss.includes('.product-nav a{'), 'Product navigation needs explicit readable colors on the light header');
+assert.ok(productPageCss.includes('prefers-reduced-motion:reduce'), 'Product page must respect reduced-motion preferences');
+assert.ok(productPageHtml.includes('product-page.css?v=20261021-white-header-v3'), 'Product page stylesheet cache key must be refreshed');
+const browserTest = read('scripts/test_storefront_browser.cjs');
+assert.ok(browserTest.includes('Product navigation text must remain readable on the light header'), 'Browser regression must verify product header contrast');
+assert.ok(browserTest.includes('Product detail add-to-cart should preserve one cart line'), 'Browser regression must cover product detail add-to-cart');
 
 const productsSource = read('products.js');
 const productMatch = productsSource.match(/const\s+ROCK_PRODUCTS\s*=\s*(\[[\s\S]*?\]);/);
@@ -131,6 +161,21 @@ for (const file of ['index.html', 'product.html', 'policies.html']) {
   const html = read(file);
   assert.equal((html.match(/white-modern\.css/gi) || []).length, 1, `${file} must load the white-modern stylesheet exactly once`);
 }
+const sharedDesignStyles = ['index.html', 'product.html', 'policies.html'].map(file => {
+  const match = read(file).match(/href="(white-modern\.css\?v=[^"]+)"/);
+  assert.ok(match, `Versioned white-modern stylesheet reference missing in ${file}`);
+  return match[1];
+});
+assert.equal(new Set(sharedDesignStyles).size, 1, 'All pages must use the same cache version for the shared design stylesheet');
+for (const [page, script] of [['product.html','product-page.js'],['policies.html','policy-page.js']]) {
+  const html = read(page);
+  const copy = read(script);
+  assert.ok(html.includes('data-i18n="brandTagline"'), `${page} must use the shared translatable brand tagline`);
+  assert.ok(copy.includes("brandTagline:'ملحقات تقنية ليومك'"), `${script} missing the Arabic brand tagline`);
+  assert.ok(copy.includes("brandTagline:'Everyday tech essentials'"), `${script} missing the English brand tagline`);
+  assert.ok(copy.includes("announcement:'ROCK | ملحقات تقنية ليومك'"), `${script} announcement copy is inconsistent`);
+  assert.ok(copy.includes("announcement:'ROCK | Everyday tech essentials'"), `${script} English announcement copy is inconsistent`);
+}
 
 const policies = read('policies.html');
 assert.equal((policies.match(/premium-refresh\.css/gi) || []).length, 1, 'Policies page must load the refresh CSS only once');
@@ -138,9 +183,50 @@ const productPage = read('product.html');
 assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not expose a Drive-folder link');
 
 const app = read('app.js');
+// Language and mobile navigation operate on all matches, not a single element.
+assert.ok(app.includes("document.querySelectorAll('[data-i18n]').forEach"), 'Language switching must update every translated element');
+assert.ok(app.includes("document.querySelectorAll('[data-i18n-aria]').forEach"), 'Translated accessibility labels must update across the page');
+assert.ok(app.includes("document.querySelectorAll('[data-mobile-link]').forEach"), 'Mobile navigation must bind every menu link');
+assert.ok(!app.includes("$('[data-i18n]').forEach"), 'A single-element selector cannot be used with forEach for translations');
+assert.ok(!app.includes("$('[data-i18n-aria]').forEach"), 'A single-element selector cannot be used with forEach for accessible labels');
+assert.ok(!app.includes("$('[data-mobile-link]').forEach"), 'A single-element selector cannot be used with forEach for mobile navigation');
+for (const key of ['pageTitle','openMenu','search','viewCart','closeAnnouncement','shopProducts','switchLanguage','powerLabel','audioLabel','driveLabel','lifeLabel','brandTagline','closingTitle','closingAccent']) {
+  assert.ok(app.includes(`${key}:`), `Homepage translation is missing: ${key}`);
+}
+assert.ok(home.includes('data-i18n="powerLabel"') && home.includes('data-i18n="audioLabel"'), 'Homepage category labels must be translatable');
+assert.ok(!home.includes('class="ticker"'), 'Legacy ticker should not return to the homepage');
+
+// Cart, checkout and product-page interaction guards.
+assert.match(home, /id="cartDrawer"[^>]*role="dialog"[^>]*aria-hidden="true"/, 'Cart drawer must be a labelled, initially hidden dialog');
+assert.ok(home.includes('aria-controls="cartDrawer"') && home.includes('aria-expanded="false"'), 'Cart trigger must expose its relationship and closed state');
+for (const key of ['emptyCartText','increaseQty','decreaseQty','closeDialog','customerNameLabel','customerPhoneLabel','customerCityLabel','customerAddressLabel','customerNotesLabel','orderSummaryLabel']) {
+  assert.ok(app.includes(`${key}:`), `Cart/checkout translation is missing: ${key}`);
+}
+assert.ok(app.includes("t('emptyCartText')"), 'The cart empty state must use purpose-written localized copy');
+assert.ok(app.includes('aria-label="${decreaseLabel}"') && app.includes('aria-label="${increaseLabel}"'), 'Quantity buttons must have accessible labels');
+assert.ok(app.includes("drawer.setAttribute('aria-hidden','false')") && app.includes("drawer.setAttribute('aria-hidden','true')"), 'Cart open/closed state must update aria-hidden');
+assert.ok(app.includes("document.body.classList.add('rock-dialog-open')"), 'Opening a dialog must prevent background scroll');
+for (const id of ['customerNameLabel','customerPhoneLabel','customerCityLabel','customerAddressLabel','customerNotesLabel','orderSummaryLabel']) {
+  assert.ok(home.includes(`data-i18n="${id}"`), `Checkout form label must be localized: ${id}`);
+}
+const productScript = read('product-page.js');
+assert.ok(productPageHtml.includes('id="productMenuBtn"') && productPageHtml.includes('id="productMobilePanel"'), 'Product page must include mobile navigation controls');
+assert.ok(productScript.includes("productMobilePanel.querySelectorAll('[data-mobile-link]')"), 'Product mobile menu must close when a link is selected');
+assert.ok(productScript.includes("document.querySelectorAll('[data-i18n-aria]')"), 'Product page must localize accessible labels');
+assert.ok(productPageHtml.includes('data-i18n="brandTagline"'), 'Product footer brand tagline must be localized');
+const productCss = read('white-modern.css');
+for (const selector of ['Product details and cart polish', 'Dialog and hidden-state semantics', '#cartItems .cart-row', '.product-page-body .product-detail-layout', '.product-page-body .product-menu-btn']) {
+  assert.ok(productCss.includes(selector), `Product/cart design rule is missing: ${selector}`);
+}
+assert.ok(productCss.includes('[hidden]{display:none!important}'), 'Hidden sections must remain hidden when component rules set display');
+assert.ok(productCss.includes('#cartDrawer[aria-hidden="true"]'), 'Closed cart must be removed from pointer interaction and the tab flow');
+assert.ok(productCss.includes('.modal[aria-hidden="true"]'), 'Closed modals must not remain interactive');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
-assert.ok(app.includes("$('.modal').forEach(modal=>modal.classList.remove('show'))"), 'Modal close function must close all modal elements');
+assert.ok(app.includes("const opened=$$('.modal.show')"), 'Modal close function must collect every open modal');
+assert.ok(app.includes("modal.setAttribute('aria-hidden','true')"), 'Closing a modal must hide it from assistive technology');
+assert.ok(app.includes("if(!$$('.modal.show').length)$('#overlay').classList.remove('show')"), 'Closing the cart must preserve the overlay while another modal remains open');
+assert.ok(app.includes("if(!$$('.modal.show').length)document.body.classList.remove('rock-dialog-open')"), 'Closing the cart must preserve dialog scroll lock while another modal remains open');
 assert.ok(!app.includes("$(' .modal'.trim())"), 'Malformed modal selector found');
 assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Collection cards must have click handlers');
 assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');

@@ -25,25 +25,31 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="styles.css?v=20261021-audit-release-1">
   <link rel="stylesheet" href="premium-refresh.css?v=20261021-audit-release-1">
-  <link rel="stylesheet" href="product-page.css?v=20261021-audit-release-1">
+  <link rel="stylesheet" href="product-page.css?v=20261021-white-header-v3">
   <link rel="stylesheet" href="rocky-assistant.css?v=20261021-audit-release-1">
-  <link rel="stylesheet" href="white-modern.css?v=20261021-white-modern-2">
+  <link rel="stylesheet" href="white-modern.css?v=20261021-product-cart-v2">
 </head>
 <body class="product-page-body">
   <div class="announcement"><span>ROCK</span><span data-i18n="announcement">ROCK — فجر جديد</span></div>
   <header class="site-header">
     <div class="header-inner">
+      <button class="icon-btn menu-btn product-menu-btn" id="productMenuBtn" type="button" aria-label="فتح القائمة" data-i18n-aria="openMenu" aria-expanded="false" aria-controls="productMobilePanel"><span></span><span></span></button>
       <a class="brand" href="./" aria-label="ROCK"><img src="assets/brand/rock-logo.svg" alt="ROCK"></a>
-      <nav class="product-nav">
+      <nav class="product-nav" aria-label="Primary navigation" data-i18n-aria="navigationMenu">
         <a href="./#shop" data-i18n="shop">المتجر</a>
         <a href="./#collections" data-i18n="collections">التصنيفات</a>
         <a href="policies.html" data-i18n="storeInfo">معلومات المتجر</a>
       </nav>
       <div class="header-actions">
-        <button class="text-btn" id="langBtn" type="button" aria-label="Change language">EN</button>
-        <a class="cart-btn" href="./?cart=1"><span data-i18n="bag">السلة</span><b id="cartCount">0</b></a>
+        <button class="text-btn" id="langBtn" type="button" aria-label="تغيير اللغة" data-i18n-aria="switchLanguage">EN</button>
+        <a class="cart-btn" href="./?cart=1" aria-label="عرض السلة" data-i18n-aria="viewCart"><span data-i18n="bag">السلة</span><b id="cartCount">0</b></a>
       </div>
     </div>
+    <nav class="mobile-panel product-mobile-panel" id="productMobilePanel" aria-label="قائمة التنقل" data-i18n-aria="navigationMenu" aria-hidden="true">
+      <a href="./#shop" data-mobile-link data-i18n="shop">المتجر</a>
+      <a href="./#collections" data-mobile-link data-i18n="collections">التصنيفات</a>
+      <a href="policies.html" data-mobile-link data-i18n="storeInfo">معلومات المتجر</a>
+    </nav>
   </header>
 
   <main class="product-page-shell">
@@ -104,13 +110,13 @@
   </main>
 
   <footer class="product-footer">
-    <a class="product-footer-brand" href="./"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span>A New Dawn.</span></a>
+    <a class="product-footer-brand" href="./"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span data-i18n="brandTagline">ملحقات تقنية ليومك</span></a>
     <p>© <span id="footerYear"></span> ROCK</p>
     <a href="policies.html" data-i18n="storeInfo">معلومات المتجر</a>
   </footer>
   <div id="productToast" class="product-toast" role="status" aria-live="polite"></div>
   <script src="products.js?v=20261021-audit-release-1"></script>
-  <script src="product-page.js?v=20261021-audit-release-1"></script>
+  <script src="product-page.js?v=20261021-product-cart-v2"></script>
   <script src="rocky-assistant.js?v=20261021-audit-release-1"></script>
 </body>
 </html>
