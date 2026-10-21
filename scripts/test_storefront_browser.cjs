@@ -108,6 +108,7 @@ async function waitForCatalog(page) {
       'Closing dialogs should restore background scrolling');
 
     // Product details: consistent header contrast, correct data, language switch, and responsive layout.
+    await page.evaluate(() => { localStorage.setItem('rock-lang', 'ar'); localStorage.removeItem('rock-cart'); });
     await page.goto(baseURL + '/product.html?id=rkch720', { waitUntil: 'networkidle' });
     await visible(page, '#productLayout', 'A valid product id should show product details');
     assert.match(await page.locator('#detailName').textContent(), /ROCK RKCH720 20W GaN Wall Charger/);
