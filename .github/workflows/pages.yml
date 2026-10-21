@@ -41,6 +41,9 @@ jobs:
           test -f premium-refresh.css
           test -f app.js
           test -f products.js
+          test -f rocky-assistant.js
+          test -f rocky-assistant.css
+          test -f assets/brand/rocky-mascot.svg
           test -f robots.txt
           test -f sitemap.xml
           test -f 404.html
@@ -48,6 +51,7 @@ jobs:
           test -d assets/products
           node --check app.js
           node --check products.js
+          node --check rocky-assistant.js
           node --check product-page.js
           node --check policy-page.js
           node - <<'NODE'
