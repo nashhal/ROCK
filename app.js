@@ -85,6 +85,8 @@
     });
     const visual=$('.hero-visual');
     if(visual)visual.hidden=featured.length===0;
+    const categories=$('.hero-meta > div:nth-child(2) strong');
+    if(categories)categories.textContent=String(new Set(products.map(product=>product.category)).size);
   }
 
   function applyLanguage(){
