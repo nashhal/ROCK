@@ -38,6 +38,11 @@ test('cart quantity, persistence and Escape keyboard behavior work', async ({ pa
 
   await page.reload();
   await expect(page.locator('#cartCount')).toHaveText('2');
+  await page.locator('#clearCartBtn').click();
+  await expect(page.locator('#cartCount')).toHaveText('0');
+  await expect(page.locator('#clearCartBtn')).toBeDisabled();
+  await page.reload();
+  await expect(page.locator('#cartCount')).toHaveText('0');
 });
 
 test('quick view closes and returns keyboard focus to its trigger', async ({ page }) => {
