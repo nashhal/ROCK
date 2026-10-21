@@ -7,17 +7,17 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; upgrade-insecure-requests">
   <link rel="canonical" href="https://nashhal.github.io/ROCK/">
-  <meta name="description" content="تسوّق إكسسوارات ROCK للشحن والصوت والسيارة وأسلوب الحياة. تصفّح الموديلات والأسعار بالريال السعودي.">
+  <meta name="description" content="استكشف إكسسوارات ROCK للشحن والصوت والسيارة. قارن الموديلات والأسعار المدرجة بالريال السعودي.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ROCK">
-  <meta property="og:title" content="ROCK — A New Dawn.">
-  <meta property="og:description" content="إكسسوارات تقنية للشحن والصوت والسيارة وأسلوب الحياة.">
+  <meta property="og:title" content="ROCK | Everyday tech essentials">
+  <meta property="og:description" content="استكشف إكسسوارات ROCK للشحن والصوت والسيارة، وقارن الموديلات والأسعار في مكان واحد.">
   <meta property="og:url" content="https://nashhal.github.io/ROCK/">
   <meta property="og:image" content="https://nashhal.github.io/ROCK/assets/brand/rock-logo.svg">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ROCK — A New Dawn.">
-  <meta name="twitter:description" content="إكسسوارات تقنية للشحن والصوت والسيارة وأسلوب الحياة.">
+  <meta name="twitter:title" content="ROCK | Everyday tech essentials">
+  <meta name="twitter:description" content="استكشف إكسسوارات ROCK للشحن والصوت والسيارة، وقارن الموديلات والأسعار في مكان واحد.">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ROCK","url":"https://nashhal.github.io/ROCK/","inLanguage":["ar","en"],"description":"ROCK consumer accessories for power, audio, car and everyday essentials."}</script>
   <title>ROCK | ملحقات تقنية للشحن والصوت والسيارة</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="styles.css?v=20261021-audit-release-1">
   <link rel="stylesheet" href="premium-refresh.css?v=20261021-audit-release-1">
   <link rel="stylesheet" href="rocky-assistant.css?v=20261021-audit-release-1">
-  <link rel="stylesheet" href="white-modern.css?v=20261021-design-system-v1">
+  <link rel="stylesheet" href="white-modern.css?v=20261021-homepage-v2">
 </head>
 <body>
   <div class="announcement"><span>ROCK</span><span data-i18n="announcement">ROCK — فجر جديد</span><button class="announcement-close" aria-label="إغلاق" data-i18n-aria="closeAnnouncement">×</button></div>
@@ -41,7 +41,7 @@
         <a href="#story" data-nav="story" data-i18n="story">عن ROCK</a>
       </nav>
       <div class="header-actions">
-        <button class="text-btn" id="langBtn">EN</button>
+        <button class="text-btn" id="langBtn" data-i18n-aria="switchLanguage" aria-label="تغيير اللغة">EN</button>
         <button class="icon-btn" id="searchBtn" aria-label="بحث" data-i18n-aria="search">⌕</button>
         <button class="cart-btn" id="cartBtn" aria-label="عرض السلة" data-i18n-aria="viewCart"><span data-i18n="bag">السلة</span><b id="cartCount" aria-live="polite" aria-atomic="true">0</b></button>
       </div>
@@ -137,7 +137,7 @@
   <div class="modal" id="checkoutModal"><div class="modal-card checkout-card" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle"><button class="close-btn" data-close-modal aria-label="إغلاق">×</button><form id="orderDetailsForm"><div class="checkout-shell"><h2 id="orderModalTitle" data-i18n="orderHeader">طلب ROCK</h2><div class="order-fields"><label for="customerName">الاسم<input id="customerName" name="customerName" required></label><label for="customerPhone">رقم الجوال<input id="customerPhone" name="customerPhone" required></label><label for="customerCity">المدينة<input id="customerCity" name="customerCity"></label><label for="customerAddress">العنوان<input id="customerAddress" name="customerAddress"></label></div><label class="order-notes" for="customerNotes">ملاحظات<textarea id="customerNotes" name="customerNotes"></textarea></label><div class="order-privacy-note" data-i18n="orderPrivacy">لا يوجد دفع إلكتروني أو إرسال تلقائي في هذه النسخة. لا تدخل بيانات البطاقة البنكية.</div><div class="order-summary"><label class="order-summary-label" for="orderText">ملخص الطلب<textarea id="orderText" readonly></textarea></label><div class="order-actions"><button type="button" class="btn btn-dark" id="copyOrder" data-i18n="copyOrder">نسخ النص</button><button type="button" class="btn policy-secondary" id="doneOrder" data-i18n="done">تم</button></div></div></div></form></div></div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="products.js?v=20261021-audit-release-1"></script><script src="app.js?v=20261021-audit-release-1"></script>
+  <script src="products.js?v=20261021-audit-release-1"></script><script src="app.js?v=20261021-homepage-v2"></script>
   <script src="rocky-assistant.js?v=20261021-audit-release-1"></script>
 </body>
 </html>
