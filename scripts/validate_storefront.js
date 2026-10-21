@@ -180,6 +180,33 @@ for (const key of ['pageTitle','openMenu','search','viewCart','closeAnnouncement
 }
 assert.ok(home.includes('data-i18n="powerLabel"') && home.includes('data-i18n="audioLabel"'), 'Homepage category labels must be translatable');
 assert.ok(!home.includes('class="ticker"'), 'Legacy ticker should not return to the homepage');
+
+// Cart, checkout and product-page interaction guards.
+assert.match(home, /id="cartDrawer"[^>]*role="dialog"[^>]*aria-hidden="true"/, 'Cart drawer must be a labelled, initially hidden dialog');
+assert.ok(home.includes('aria-controls="cartDrawer"') && home.includes('aria-expanded="false"'), 'Cart trigger must expose its relationship and closed state');
+for (const key of ['emptyCartText','increaseQty','decreaseQty','closeDialog','customerNameLabel','customerPhoneLabel','customerCityLabel','customerAddressLabel','customerNotesLabel','orderSummaryLabel']) {
+  assert.ok(app.includes(`${key}:`), `Cart/checkout translation is missing: ${key}`);
+}
+assert.ok(app.includes("t('emptyCartText')"), 'The cart empty state must use purpose-written localized copy');
+assert.ok(app.includes('aria-label="${decreaseLabel}"') && app.includes('aria-label="${increaseLabel}"'), 'Quantity buttons must have accessible labels');
+assert.ok(app.includes("drawer.setAttribute('aria-hidden','false')") && app.includes("drawer.setAttribute('aria-hidden','true')"), 'Cart open/closed state must update aria-hidden');
+assert.ok(app.includes("document.body.classList.add('rock-dialog-open')"), 'Opening a dialog must prevent background scroll');
+for (const id of ['customerNameLabel','customerPhoneLabel','customerCityLabel','customerAddressLabel','customerNotesLabel','orderSummaryLabel']) {
+  assert.ok(home.includes(`data-i18n="${id}"`), `Checkout form label must be localized: ${id}`);
+}
+const productPageHtml = read('product.html');
+const productScript = read('product-page.js');
+assert.ok(productPageHtml.includes('id="productMenuBtn"') && productPageHtml.includes('id="productMobilePanel"'), 'Product page must include mobile navigation controls');
+assert.ok(productScript.includes("productMobilePanel.querySelectorAll('[data-mobile-link]')"), 'Product mobile menu must close when a link is selected');
+assert.ok(productScript.includes("document.querySelectorAll('[data-i18n-aria]')"), 'Product page must localize accessible labels');
+assert.ok(productPageHtml.includes('data-i18n="brandTagline"'), 'Product footer brand tagline must be localized');
+const productCss = read('white-modern.css');
+for (const selector of ['Product details and cart polish', 'Dialog and hidden-state semantics', '#cartItems .cart-row', '.product-page-body .product-detail-layout', '.product-page-body .product-menu-btn']) {
+  assert.ok(productCss.includes(selector), `Product/cart design rule is missing: ${selector}`);
+}
+assert.ok(productCss.includes('[hidden]{display:none!important}'), 'Hidden sections must remain hidden when component rules set display');
+assert.ok(productCss.includes('#cartDrawer[aria-hidden="true"]'), 'Closed cart must be removed from pointer interaction and the tab flow');
+assert.ok(productCss.includes('.modal[aria-hidden="true"]'), 'Closed modals must not remain interactive');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
 assert.ok(app.includes("$('.modal').forEach(modal=>modal.classList.remove('show'))"), 'Modal close function must close all modal elements');
