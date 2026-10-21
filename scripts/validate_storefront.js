@@ -49,7 +49,7 @@ assert.ok(productPageCss.includes('prefers-reduced-motion:reduce'), 'Product pag
 assert.ok(productPageHtml.includes('product-page.css?v=20261022-catalog-quality'), 'Product page stylesheet cache key must be refreshed');
 for (const page of ['index.html', 'product.html']) {
   const html = read(page);
-  assert.ok(html.includes('data/product-image-quality.js?v=20261022-quality-filter'), `Photo quality manifest must load in ${page}`);
+  assert.ok(html.includes('data/product-image-quality.js?v=20261022-dawn-refresh-v1'), `Photo quality manifest must load in ${page}`);
   assert.ok(html.indexOf('data/product-image-quality.js') < html.lastIndexOf(page === 'index.html' ? 'app.js?' : 'product-page.js?'), `Photo quality manifest must load before catalog rendering in ${page}`);
 }
 const browserTest = read('scripts/test_storefront_browser.cjs');
