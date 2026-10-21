@@ -8,7 +8,7 @@
   let lang = getStored('rock-lang', 'ar') === 'en' ? 'en' : 'ar';
   const i18n = {
     ar:{
-      announcement:'تقنية يومية بتفاصيل محسوبة',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
+      announcement:'ROCK — فجر جديد',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
       productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
       catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',modelLabel:'الموديل',modelMissing:'غير محدد',priceLabel:'السعر',viewProduct:'عرض المنتج',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
       factCompatTitle:'التوافق',factCompatText:'تحقق من توافق المنتج مع جهازك والميزات المدعومة قبل الطلب.',
@@ -23,7 +23,7 @@
       catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',sar:'ر.س',added:'تمت الإضافة إلى السلة',addError:'تعذر حفظ السلة في هذا المتصفح'
     },
     en:{
-      announcement:'Everyday technology, considered.',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
+      announcement:'ROCK — A New Dawn',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
       productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
       catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',modelLabel:'Model',modelMissing:'Not specified',priceLabel:'Price',viewProduct:'View product',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
       factCompatTitle:'Compatibility',factCompatText:'Confirm device fit and supported features before ordering.',
