@@ -112,6 +112,20 @@
     return { min: x ? Number(x[1]) : between ? Math.min(Number(between[1]), Number(between[2])) : null,
       max: m ? Number(m[1]) : between ? Math.max(Number(between[1]), Number(between[2])) : null };
   }
+  function requestedType(query) {
+    const q = normalize(query);
+    if (/power bank|powerbank|باور بانك|باوربانك|بطاريه متنقله|portable charger/.test(q)) return 'powerbank';
+    if (/cable|cord|كابل|كيبل|كيابل|كابلات|سلك|اسلاك/.test(q)) return 'cable';
+    if (/charger|شاحن|شواحن/.test(q)) return 'charger';
+    return '';
+  }
+  function matchesRequestedType(product, type) {
+    const haystack = normalize([product.nameAr, product.nameEn, product.descriptionEn].join(' '));
+    if (type === 'powerbank') return /power bank|powerbank|portable charger|portable battery|باور بانك|باوربانك|بطاريه متنقله/.test(haystack);
+    if (type === 'cable') return /cable|cord|كابل|كيبل|سلك/.test(haystack);
+    if (type === 'charger') return /charger|شاحن/.test(haystack);
+    return true;
+  }
   function rankProducts(query) {
     const q = normalize(query);
     const category = categoryOf(query);
@@ -128,6 +142,8 @@
       return { p, score, index };
     }).filter(item => item.score >= 0);
     if (category) ranked = ranked.filter(item => item.p.category === category);
+    const intent = requestedType(query);
+    if (intent) ranked = ranked.filter(item => matchesRequestedType(item.p, intent));
     ranked.sort((a,b) => b.score - a.score || a.index-b.index);
     if (ranked.length && !category && words.length && ranked[0].score <= 1) return [];
     return ranked.map(item => item.p);
