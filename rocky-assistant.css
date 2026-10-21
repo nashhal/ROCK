@@ -84,3 +84,6 @@
 .rocky-widget[dir="rtl"] .rocky-panel,.rocky-widget[dir="rtl"] .rocky-intro,.rocky-widget[dir="rtl"] .rocky-messages,.rocky-widget[dir="rtl"] .rocky-foot{direction:rtl;text-align:right}
 .rocky-widget[dir="ltr"] .rocky-launcher-copy,.rocky-widget[dir="ltr"] .rocky-head-copy{text-align:left}
 .rocky-widget[dir="rtl"] .rocky-launcher-copy,.rocky-widget[dir="rtl"] .rocky-head-copy{text-align:right}
+
+/* Keep the focus ring highly visible on the dark launcher. */
+.rocky-launcher:focus-visible{outline-color:#65b8ff}
