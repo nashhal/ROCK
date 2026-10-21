@@ -49,13 +49,13 @@ async function waitForCatalog(page) {
     assert.equal(await page.locator('html').getAttribute('dir'), 'rtl', 'Homepage should start in Arabic RTL');
     const approvedIds = await page.evaluate(() => window.ROCK_PRODUCT_IMAGE_QUALITY.visibleIds);
     assert.equal(await page.locator('#heroProductCount').textContent(), String(approvedIds.length), 'Hero count must match approved product photos');
-    const listedIds = await page.locator('#productGrid [data-add]').evaluateAll(nodes => nodes.map(node => node.dataset.add));
-    assert.deepEqual(listedIds, approvedIds, 'Only products with clear white-background images should appear in the catalog');
     await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.forEach(image => { image.loading = 'eager'; }));
     await page.waitForFunction(() => [...document.querySelectorAll('#productGrid [data-product-image]')].every(image => image.complete),
       { timeout: 15000 });
     assert.ok(await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.every(image => image.naturalWidth > 0)),
       'Every shown product card must have a successfully loaded image');
+    const listedIds = await page.locator('#productGrid [data-add]').evaluateAll(nodes => nodes.map(node => node.dataset.add));
+    assert.deepEqual(listedIds, approvedIds, 'Only products with clear, loadable white-background images should appear in the catalog');
     await visible(page, '.brand img', 'The original ROCK logo should remain visible');
     const logo = await page.locator('.brand img').evaluate(el => ({ complete: el.complete, width: el.naturalWidth }));
     assert.ok(logo.complete && logo.width > 0, 'The original ROCK logo asset should load');
