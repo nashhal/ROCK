@@ -419,4 +419,4 @@ footer,.site-footer{border-top:1px solid rgba(255,255,255,.1)}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 /* Accessibility refinements */
-.announcement-close{display:grid;place-items:center;width:32px;height:32px;line-height:1;padding:0;inset-inline-end:10px;right:auto}
+.announcement-close{display:grid;place-items:center;width:32px;height:32px;line-height:1;padding:0}
