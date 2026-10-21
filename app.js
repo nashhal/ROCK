@@ -24,9 +24,9 @@
       trustOrderTitle:'راجع طلبك أولًا',trustOrderText:'أنشئ ملخص الطلب وراجعه قبل مشاركته.',
       storeInfo:'معلومات المتجر',customerNameLabel:'الاسم',customerPhoneLabel:'رقم الجوال',customerCityLabel:'المدينة',
       customerAddressLabel:'العنوان أو نقطة الاستلام',customerNotesLabel:'ملاحظات (اختياري)',orderSummaryLabel:'ملخص الطلب',
-      orderPrivacy:'لا يوجد دفع إلكتروني أو إرسال تلقائي في هذه النسخة. لا تدخل بيانات البطاقة البنكية.',
+      orderPrivacy:'لن تُرسل بياناتك تلقائيًا. عند النسخ أو المشاركة ستتضمن الرسالة البيانات التي أدخلتها؛ راجع المحتوى واختر الجهة المستلمة بنفسك. لا يوجد دفع إلكتروني.',
       orderHeader:'طلب ROCK',customer:'العميل',phone:'الجوال',city:'المدينة',address:'العنوان/الاستلام',notes:'ملاحظات',copyFailed:'تعذّر النسخ. حدّد النص وانسخه يدويًا.',
-      announcement:'ROCK | ملحقات تقنية ليومك',shop:'المتجر',collections:'التصنيفات',story:'عن ROCK',bag:'السلة',eyebrow:'إكسسوارات تقنية ليومك',hero1:'إكسسوارات تقنية',hero2:'ليومك، ببساطة.',heroText:'تصفّح إكسسوارات ROCK للشحن والصوت والسيارة، وقارن الموديلات والأسعار في مكان واحد.',shopNow:'تصفّح المنتجات',featuredBtn:'استكشف الفئات',products:'منتجًا',categories:'فئات',currency:'بالريال السعودي',catalog:'الكتالوج',shopTitle:'اختر ما يناسبك من ROCK',filter:'تصفية',collectionsLabel:'المجموعات',collectionsTitle:'تصفّح حسب الفئة',collectionsNote:'من المكتب إلى الطريق',powerText:'الشحن والطاقة',audioText:'السماعات والصوت',driveText:'ملحقات للسيارة',lifeText:'إكسسوارات يومية',storyTitle:'اختيار أوضح. استخدام أسهل.',storyText:'نعرض موديل المنتج وسعره بوضوح، لتتمكن من المقارنة واختيار ما تحتاجه دون تعقيد.',backTop:'العودة للبداية ↗',clearCart:'تفريغ السلة',bagTitle:'سلتك',total:'الإجمالي',checkout:'تجهيز الطلب',continue:'متابعة التسوق',addCart:'أضف إلى السلة',orderTitle:'طلبك جاهز',orderText:'راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.',copyOrder:'نسخ تفاصيل الطلب',done:'تم',noResults:'لا توجد نتائج',noResultsSub:'جرّب كلمة بحث أو تصنيفًا آخر',added:'تمت الإضافة إلى السلة',cleared:'تم تفريغ السلة',copied:'تم نسخ تفاصيل الطلب',empty:'السلة فارغة',emptyCartText:'لا توجد منتجات في السلة بعد. أضف منتجًا للمتابعة.',increaseQty:'زيادة الكمية',decreaseQty:'تقليل الكمية',closeDialog:'إغلاق النافذة',navigationMenu:'قائمة التنقل',sar:'ر.س'
+      announcement:'ROCK | ملحقات تقنية ليومك',shop:'المتجر',collections:'التصنيفات',story:'عن ROCK',bag:'السلة',eyebrow:'إكسسوارات تقنية ليومك',hero1:'إكسسوارات تقنية',hero2:'ليومك، ببساطة.',heroText:'تصفّح إكسسوارات ROCK للشحن والصوت والسيارة، وقارن الموديلات والأسعار في مكان واحد.',shopNow:'تصفّح المنتجات',featuredBtn:'استكشف الفئات',products:'منتجًا',categories:'فئات',currency:'بالريال السعودي',catalog:'الكتالوج',shopTitle:'اختر ما يناسبك من ROCK',filter:'تصفية',collectionsLabel:'المجموعات',collectionsTitle:'تصفّح حسب الفئة',collectionsNote:'من المكتب إلى الطريق',powerText:'الشحن والطاقة',audioText:'السماعات والصوت',driveText:'ملحقات للسيارة',lifeText:'إكسسوارات يومية',storyTitle:'اختيار أوضح. استخدام أسهل.',storyText:'نعرض موديل المنتج وسعره بوضوح، لتتمكن من المقارنة واختيار ما تحتاجه دون تعقيد.',backTop:'العودة للبداية ↗',clearCart:'تفريغ السلة',bagTitle:'سلتك',total:'الإجمالي',checkout:'تجهيز الطلب',continue:'متابعة التسوق',addCart:'أضف إلى السلة',orderTitle:'طلبك جاهز',orderText:'راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.',copyOrder:'نسخ تفاصيل الطلب',shareOrder:'مشاركة الطلب',shared:'تمت مشاركة تفاصيل الطلب',orderConfirmationLabel:'أؤكد أنني راجعت الملخص وأفهم أنه ليس طلبًا مؤكدًا، وأن السعر والتوفر والتوصيل تحتاج إلى تأكيد.',done:'تم',noResults:'لا توجد نتائج',noResultsSub:'جرّب كلمة بحث أو تصنيفًا آخر',added:'تمت الإضافة إلى السلة',cleared:'تم تفريغ السلة',copied:'تم نسخ تفاصيل الطلب',empty:'السلة فارغة',emptyCartText:'لا توجد منتجات في السلة بعد. أضف منتجًا للمتابعة.',increaseQty:'زيادة الكمية',decreaseQty:'تقليل الكمية',closeDialog:'إغلاق النافذة',navigationMenu:'قائمة التنقل',sar:'ر.س'
     },
     en: {
       pageTitle:'ROCK | Charging, audio and car accessories',
@@ -42,9 +42,9 @@
       trustOrderTitle:'Review your request',trustOrderText:'Prepare and review an order summary before sharing it.',
       storeInfo:'Store information',customerNameLabel:'Name',customerPhoneLabel:'Mobile number',customerCityLabel:'City',
       customerAddressLabel:'Address or pickup point',customerNotesLabel:'Notes (optional)',orderSummaryLabel:'Order summary',
-      orderPrivacy:'This version has no online payment or automatic order submission. Do not enter bank card details.',
+      orderPrivacy:'Your details are not sent automatically. Copying or sharing includes the information you entered in the message; review its contents and choose the recipient yourself. No online payment is processed.',
       orderHeader:'ROCK order request',customer:'Customer',phone:'Mobile',city:'City',address:'Address/pickup',notes:'Notes',copyFailed:'Could not copy. Select the text and copy it manually.',
-      announcement:'ROCK | Everyday tech essentials',shop:'Shop',collections:'Collections',story:'About ROCK',bag:'Bag',eyebrow:'Everyday tech essentials',hero1:'Everyday tech.',hero2:'Made simpler.',heroText:'Explore ROCK charging, audio and car accessories. Compare model names and listed prices in one place.',shopNow:'Browse products',featuredBtn:'Explore categories',products:'products',categories:'categories',currency:'Saudi riyals',catalog:'catalog',shopTitle:'Find your ROCK essentials',filter:'Filter',collectionsLabel:'collections',collectionsTitle:'Browse by category',collectionsNote:'From desk to road',powerText:'Charging and power',audioText:'Audio accessories',driveText:'Car accessories',lifeText:'Everyday accessories',storyTitle:'Clear choices. Easier everyday use.',storyText:'Product model names and listed prices are presented clearly, so you can compare options and choose what you need without extra clutter.',backTop:'Back to top ↗',clearCart:'Clear bag',bagTitle:'Your bag',total:'Total',checkout:'Prepare order',continue:'Continue shopping',addCart:'Add to bag',orderTitle:'Your order is ready',orderText:'Review the details, then copy the order to send through your preferred channel.',copyOrder:'Copy order details',done:'Done',noResults:'No results',noResultsSub:'Try another search or category.',added:'Added to bag',cleared:'Bag cleared',copied:'Order details copied',empty:'Your bag is empty',emptyCartText:'Your bag is empty for now. Add a product to continue.',increaseQty:'Increase quantity',decreaseQty:'Decrease quantity',closeDialog:'Close dialog',navigationMenu:'Navigation menu',sar:'SAR'
+      announcement:'ROCK | Everyday tech essentials',shop:'Shop',collections:'Collections',story:'About ROCK',bag:'Bag',eyebrow:'Everyday tech essentials',hero1:'Everyday tech.',hero2:'Made simpler.',heroText:'Explore ROCK charging, audio and car accessories. Compare model names and listed prices in one place.',shopNow:'Browse products',featuredBtn:'Explore categories',products:'products',categories:'categories',currency:'Saudi riyals',catalog:'catalog',shopTitle:'Find your ROCK essentials',filter:'Filter',collectionsLabel:'collections',collectionsTitle:'Browse by category',collectionsNote:'From desk to road',powerText:'Charging and power',audioText:'Audio accessories',driveText:'Car accessories',lifeText:'Everyday accessories',storyTitle:'Clear choices. Easier everyday use.',storyText:'Product model names and listed prices are presented clearly, so you can compare options and choose what you need without extra clutter.',backTop:'Back to top ↗',clearCart:'Clear bag',bagTitle:'Your bag',total:'Total',checkout:'Prepare order',continue:'Continue shopping',addCart:'Add to bag',orderTitle:'Your order is ready',orderText:'Review the details, then copy the order to send through your preferred channel.',copyOrder:'Copy order details',shareOrder:'Share order',shared:'Order details shared',orderConfirmationLabel:'I have reviewed this summary and understand it is not a confirmed order; price, availability and delivery must be confirmed.',done:'Done',noResults:'No results',noResultsSub:'Try another search or category.',added:'Added to bag',cleared:'Bag cleared',copied:'Order details copied',empty:'Your bag is empty',emptyCartText:'Your bag is empty for now. Add a product to continue.',increaseQty:'Increase quantity',decreaseQty:'Decrease quantity',closeDialog:'Close dialog',navigationMenu:'Navigation menu',sar:'SAR'
     }
   };
 
@@ -282,11 +282,14 @@
   function checkout(){
     if(!state.cart.length) return;
     $('#orderDetailsForm').reset();
-    $('#orderText').value = buildOrderText(false);
+    $('#orderText').value = buildOrderText(true);
     closeCart();
     openModal('checkoutModal');
     $('#customerName').focus();
   }
+  $('#orderDetailsForm').addEventListener('input', event => {
+    if(event.target.id !== 'orderText') $('#orderText').value = buildOrderText(true);
+  });
   function buildOrderText(includeCustomer=true){
     let total = 0;
     const lines = state.cart.map(item => {
@@ -326,6 +329,22 @@
       else toast(t('copyFailed'));
     } catch { toast(t('copyFailed')); }
   }
+  async function shareOrder(){
+    const form = $('#orderDetailsForm');
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    const text = buildOrderText(true);
+    $('#orderText').value = text;
+    if(typeof navigator.share === 'function'){
+      try {
+        await navigator.share({title:t('orderHeader'),text});
+        toast(t('shared'));
+        return;
+      } catch(error) {
+        if(error && error.name === 'AbortError') return;
+      }
+    }
+    await copyOrder();
+  }
   function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(window.__rockToast);window.__rockToast=setTimeout(()=>el.classList.remove('show'),1800)}
 
   $('#langBtn').onclick=()=>{state.lang=state.lang==='ar'?'en':'ar';storageSet('rock-lang',state.lang);applyLanguage()};
@@ -349,7 +368,7 @@
   if(scrollTopButton)scrollTopButton.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
   const clearCartButton=$('#clearCartBtn');
   if(clearCartButton)clearCartButton.onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
-  $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{if(state.activeProduct)add(state.activeProduct.id);closeModals()};
+  $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#shareOrder').onclick=shareOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{if(state.activeProduct)add(state.activeProduct.id);closeModals()};
   $$('[data-close-modal]').forEach(b=>b.onclick=closeModals);
   $('#menuBtn').onclick=()=>{
     const expanded=$('#mobilePanel').classList.toggle('open');
