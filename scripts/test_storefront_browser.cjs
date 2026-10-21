@@ -24,8 +24,11 @@ async function noHorizontalOverflow(page, label) {
 }
 
 async function waitForCatalog(page) {
-  await page.waitForFunction(() => document.querySelectorAll('#productGrid .product-card').length === 41,
-    { timeout: 15000 });
+  await page.waitForFunction(() => {
+    const quality = window.ROCK_PRODUCT_IMAGE_QUALITY;
+    return quality && Array.isArray(quality.visibleIds) && quality.visibleIds.length > 0 &&
+      document.querySelectorAll('#productGrid .product-card').length === quality.visibleIds.length;
+  }, { timeout: 15000 });
 }
 
 (async () => {
@@ -44,7 +47,12 @@ async function waitForCatalog(page) {
     await waitForCatalog(page);
     await page.evaluate(() => document.fonts.ready);
     assert.equal(await page.locator('html').getAttribute('dir'), 'rtl', 'Homepage should start in Arabic RTL');
-    assert.equal(await page.locator('#heroProductCount').textContent(), '41', 'Hero count must match the catalog');
+    const approvedIds = await page.evaluate(() => window.ROCK_PRODUCT_IMAGE_QUALITY.visibleIds);
+    assert.equal(await page.locator('#heroProductCount').textContent(), String(approvedIds.length), 'Hero count must match approved product photos');
+    const listedIds = await page.locator('#productGrid [data-add]').evaluateAll(nodes => nodes.map(node => node.dataset.add));
+    assert.deepEqual(listedIds, approvedIds, 'Only products with clear white-background images should appear in the catalog');
+    assert.ok(await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)),
+      'Every shown product card must have a successfully loaded image');
     await visible(page, '.brand img', 'The original ROCK logo should remain visible');
     const logo = await page.locator('.brand img').evaluate(el => ({ complete: el.complete, width: el.naturalWidth }));
     assert.ok(logo.complete && logo.width > 0, 'The original ROCK logo asset should load');
@@ -77,7 +85,7 @@ async function waitForCatalog(page) {
     await page.screenshot({ path: path.join(artifactDir, '02-home-mobile.png'), fullPage: true });
 
     // Cart flow: quantity controls, total and localized checkout form.
-    await page.locator('#productGrid [data-add]').first().click();
+    await page.locator('#productGrid [data-add="rkcbl146"]').click();
     await visible(page, '#cartDrawer.open', 'Adding a product should open the cart drawer');
     assert.equal(await page.locator('#cartDrawer').getAttribute('aria-hidden'), 'false');
     assert.equal(await page.locator('#cartCount').textContent(), '1');
