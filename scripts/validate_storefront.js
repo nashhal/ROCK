@@ -210,7 +210,7 @@ assert.ok(home.includes('class="order-privacy-link" href="policies.html"'), 'Che
 assert.ok(app.includes("async function shareOrder()") && app.includes("navigator.share({title:t('orderHeader'),text})"), 'Checkout share handler is missing');
 assert.ok(app.includes("$('#orderDetailsForm').addEventListener('input'"), 'Order preview must update as customer details are entered');
 assert.ok(app.includes("if(!form.checkValidity()){ form.reportValidity(); return; }"), 'Order sharing and copying must validate required fields');
-assert.ok(read('policy-page.js').includes('destination you choose in the share sheet'), 'Privacy policy must explain the order share destination');
+assert.ok(read('policy-page.js').includes('review the recipient and message before sending'), 'Privacy policy must explain how customer-entered order details are shared');
 // Language and mobile navigation operate on all matches, not a single element.
 assert.ok(app.includes("document.querySelectorAll('[data-i18n]').forEach"), 'Language switching must update every translated element');
 assert.ok(app.includes("document.querySelectorAll('[data-i18n-aria]').forEach"), 'Translated accessibility labels must update across the page');
