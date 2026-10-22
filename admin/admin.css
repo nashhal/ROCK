@@ -123,3 +123,12 @@ footer span:first-child{font-weight:700;color:#526982}
 .order-detail-notes{padding:13px;background:#f7f9fc;border-radius:8px;color:#51647c;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.8}
 .order-payment-note{margin-top:12px;padding:12px;border:1px solid #f0dfb9;border-radius:8px;background:#fffbf2;color:#845b16;font-size:11px;line-height:1.7}
 @media(max-width:760px){.order-detail-grid{grid-template-columns:1fr}.order-status-select{min-width:110px}.order-detail-body{padding:14px}.view-tab{flex:1}}
+
+
+.stock-cell{display:inline-flex;align-items:center;gap:5px;max-width:120px;color:#516780;font-size:11px;font-weight:700;white-space:nowrap}
+.stock-cell:has(+ .status-pill){margin-inline-end:2px}
+.shipping-editor{display:grid;grid-template-columns:minmax(160px,230px) auto;align-items:end;gap:10px;padding:16px;margin:0 0 18px;border:1px solid #d9e7f7;border-radius:10px;background:#f7faff}
+.shipping-editor label{max-width:260px}
+.shipping-editor p{grid-column:1/-1;margin:0;color:#70849c;font-size:11px;line-height:1.7}
+.shipping-editor .btn{min-height:43px}
+@media(max-width:540px){.shipping-editor{grid-template-columns:1fr}.shipping-editor p{grid-column:auto}.shipping-editor label{max-width:none}}
