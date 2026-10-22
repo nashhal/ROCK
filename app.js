@@ -38,7 +38,7 @@
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
       sortFeatured:'ترتيب المتجر',sortLow:'السعر: من الأقل للأعلى',sortHigh:'السعر: من الأعلى للأقل',sortName:'الاسم',
       resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',sortBy:'ترتيب حسب',priceLabel:'السعر',modelLabel:'الموديل',modelMissing:'غير محدد',
-      shopIntro:'ابحث باسم المنتج أو الموديل، وراجع السعر قبل الاختيار.',viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'أضف للسلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',
+      shopIntro:'ابحث باسم المنتج أو الموديل، وراجع السعر قبل الاختيار.',viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'أضف للسلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',outOfStock:'نفد المخزون',
       trustProductTitle:'ابدأ بالموديل',trustProductText:'أسماء الموديلات واضحة لتسهيل المقارنة.',
       trustPriceTitle:'السعر أمامك',trustPriceText:'الأسعار المدرجة بالريال السعودي.',
       trustOrderTitle:'راجع طلبك أولًا',trustOrderText:'أنشئ ملخص الطلب وراجعه قبل مشاركته.',
@@ -56,7 +56,7 @@
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',
       sortFeatured:'Store order',sortLow:'Price: low to high',sortHigh:'Price: high to low',sortName:'Name',
       resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',sortBy:'Sort by',priceLabel:'Price',modelLabel:'Model',modelMissing:'Not specified',
-      shopIntro:'Search by product name or model, then review the listed price before choosing.',viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',
+      shopIntro:'Search by product name or model, then review the listed price before choosing.',viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',outOfStock:'Out of stock',
       trustProductTitle:'Start with the model',trustProductText:'Clear model names make comparison easier.',
       trustPriceTitle:'Prices at a glance',trustPriceText:'Listed prices are shown in Saudi riyals.',
       trustOrderTitle:'Review your request',trustOrderText:'Prepare and review an order summary before sharing it.',
@@ -168,6 +168,7 @@
       card.className = 'product-card';
       card.style.animationDelay = `${Math.min(i, 12) * 25}ms`;
       const modelText = p.model && p.model !== '—' ? p.model : t('modelMissing');
+      const available = p.inStock !== false;
       card.innerHTML = `
         <a class="product-image product-image-link" href="${detailUrl}" aria-label="${esc(t('viewProduct'))}: ${esc(name(p))}">
           ${image ? `<img data-product-image loading="lazy" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="360">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
@@ -177,9 +178,10 @@
           <div class="product-model-row"><span class="product-field-label">${esc(t('modelLabel'))}</span><span class="product-model" dir="ltr">${esc(modelText)}</span></div>
           <a class="product-title-link" href="${detailUrl}"><div class="product-name">${esc(name(p))}</div></a>
           <div class="product-price-row"><span class="price-label">${esc(t('priceLabel'))}</span><span class="price">${money(p.price)}</span></div>
+          ${available ? '' : `<div class="stock-flag is-out">${esc(t('outOfStock'))}</div>`}
           <div class="product-actions">
             <button class="product-action-btn product-action-view" data-view="${esc(p.id)}" aria-label="${esc(t('quickView'))}: ${esc(name(p))}" title="${esc(t('quickView'))}"><span>${esc(t('quickView'))}</span><span aria-hidden="true">↗</span></button>
-            <button class="product-action-btn product-action-add" data-add="${esc(p.id)}" aria-label="${esc(t('addToBag'))}: ${esc(name(p))}" title="${esc(t('addToBag'))}"><span>${esc(t('addToBag'))}</span><span aria-hidden="true">＋</span></button>
+            <button class="product-action-btn product-action-add" data-add="${esc(p.id)}" ${available ? '' : 'disabled'} aria-label="${esc(available ? t('addToBag') : t('outOfStock'))}: ${esc(name(p))}" title="${esc(available ? t('addToBag') : t('outOfStock'))}"><span>${esc(available ? t('addToBag') : t('outOfStock'))}</span><span aria-hidden="true">＋</span></button>
           </div>
         </div>`;
       grid.appendChild(card);
@@ -205,6 +207,7 @@
   function add(id){
     const product = products.find(item => item.id === id);
     if (!product) return;
+    if (product.inStock === false) { toast(t('outOfStock')); return; }
     const row = state.cart.find(item => item.id === id);
     if (row && row.qty >= 99) {
       toast(state.lang === 'ar' ? 'وصلت إلى الحد الأقصى للكمية' : 'Maximum quantity reached');
@@ -327,7 +330,10 @@
     imageWrap.dataset.placeholder=t('photoPending'); modalImage.alt=name(p);
     if(image){modalImage.src=image;modalImage.onerror=()=>{modalImage.hidden=true;imageWrap.classList.add('image-pending')};}
     else modalImage.removeAttribute('src');
-    $('#modalModel').textContent=p.model;$('#modalName').textContent=name(p);$('#modalPrice').textContent=money(p.price);openModal('productModal')
+    $('#modalModel').textContent=p.model;$('#modalName').textContent=name(p);$('#modalPrice').textContent=money(p.price);
+    $('#modalAdd').disabled = p.inStock === false;
+    $('#modalAdd').textContent = t(p.inStock === false ? 'outOfStock' : 'addToBag');
+    openModal('productModal')
   }
   function checkout(){
     if(!state.cart.length) return;
