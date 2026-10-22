@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../api/bootstrap.php';
+require_once __DIR__ . '/../api/order-schema.php';
+require_once __DIR__ . '/../api/order-domain.php';
 
 rock_start_session();
 header('X-Content-Type-Options: nosniff');
@@ -11,6 +13,8 @@ function rock_admin_row(array $row): array
     $product = rock_public_product($row);
     $product['active'] = (bool)$row['active'];
     $product['imageApproved'] = (bool)$row['image_approved'];
+    $product['stockQuantity'] = array_key_exists('stock_quantity', $row) && $row['stock_quantity'] !== null ? (int)$row['stock_quantity'] : null;
+    $product['lowStockThreshold'] = (int)($row['low_stock_threshold'] ?? 5);
     return $product;
 }
 
@@ -127,6 +131,38 @@ try {
 
     $admin = rock_require_admin();
 
+    if ($method === 'GET' && $action === 'orders') {
+        if (!rock_order_schema_ready($pdo)) {
+            rock_json(['error' => 'جداول الطلبات غير جاهزة. شغّل api/migrate-orders.php ثم احذفه.'], 503);
+        }
+        $rows = $pdo->query("SELECT o.id, o.order_number, o.status, o.payment_status, o.customer_name, o.customer_phone,
+                o.customer_city, o.customer_address, o.customer_notes, o.currency, o.subtotal, o.shipping, o.total,
+                o.created_at, o.updated_at, COUNT(i.id) AS item_count
+            FROM rock_orders o
+            LEFT JOIN rock_order_items i ON i.order_id = o.id
+            GROUP BY o.id
+            ORDER BY o.created_at DESC
+            LIMIT 200")->fetchAll();
+        rock_json(['orders' => $rows, 'count' => count($rows)]);
+    }
+
+    if ($method === 'GET' && $action === 'order_items') {
+        if (!rock_order_schema_ready($pdo)) {
+            rock_json(['error' => 'جداول الطلبات غير جاهزة.'], 503);
+        }
+        $orderId = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
+        if ($orderId === false || $orderId < 1) {
+            rock_json(['error' => 'معرّف الطلب غير صالح.'], 422);
+        }
+        $statement = $pdo->prepare('SELECT product_id, model, name_ar, name_en, unit_price, quantity, line_total
+            FROM rock_order_items WHERE order_id = ? ORDER BY id ASC');
+        $statement->execute([$orderId]);
+        $eventStatement = $pdo->prepare('SELECT actor_username, event_type, from_status, to_status, created_at
+            FROM rock_order_events WHERE order_id = ? ORDER BY created_at ASC, id ASC');
+        $eventStatement->execute([$orderId]);
+        rock_json(['items' => $statement->fetchAll(), 'events' => $eventStatement->fetchAll()]);
+    }
+
     if ($method === 'GET' && $action === 'products') {
         $rows = $pdo->query('SELECT * FROM rock_products ORDER BY active DESC, sort_order ASC, name_ar ASC')->fetchAll();
         rock_json([
@@ -145,6 +181,164 @@ try {
     }
 
     rock_check_csrf();
+
+    if ($action === 'order_shipping') {
+        if (!rock_order_schema_ready($pdo)) {
+            rock_json(['error' => 'جداول الطلبات غير جاهزة.'], 503);
+        }
+        $orderId = filter_var($_POST['order_id'] ?? null, FILTER_VALIDATE_INT);
+        $shippingText = trim((string)($_POST['shipping'] ?? ''));
+        if ($orderId === false || $orderId < 1 || !preg_match('/^\d{1,9}(?:\.\d{1,2})?$/', $shippingText)) {
+            rock_json(['error' => 'أدخل رقم طلب صالحًا ورسوم شحن حتى منزلتين عشريتين.'], 422);
+        }
+        $shippingMinor = rock_order_decimal_to_minor($shippingText);
+        $pdo->beginTransaction();
+        $read = $pdo->prepare('SELECT status, subtotal FROM rock_orders WHERE id = ? FOR UPDATE');
+        $read->execute([$orderId]);
+        $order = $read->fetch();
+        if (!is_array($order)) {
+            $pdo->rollBack();
+            rock_json(['error' => 'الطلب غير موجود.'], 404);
+        }
+        if ((string)$order['status'] !== 'new') {
+            $pdo->rollBack();
+            rock_json(['error' => 'يمكن تعديل رسوم الشحن فقط قبل تأكيد الطلب.'], 409);
+        }
+        $subtotalMinor = rock_order_decimal_to_minor($order['subtotal']);
+        $totalMinor = $subtotalMinor + $shippingMinor;
+        $update = $pdo->prepare('UPDATE rock_orders SET shipping = ?, total = ? WHERE id = ?');
+        $update->execute([
+            rock_order_minor_to_decimal($shippingMinor),
+            rock_order_minor_to_decimal($totalMinor),
+            $orderId,
+        ]);
+        $event = $pdo->prepare('INSERT INTO rock_order_events (order_id, actor_admin_id, actor_username, event_type, from_status, to_status)
+            VALUES (?, ?, ?, ?, ?, ?)');
+        $event->execute([$orderId, $admin['id'], $admin['username'], 'shipping_updated', 'new', 'new']);
+        $pdo->commit();
+        rock_json([
+            'ok' => true,
+            'id' => $orderId,
+            'shipping' => rock_order_minor_to_decimal($shippingMinor),
+            'total' => rock_order_minor_to_decimal($totalMinor),
+        ]);
+    }
+
+    if ($action === 'order_status') {
+        if (!rock_order_schema_ready($pdo)) {
+            rock_json(['error' => 'جداول الطلبات غير جاهزة. شغّل api/migrate-orders.php ثم احذفه.'], 503);
+        }
+        $orderId = filter_var($_POST['order_id'] ?? null, FILTER_VALIDATE_INT);
+        $nextStatus = trim((string)($_POST['status'] ?? ''));
+        $allowed = ['new', 'confirmed', 'preparing', 'shipped', 'delivered', 'cancelled'];
+        if ($orderId === false || $orderId < 1 || !in_array($nextStatus, $allowed, true)) {
+            rock_json(['error' => 'حالة الطلب أو معرّفه غير صالح.'], 422);
+        }
+
+        $transitions = [
+            'new' => ['confirmed', 'cancelled'],
+            'confirmed' => ['preparing', 'cancelled'],
+            'preparing' => ['shipped', 'cancelled'],
+            'shipped' => ['delivered'],
+            'delivered' => [],
+            'cancelled' => [],
+        ];
+
+        $pdo->beginTransaction();
+        $read = $pdo->prepare('SELECT status, shipping, stock_committed FROM rock_orders WHERE id = ? FOR UPDATE');
+        $read->execute([$orderId]);
+        $current = $read->fetch();
+        if (!is_array($current)) {
+            $pdo->rollBack();
+            rock_json(['error' => 'الطلب غير موجود.'], 404);
+        }
+        $fromStatus = (string)$current['status'];
+        $stockCommitted = (bool)$current['stock_committed'];
+        if ($fromStatus === $nextStatus) {
+            $pdo->commit();
+            rock_json(['ok' => true, 'id' => $orderId, 'status' => $nextStatus, 'unchanged' => true]);
+        }
+        if (!in_array($nextStatus, $transitions[$fromStatus] ?? [], true)) {
+            $pdo->rollBack();
+            rock_json(['error' => 'لا يمكن نقل الطلب من الحالة الحالية إلى الحالة المطلوبة.'], 409);
+        }
+        if ($nextStatus === 'confirmed' && $current['shipping'] === null) {
+            $pdo->rollBack();
+            rock_json(['error' => 'أدخل رسوم الشحن النهائية واحفظها قبل تأكيد الطلب.'], 409);
+        }
+
+        if ($nextStatus === 'confirmed' && !$stockCommitted) {
+            $itemsQuery = $pdo->prepare('SELECT i.id AS order_item_id, i.product_id, i.quantity, p.id AS existing_product_id, p.stock_quantity
+                FROM rock_order_items i
+                LEFT JOIN rock_products p ON p.id = i.product_id
+                WHERE i.order_id = ?
+                FOR UPDATE');
+            $itemsQuery->execute([$orderId]);
+            $stockItems = $itemsQuery->fetchAll();
+            if (!$stockItems) {
+                $pdo->rollBack();
+                rock_json(['error' => 'الطلب لا يحتوي منتجات صالحة.'], 409);
+            }
+            foreach ($stockItems as $item) {
+                if ($item['existing_product_id'] === null) {
+                    $pdo->rollBack();
+                    rock_json(['error' => 'أحد منتجات الطلب حُذف من الكتالوج. استعد المنتج أو راجع الطلب قبل التأكيد.'], 409);
+                }
+                if ($item['stock_quantity'] === null) {
+                    continue;
+                }
+                if ((int)$item['stock_quantity'] < (int)$item['quantity']) {
+                    $pdo->rollBack();
+                    rock_json(['error' => 'المخزون لا يكفي للمنتج ' . (string)$item['product_id'] . '. حدّث الكميات قبل التأكيد.'], 409);
+                }
+            }
+            $decrement = $pdo->prepare('UPDATE rock_products SET stock_quantity = stock_quantity - ? WHERE id = ? AND stock_quantity IS NOT NULL AND stock_quantity >= ?');
+            $commitItemStock = $pdo->prepare('UPDATE rock_order_items SET stock_committed_quantity = ? WHERE id = ?');
+            foreach ($stockItems as $item) {
+                if ($item['stock_quantity'] === null) {
+                    continue;
+                }
+                $quantity = (int)$item['quantity'];
+                $decrement->execute([$quantity, (string)$item['product_id'], $quantity]);
+                if ($decrement->rowCount() !== 1) {
+                    $pdo->rollBack();
+                    rock_json(['error' => 'تغير المخزون أثناء تأكيد الطلب. راجع الكمية وحاول مجددًا.'], 409);
+                }
+                $commitItemStock->execute([$quantity, (int)$item['order_item_id']]);
+            }
+            $stockCommitted = true;
+        }
+
+        $shouldRestock = $nextStatus === 'cancelled'
+            && $stockCommitted
+            && in_array($fromStatus, ['confirmed', 'preparing'], true);
+        if ($shouldRestock) {
+            $itemsQuery = $pdo->prepare('SELECT i.id AS order_item_id, i.product_id, i.stock_committed_quantity, p.id AS existing_product_id, p.stock_quantity
+                FROM rock_order_items i
+                LEFT JOIN rock_products p ON p.id = i.product_id
+                WHERE i.order_id = ?
+                FOR UPDATE');
+            $itemsQuery->execute([$orderId]);
+            $restock = $pdo->prepare('UPDATE rock_products SET stock_quantity = stock_quantity + ? WHERE id = ? AND stock_quantity IS NOT NULL');
+            $clearItemStock = $pdo->prepare('UPDATE rock_order_items SET stock_committed_quantity = 0 WHERE id = ?');
+            foreach ($itemsQuery->fetchAll() as $item) {
+                $committedQuantity = (int)$item['stock_committed_quantity'];
+                if ($committedQuantity > 0 && $item['existing_product_id'] !== null && $item['stock_quantity'] !== null) {
+                    $restock->execute([$committedQuantity, (string)$item['product_id']]);
+                }
+                $clearItemStock->execute([(int)$item['order_item_id']]);
+            }
+            $stockCommitted = false;
+        }
+
+        $update = $pdo->prepare('UPDATE rock_orders SET status = ?, stock_committed = ? WHERE id = ?');
+        $update->execute([$nextStatus, $stockCommitted ? 1 : 0, $orderId]);
+        $event = $pdo->prepare('INSERT INTO rock_order_events (order_id, actor_admin_id, actor_username, event_type, from_status, to_status)
+            VALUES (?, ?, ?, ?, ?, ?)');
+        $event->execute([$orderId, $admin['id'], $admin['username'], 'status_changed', $fromStatus, $nextStatus]);
+        $pdo->commit();
+        rock_json(['ok' => true, 'id' => $orderId, 'status' => $nextStatus, 'stockCommitted' => $stockCommitted]);
+    }
 
     if ($action === 'delete') {
         $id = (string)($_POST['id'] ?? '');
@@ -177,6 +371,22 @@ try {
     $descriptionEn = trim((string)($_POST['description_en'] ?? ''));
     $picturesUrl = trim((string)($_POST['pictures_url'] ?? ''));
     $requestedActive = (string)($_POST['active'] ?? '0') === '1';
+    $stockText = trim((string)($_POST['stock_quantity'] ?? ''));
+    $thresholdText = trim((string)($_POST['low_stock_threshold'] ?? '5'));
+    $stockQuantity = null;
+    if ($stockText !== '') {
+        if (!preg_match('/^\d{1,7}$/', $stockText) || (int)$stockText > 1000000) {
+            rock_json(['error' => 'أدخل كمية مخزون صحيحة حتى مليون وحدة، أو اترك الحقل فارغًا لتعطيل تتبع المخزون.'], 422);
+        }
+        $stockQuantity = (int)$stockText;
+    }
+    if ($thresholdText === '') {
+        $thresholdText = '5';
+    }
+    if (!preg_match('/^\d{1,7}$/', $thresholdText) || (int)$thresholdText > 1000000) {
+        rock_json(['error' => 'حد التنبيه للمخزون غير صالح.'], 422);
+    }
+    $lowStockThreshold = (int)$thresholdText;
 
     if (!preg_match('/^[a-zA-Z0-9_-]{2,80}$/', $id)) {
         rock_json(['error' => 'معرّف المنتج يجب أن يحتوي على أحرف أو أرقام أو شرطة فقط.'], 422);
@@ -263,9 +473,9 @@ try {
 
     $sortOrder = $existing ? (int)$existing['sort_order'] : ((int)$pdo->query('SELECT COALESCE(MAX(sort_order), 0) + 10 FROM rock_products')->fetchColumn());
     $sql = 'INSERT INTO rock_products
-      (id, barcode, model, category, price, image, name_ar, name_en, description_en, pictures_url, images_json, active, image_approved, sort_order)
-      VALUES (:id, :barcode, :model, :category, :price, :image, :name_ar, :name_en, :description_en, :pictures_url, :images_json, :active, :image_approved, :sort_order)
-      ON DUPLICATE KEY UPDATE barcode = VALUES(barcode), model = VALUES(model), category = VALUES(category), price = VALUES(price), image = VALUES(image), name_ar = VALUES(name_ar), name_en = VALUES(name_en), description_en = VALUES(description_en), pictures_url = VALUES(pictures_url), images_json = VALUES(images_json), active = VALUES(active), image_approved = VALUES(image_approved), sort_order = VALUES(sort_order)';
+      (id, barcode, model, category, price, image, name_ar, name_en, description_en, pictures_url, images_json, active, image_approved, sort_order, stock_quantity, low_stock_threshold)
+      VALUES (:id, :barcode, :model, :category, :price, :image, :name_ar, :name_en, :description_en, :pictures_url, :images_json, :active, :image_approved, :sort_order, :stock_quantity, :low_stock_threshold)
+      ON DUPLICATE KEY UPDATE barcode = VALUES(barcode), model = VALUES(model), category = VALUES(category), price = VALUES(price), image = VALUES(image), name_ar = VALUES(name_ar), name_en = VALUES(name_en), description_en = VALUES(description_en), pictures_url = VALUES(pictures_url), images_json = VALUES(images_json), active = VALUES(active), image_approved = VALUES(image_approved), sort_order = VALUES(sort_order), stock_quantity = VALUES(stock_quantity), low_stock_threshold = VALUES(low_stock_threshold)';
     try {
         $save = $pdo->prepare($sql);
         $save->execute([
@@ -283,6 +493,8 @@ try {
             ':active' => $requestedActive ? 1 : 0,
             ':image_approved' => $imageApproved ? 1 : 0,
             ':sort_order' => $sortOrder,
+            ':stock_quantity' => $stockQuantity,
+            ':low_stock_threshold' => $lowStockThreshold,
         ]);
     } catch (Throwable $error) {
         if ($uploadedRelative !== '') {

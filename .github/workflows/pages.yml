@@ -34,6 +34,12 @@ jobs:
       - name: Validate source and catalog
         run: |
           php -l api/bootstrap.php
+          php -l api/order-domain.php
+          php -l api/order-schema.php
+          php -l api/orders.php
+          php -l api/migrate-orders.php
+          php -l scripts/test_order_domain.php
+          php scripts/test_order_domain.php
           php -l api/image-quality.php
           php -l api/products.php
           php -l api/install.php
@@ -126,6 +132,12 @@ jobs:
       - name: Validate generated storefront
         run: |
           php -l api/bootstrap.php
+          php -l api/order-domain.php
+          php -l api/order-schema.php
+          php -l api/orders.php
+          php -l api/migrate-orders.php
+          php -l scripts/test_order_domain.php
+          php scripts/test_order_domain.php
           php -l api/image-quality.php
           php -l api/products.php
           php -l api/install.php

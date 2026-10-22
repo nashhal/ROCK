@@ -52,6 +52,8 @@ if (!$configured) {
     </section>
 
     <section id="dashboard" hidden>
+      <div class="view-switcher" role="tablist" aria-label="مساحة الإدارة"><button class="view-tab active" type="button" role="tab" aria-selected="true" data-admin-view="products">المنتجات والكتالوج</button><button class="view-tab" type="button" role="tab" aria-selected="false" data-admin-view="orders">الطلبات</button></div>
+      <div id="productsView">
       <div class="page-heading"><div><span class="kicker">ROCK / CATALOG</span><h1>إدارة المنتجات</h1><p>عدّل الأسعار والأسماء والصور، ثم احفظ ليظهر التغيير في المتجر.</p></div><button id="newProductButton" class="btn btn-primary" type="button">＋ إضافة منتج</button></div>
       <div class="stats">
         <article class="stat"><span>إجمالي المنتجات</span><strong id="totalCount">—</strong></article>
@@ -61,8 +63,19 @@ if (!$configured) {
       <section class="catalog-panel">
         <div class="table-toolbar"><label class="search-label" for="searchProducts">بحث بالاسم أو الموديل أو الباركود</label><input id="searchProducts" type="search" placeholder="ابحث في الكتالوج…"><button id="refreshButton" class="btn btn-quiet" type="button">تحديث</button></div>
         <div id="catalogMessage" class="form-message" role="status" aria-live="polite"></div>
-        <div class="table-scroll"><table><thead><tr><th>الصورة</th><th>الموديل</th><th>اسم المنتج</th><th>السعر</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="productsBody"></tbody></table></div>
+        <div class="table-scroll"><table><thead><tr><th>الصورة</th><th>الموديل</th><th>اسم المنتج</th><th>السعر</th><th>المخزون</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="productsBody"></tbody></table></div>
         <p class="table-note">لن يظهر المنتج للزوار إلا إذا كان مفعّلًا وصورته الرئيسية واضحة بخلفية بيضاء.</p>
+      </section>
+      </div>
+      <section id="ordersView" hidden>
+        <div class="page-heading"><div><span class="kicker">ROCK / ORDERS</span><h1>طلبات المتجر</h1><p>طلبات العملاء المسجلة على قاعدة البيانات، مع انتقالات حالة موثّقة. لا يتم تحديث حالة الدفع من هذه اللوحة.</p></div><button id="refreshOrdersButton" class="btn btn-quiet" type="button">تحديث الطلبات</button></div>
+        <div class="stats"><article class="stat"><span>إجمالي الطلبات</span><strong id="ordersTotalCount">—</strong></article><article class="stat"><span>بانتظار المراجعة</span><strong id="ordersNewCount">—</strong></article><article class="stat"><span>طلبات اليوم (UTC)</span><strong id="ordersTodayCount">—</strong></article></div>
+        <section class="catalog-panel">
+          <div class="table-toolbar"><label class="search-label" for="searchOrders">بحث برقم الطلب أو العميل أو الجوال</label><input id="searchOrders" type="search" placeholder="ابحث في الطلبات…"><button id="refreshOrdersInline" class="btn btn-quiet" type="button">تحديث</button></div>
+          <div id="ordersMessage" class="form-message" role="status" aria-live="polite"></div>
+          <div class="table-scroll"><table><thead><tr><th>رقم الطلب</th><th>العميل</th><th>الجوال</th><th>العناصر</th><th>الإجمالي</th><th>التاريخ</th><th>الحالة</th><th>التفاصيل</th></tr></thead><tbody id="ordersBody"></tbody></table></div>
+          <p class="table-note">حالة الطلب لا تعني تأكيد الدفع. الدفع والشحن غير مربوطين بمزودين فعليين في هذه النسخة.</p>
+        </section>
       </section>
     </section>
   </main>
@@ -78,6 +91,8 @@ if (!$configured) {
           <label>الباركود <input name="barcode" maxlength="80" placeholder="اختياري"></label>
           <label>التصنيف <select name="category" required><option value="power">الشحن والطاقة</option><option value="audio">الصوت والسماعات</option><option value="car">إكسسوارات السيارة</option><option value="lifestyle">إكسسوارات يومية</option></select></label>
           <label>السعر (ر.س) <input name="price" type="number" inputmode="decimal" min="0" max="999999999" step="0.01" required></label>
+          <label>كمية المخزون (اختياري) <input name="stock_quantity" type="number" inputmode="numeric" min="0" max="1000000" step="1"><small>اتركه فارغًا إذا لم تكن تتتبع مخزون هذا المنتج.</small></label>
+          <label>حد تنبيه انخفاض المخزون <input name="low_stock_threshold" type="number" inputmode="numeric" min="0" max="1000000" step="1" value="5" required></label>
           <label>الاسم بالعربية <input name="name_ar" required maxlength="255"></label>
           <label class="wide-field">الاسم بالإنجليزية <input name="name_en" required maxlength="255"></label>
           <label class="wide-field">وصف مختصر بالإنجليزية <textarea name="description_en" rows="2" maxlength="12000"></textarea></label>
@@ -90,6 +105,7 @@ if (!$configured) {
       </form>
     </section>
   </div>
+  <div id="orderDetailDialog" class="dialog-wrap" hidden><div class="dialog-backdrop" data-close-order-dialog></div><section class="product-dialog order-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="orderDetailTitle"><div class="dialog-header"><div><span class="kicker">ROCK / ORDER</span><h2 id="orderDetailTitle">تفاصيل الطلب</h2></div><button type="button" class="icon-button" data-close-order-dialog aria-label="إغلاق">×</button></div><div id="orderDetailBody" class="order-detail-body"></div><div class="dialog-actions"><button type="button" class="btn btn-quiet" data-close-order-dialog>إغلاق</button></div></section></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <footer><span>ROCK — فجر جديد مع روك</span><span>لوحة إدارة محمية · لا يوجد دفع إلكتروني ضمن هذه اللوحة</span></footer>
 </body>

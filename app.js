@@ -25,7 +25,7 @@
   function storageGet(key, fallback=''){ try { const value = localStorage.getItem(key); return value === null ? fallback : value; } catch { return fallback; } }
   function storageSet(key, value){ try { localStorage.setItem(key, value); return true; } catch { return false; } }
   const initialLang = storageGet('rock-lang', 'ar');
-  const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', minPrice: '', maxPrice: '', cart: safeCart(), activeProduct: null };
+  const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', minPrice: '', maxPrice: '', cart: safeCart(), activeProduct: null, orderKey: '', orderSubmitted: false };
   let cartReturnFocus = null;
   let modalReturnFocus = null;
 
@@ -38,15 +38,15 @@
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
       sortFeatured:'ترتيب المتجر',sortLow:'السعر: من الأقل للأعلى',sortHigh:'السعر: من الأعلى للأقل',sortName:'الاسم',
       resultsPrefix:'عدد النتائج:',priceRange:'نطاق السعر',minPrice:'من',maxPrice:'إلى',clearFilters:'مسح الفلاتر',sortBy:'ترتيب حسب',priceLabel:'السعر',modelLabel:'الموديل',modelMissing:'غير محدد',
-      shopIntro:'ابحث باسم المنتج أو الموديل، وراجع السعر قبل الاختيار.',viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'أضف للسلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',
+      shopIntro:'ابحث باسم المنتج أو الموديل، وراجع السعر قبل الاختيار.',viewProduct:'عرض المنتج',quickView:'نظرة سريعة',addToBag:'أضف للسلة',details:'التفاصيل',photoPending:'صورة المنتج قيد التجهيز',outOfStock:'نفد المخزون',
       trustProductTitle:'ابدأ بالموديل',trustProductText:'أسماء الموديلات واضحة لتسهيل المقارنة.',
       trustPriceTitle:'السعر أمامك',trustPriceText:'الأسعار المدرجة بالريال السعودي.',
       trustOrderTitle:'راجع طلبك أولًا',trustOrderText:'أنشئ ملخص الطلب وراجعه قبل مشاركته.',
       storeInfo:'معلومات المتجر',customerNameLabel:'الاسم',customerPhoneLabel:'رقم الجوال',customerCityLabel:'المدينة',
       customerAddressLabel:'العنوان أو نقطة الاستلام',customerNotesLabel:'ملاحظات (اختياري)',orderSummaryLabel:'ملخص الطلب',
       orderPrivacy:'لن تُرسل بياناتك تلقائيًا. عند النسخ أو المشاركة ستتضمن الرسالة البيانات التي أدخلتها؛ راجع المحتوى واختر الجهة المستلمة بنفسك. لا يوجد دفع إلكتروني.',
-      orderHeader:'طلب ROCK',customer:'العميل',phone:'الجوال',city:'المدينة',address:'العنوان/الاستلام',notes:'ملاحظات',copyFailed:'تعذّر النسخ. حدّد النص وانسخه يدويًا.',
-      announcement:'ROCK | فجر جديد مع روك',shop:'المتجر',collections:'التصنيفات',story:'عن ROCK',bag:'السلة',eyebrow:'إكسسوارات تقنية ليومك',hero1:'فجر جديد',hero2:'مع روك.',heroText:'تصفّح إكسسوارات ROCK للشحن والصوت والسيارة، وقارن الموديلات والأسعار في مكان واحد.',shopNow:'تصفّح المنتجات',featuredBtn:'استكشف الفئات',products:'منتجًا',categories:'فئات',currency:'بالريال السعودي',catalog:'الكتالوج',shopTitle:'اختر ما يناسبك من ROCK',filter:'تصفية',collectionsLabel:'المجموعات',collectionsTitle:'تصفّح حسب الفئة',collectionsNote:'من المكتب إلى الطريق',powerText:'الشحن والطاقة',audioText:'السماعات والصوت',driveText:'ملحقات للسيارة',lifeText:'إكسسوارات يومية',storyTitle:'اختيار أوضح. استخدام أسهل.',storyText:'نعرض موديل المنتج وسعره بوضوح، لتتمكن من المقارنة واختيار ما تحتاجه دون تعقيد.',backTop:'العودة للبداية ↗',clearCart:'تفريغ السلة',bagTitle:'سلتك',total:'الإجمالي',checkout:'تجهيز الطلب',continue:'متابعة التسوق',addCart:'أضف إلى السلة',orderTitle:'طلبك جاهز',orderText:'راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.',copyOrder:'نسخ تفاصيل الطلب',shareOrder:'مشاركة الطلب',shared:'تمت مشاركة تفاصيل الطلب',orderConfirmationLabel:'أؤكد أنني راجعت الملخص وأفهم أنه ليس طلبًا مؤكدًا، وأن السعر والتوفر والتوصيل تحتاج إلى تأكيد.',done:'تم',noResults:'لا توجد نتائج',noResultsSub:'جرّب كلمة بحث أو تصنيفًا آخر',added:'تمت الإضافة إلى السلة',cleared:'تم تفريغ السلة',copied:'تم نسخ تفاصيل الطلب',empty:'السلة فارغة',emptyCartText:'لا توجد منتجات في السلة بعد. أضف منتجًا للمتابعة.',increaseQty:'زيادة الكمية',decreaseQty:'تقليل الكمية',closeDialog:'إغلاق النافذة',navigationMenu:'قائمة التنقل',sar:'ر.س'
+      shippingNote:'الشحن والدفع غير محسوبين في هذا الملخص.',orderHeader:'طلب ROCK',customer:'العميل',phone:'الجوال',city:'المدينة',address:'العنوان/الاستلام',notes:'ملاحظات',copyFailed:'تعذّر النسخ. حدّد النص وانسخه يدويًا.',submitOrder:'تسجيل الطلب',orderReceived:'تم تسجيل طلبك مبدئيًا برقم:',orderSaved:'تم التسجيل',orderNotFinal:'لم يتم تأكيد الدفع أو التوصيل؛ سيتواصل المتجر لتأكيد التفاصيل.',orderPrivacyLive:'سيُرسل زر «تسجيل الطلب» بياناتك إلى قاعدة بيانات المتجر لاستلام الطلب. لا يوجد دفع إلكتروني، ويجب تأكيد التوفر والشحن والسعر النهائي.',
+      announcement:'ROCK | فجر جديد مع روك',shop:'المتجر',collections:'التصنيفات',story:'عن ROCK',bag:'السلة',eyebrow:'إكسسوارات تقنية ليومك',hero1:'فجر جديد',hero2:'مع روك.',heroText:'تصفّح إكسسوارات ROCK للشحن والصوت والسيارة، وقارن الموديلات والأسعار في مكان واحد.',shopNow:'تصفّح المنتجات',featuredBtn:'استكشف الفئات',products:'منتجًا',categories:'فئات',currency:'بالريال السعودي',catalog:'الكتالوج',shopTitle:'اختر ما يناسبك من ROCK',filter:'تصفية',collectionsLabel:'المجموعات',collectionsTitle:'تصفّح حسب الفئة',collectionsNote:'من المكتب إلى الطريق',powerText:'الشحن والطاقة',audioText:'السماعات والصوت',driveText:'ملحقات للسيارة',lifeText:'إكسسوارات يومية',storyTitle:'اختيار أوضح. استخدام أسهل.',storyText:'نعرض موديل المنتج وسعره بوضوح، لتتمكن من المقارنة واختيار ما تحتاجه دون تعقيد.',backTop:'العودة للبداية ↗',clearCart:'تفريغ السلة',bagTitle:'سلتك',total:'مجموع المنتجات',productsSubtotal:'مجموع المنتجات قبل الشحن',checkout:'تجهيز الطلب',continue:'متابعة التسوق',addCart:'أضف إلى السلة',orderTitle:'طلبك جاهز',orderText:'راجع التفاصيل ثم انسخ الطلب لإرساله عبر القناة التي تستخدمها.',copyOrder:'نسخ تفاصيل الطلب',shareOrder:'مشاركة الطلب',shared:'تمت مشاركة تفاصيل الطلب',orderConfirmationLabel:'أؤكد أنني راجعت الملخص وأفهم أنه ليس طلبًا مؤكدًا، وأن السعر والتوفر والتوصيل تحتاج إلى تأكيد.',done:'تم',noResults:'لا توجد نتائج',noResultsSub:'جرّب كلمة بحث أو تصنيفًا آخر',added:'تمت الإضافة إلى السلة',cleared:'تم تفريغ السلة',copied:'تم نسخ تفاصيل الطلب',empty:'السلة فارغة',emptyCartText:'لا توجد منتجات في السلة بعد. أضف منتجًا للمتابعة.',increaseQty:'زيادة الكمية',decreaseQty:'تقليل الكمية',closeDialog:'إغلاق النافذة',navigationMenu:'قائمة التنقل',sar:'ر.س'
     },
     en: {
       pageTitle:'ROCK | Charging, audio and car accessories',
@@ -56,15 +56,15 @@
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',
       sortFeatured:'Store order',sortLow:'Price: low to high',sortHigh:'Price: high to low',sortName:'Name',
       resultsPrefix:'Results:',priceRange:'Price range',minPrice:'Min',maxPrice:'Max',clearFilters:'Clear filters',sortBy:'Sort by',priceLabel:'Price',modelLabel:'Model',modelMissing:'Not specified',
-      shopIntro:'Search by product name or model, then review the listed price before choosing.',viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',
+      shopIntro:'Search by product name or model, then review the listed price before choosing.',viewProduct:'View product',quickView:'Quick view',addToBag:'Add to bag',details:'Details',photoPending:'Product photo pending',outOfStock:'Out of stock',
       trustProductTitle:'Start with the model',trustProductText:'Clear model names make comparison easier.',
       trustPriceTitle:'Prices at a glance',trustPriceText:'Listed prices are shown in Saudi riyals.',
       trustOrderTitle:'Review your request',trustOrderText:'Prepare and review an order summary before sharing it.',
       storeInfo:'Store information',customerNameLabel:'Name',customerPhoneLabel:'Mobile number',customerCityLabel:'City',
       customerAddressLabel:'Address or pickup point',customerNotesLabel:'Notes (optional)',orderSummaryLabel:'Order summary',
       orderPrivacy:'Your details are not sent automatically. Copying or sharing includes the information you entered in the message; review its contents and choose the recipient yourself. No online payment is processed.',
-      orderHeader:'ROCK order request',customer:'Customer',phone:'Mobile',city:'City',address:'Address/pickup',notes:'Notes',copyFailed:'Could not copy. Select the text and copy it manually.',
-      announcement:'ROCK | A new dawn with ROCK',shop:'Shop',collections:'Collections',story:'About ROCK',bag:'Bag',eyebrow:'Everyday tech essentials',hero1:'A new dawn',hero2:'with ROCK.',heroText:'Explore ROCK charging, audio and car accessories. Compare model names and listed prices in one place.',shopNow:'Browse products',featuredBtn:'Explore categories',products:'products',categories:'categories',currency:'Saudi riyals',catalog:'catalog',shopTitle:'Find your ROCK essentials',filter:'Filter',collectionsLabel:'collections',collectionsTitle:'Browse by category',collectionsNote:'From desk to road',powerText:'Charging and power',audioText:'Audio accessories',driveText:'Car accessories',lifeText:'Everyday accessories',storyTitle:'Clear choices. Easier everyday use.',storyText:'Product model names and listed prices are presented clearly, so you can compare options and choose what you need without extra clutter.',backTop:'Back to top ↗',clearCart:'Clear bag',bagTitle:'Your bag',total:'Total',checkout:'Prepare order',continue:'Continue shopping',addCart:'Add to bag',orderTitle:'Your order is ready',orderText:'Review the details, then copy the order to send through your preferred channel.',copyOrder:'Copy order details',shareOrder:'Share order',shared:'Order details shared',orderConfirmationLabel:'I have reviewed this summary and understand it is not a confirmed order; price, availability and delivery must be confirmed.',done:'Done',noResults:'No results',noResultsSub:'Try another search or category.',added:'Added to bag',cleared:'Bag cleared',copied:'Order details copied',empty:'Your bag is empty',emptyCartText:'Your bag is empty for now. Add a product to continue.',increaseQty:'Increase quantity',decreaseQty:'Decrease quantity',closeDialog:'Close dialog',navigationMenu:'Navigation menu',sar:'SAR'
+      shippingNote:'Shipping and payment are not included in this summary.',orderHeader:'ROCK order request',customer:'Customer',phone:'Mobile',city:'City',address:'Address/pickup',notes:'Notes',copyFailed:'Could not copy. Select the text and copy it manually.',submitOrder:'Submit order request',orderReceived:'Your request was recorded with reference:',orderSaved:'Recorded',orderNotFinal:'Payment and delivery are not confirmed; the store must verify the details.',orderPrivacyLive:'Submit order sends your details to the store database. Online payment is not enabled; stock, shipping, and the final total still need confirmation.',
+      announcement:'ROCK | A new dawn with ROCK',shop:'Shop',collections:'Collections',story:'About ROCK',bag:'Bag',eyebrow:'Everyday tech essentials',hero1:'A new dawn',hero2:'with ROCK.',heroText:'Explore ROCK charging, audio and car accessories. Compare model names and listed prices in one place.',shopNow:'Browse products',featuredBtn:'Explore categories',products:'products',categories:'categories',currency:'Saudi riyals',catalog:'catalog',shopTitle:'Find your ROCK essentials',filter:'Filter',collectionsLabel:'collections',collectionsTitle:'Browse by category',collectionsNote:'From desk to road',powerText:'Charging and power',audioText:'Audio accessories',driveText:'Car accessories',lifeText:'Everyday accessories',storyTitle:'Clear choices. Easier everyday use.',storyText:'Product model names and listed prices are presented clearly, so you can compare options and choose what you need without extra clutter.',backTop:'Back to top ↗',clearCart:'Clear bag',bagTitle:'Your bag',total:'Products subtotal',productsSubtotal:'Products subtotal (before shipping)',checkout:'Prepare order',continue:'Continue shopping',addCart:'Add to bag',orderTitle:'Your order is ready',orderText:'Review the details, then copy the order to send through your preferred channel.',copyOrder:'Copy order details',shareOrder:'Share order',shared:'Order details shared',orderConfirmationLabel:'I have reviewed this summary and understand it is not a confirmed order; price, availability and delivery must be confirmed.',done:'Done',noResults:'No results',noResultsSub:'Try another search or category.',added:'Added to bag',cleared:'Bag cleared',copied:'Order details copied',empty:'Your bag is empty',emptyCartText:'Your bag is empty for now. Add a product to continue.',increaseQty:'Increase quantity',decreaseQty:'Decrease quantity',closeDialog:'Close dialog',navigationMenu:'Navigation menu',sar:'SAR'
     }
   };
 
@@ -129,8 +129,15 @@
     $('#maxPrice').placeholder = state.lang === 'ar' ? 'إلى' : 'Max';
     $('#minPrice').setAttribute('aria-label', state.lang === 'ar' ? 'أقل سعر بالريال السعودي' : 'Minimum price in Saudi riyals');
     $('#maxPrice').setAttribute('aria-label', state.lang === 'ar' ? 'أعلى سعر بالريال السعودي' : 'Maximum price in Saudi riyals');
+    updateOrderModeLabels();
     render();
     renderCart();
+  }
+  function updateOrderModeLabels(){
+    const shareButton=$('#shareOrder');
+    if(shareButton)shareButton.textContent=state.orderSubmitted?t('orderSaved'):(liveCatalog?t('submitOrder'):t('shareOrder'));
+    const privacy=$('.order-privacy-note span');
+    if(privacy)privacy.textContent=liveCatalog?t('orderPrivacyLive'):t('orderPrivacy');
   }
   function filtered(){
     const q=state.query.trim().toLowerCase();
@@ -161,6 +168,7 @@
       card.className = 'product-card';
       card.style.animationDelay = `${Math.min(i, 12) * 25}ms`;
       const modelText = p.model && p.model !== '—' ? p.model : t('modelMissing');
+      const available = p.inStock !== false;
       card.innerHTML = `
         <a class="product-image product-image-link" href="${detailUrl}" aria-label="${esc(t('viewProduct'))}: ${esc(name(p))}">
           ${image ? `<img data-product-image loading="lazy" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="360">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
@@ -170,9 +178,10 @@
           <div class="product-model-row"><span class="product-field-label">${esc(t('modelLabel'))}</span><span class="product-model" dir="ltr">${esc(modelText)}</span></div>
           <a class="product-title-link" href="${detailUrl}"><div class="product-name">${esc(name(p))}</div></a>
           <div class="product-price-row"><span class="price-label">${esc(t('priceLabel'))}</span><span class="price">${money(p.price)}</span></div>
+          ${available ? '' : `<div class="stock-flag is-out">${esc(t('outOfStock'))}</div>`}
           <div class="product-actions">
             <button class="product-action-btn product-action-view" data-view="${esc(p.id)}" aria-label="${esc(t('quickView'))}: ${esc(name(p))}" title="${esc(t('quickView'))}"><span>${esc(t('quickView'))}</span><span aria-hidden="true">↗</span></button>
-            <button class="product-action-btn product-action-add" data-add="${esc(p.id)}" aria-label="${esc(t('addToBag'))}: ${esc(name(p))}" title="${esc(t('addToBag'))}"><span>${esc(t('addToBag'))}</span><span aria-hidden="true">＋</span></button>
+            <button class="product-action-btn product-action-add" data-add="${esc(p.id)}" ${available ? '' : 'disabled'} aria-label="${esc(available ? t('addToBag') : t('outOfStock'))}: ${esc(name(p))}" title="${esc(available ? t('addToBag') : t('outOfStock'))}"><span>${esc(available ? t('addToBag') : t('outOfStock'))}</span><span aria-hidden="true">＋</span></button>
           </div>
         </div>`;
       grid.appendChild(card);
@@ -198,6 +207,7 @@
   function add(id){
     const product = products.find(item => item.id === id);
     if (!product) return;
+    if (product.inStock === false) { toast(t('outOfStock')); return; }
     const row = state.cart.find(item => item.id === id);
     if (row && row.qty >= 99) {
       toast(state.lang === 'ar' ? 'وصلت إلى الحد الأقصى للكمية' : 'Maximum quantity reached');
@@ -234,14 +244,15 @@
       const cartImage=safeImage(p.image);
       const decreaseLabel=esc(t('decreaseQty')+' '+name(p));
       const increaseLabel=esc(t('increaseQty')+' '+name(p));
+      const available = p.inStock !== false;
       row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}" loading="lazy" width="76" height="76">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}
         <div>
           <h4>${esc(name(p))}</h4>
-          <p>${esc(p.model)} · ${money(p.price)}</p>
+          <p>${esc(p.model)} · ${money(p.price)}${available ? '' : ' · '+esc(t('outOfStock'))}</p>
           <div class="qty">
             <button type="button" data-dec="${esc(p.id)}" aria-label="${decreaseLabel}">−</button>
             <span aria-live="polite" aria-atomic="true">${item.qty}</span>
-            <button type="button" data-inc="${esc(p.id)}" aria-label="${increaseLabel}" ${item.qty>=99?'disabled':''}>+</button>
+            <button type="button" data-inc="${esc(p.id)}" aria-label="${increaseLabel}" ${item.qty>=99||!available?'disabled':''}>+</button>
           </div>
         </div>
         <strong>${money(p.price*item.qty)}</strong>`;
@@ -258,7 +269,7 @@
     wrap.querySelectorAll('[data-inc]').forEach(button=>button.onclick=()=>changeQty(button.dataset.inc,1));
     $('#cartTotal').textContent=money(total);
   }
-  function changeQty(id,d){const row=state.cart.find(x=>x.id===id);if(!row)return;row.qty=Math.min(99,row.qty+d);if(row.qty<=0)state.cart=state.cart.filter(x=>x.id!==id);persist();renderCart()}
+  function changeQty(id,d){const row=state.cart.find(x=>x.id===id);if(!row)return;const product=products.find(x=>x.id===id);if(d>0&&product?.inStock===false){toast(t('outOfStock'));return;}row.qty=Math.min(99,row.qty+d);if(row.qty<=0)state.cart=state.cart.filter(x=>x.id!==id);persist();renderCart()}
   function openCart(){
     const drawer=$('#cartDrawer');
     if(!drawer.classList.contains('open'))cartReturnFocus=document.activeElement;
@@ -320,11 +331,20 @@
     imageWrap.dataset.placeholder=t('photoPending'); modalImage.alt=name(p);
     if(image){modalImage.src=image;modalImage.onerror=()=>{modalImage.hidden=true;imageWrap.classList.add('image-pending')};}
     else modalImage.removeAttribute('src');
-    $('#modalModel').textContent=p.model;$('#modalName').textContent=name(p);$('#modalPrice').textContent=money(p.price);openModal('productModal')
+    $('#modalModel').textContent=p.model;$('#modalName').textContent=name(p);$('#modalPrice').textContent=money(p.price);
+    $('#modalAdd').disabled = p.inStock === false;
+    $('#modalAdd').textContent = t(p.inStock === false ? 'outOfStock' : 'addToBag');
+    openModal('productModal')
   }
   function checkout(){
     if(!state.cart.length) return;
+    if(state.cart.some(item => products.find(product => product.id === item.id)?.inStock === false)) { toast(t('outOfStock')); return; }
     $('#orderDetailsForm').reset();
+    state.orderKey = (globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function') ? globalThis.crypto.randomUUID() : ('rock-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+    state.orderSubmitted = false;
+    $('#shareOrder').disabled = false;
+    $('#copyOrder').disabled = false;
+    updateOrderModeLabels();
     $('#orderText').value = buildOrderText(true);
     closeCart();
     openModal('checkoutModal');
@@ -342,7 +362,7 @@
       total += lineTotal;
       return `${name(p)} | ${p.model} | ${item.qty} × ${money(p.price)} = ${money(lineTotal)}`;
     }).filter(Boolean);
-    const parts = [t('orderHeader'), ...lines, '----------------', `${t('total')}: ${money(total)}`];
+    const parts = [t('orderHeader'), ...lines, '----------------', `${t('productsSubtotal')}: ${money(total)}`, t('shippingNote')];
     if(includeCustomer){
       parts.push('----------------');
       parts.push(`${t('customer')}: ${$('#customerName').value.trim()}`);
@@ -372,8 +392,51 @@
       else toast(t('copyFailed'));
     } catch { toast(t('copyFailed')); }
   }
+  async function submitOrder(){
+    const form=$('#orderDetailsForm');
+    if(state.orderSubmitted)return;
+    if(!form.checkValidity()){form.reportValidity();return;}
+    if(!liveCatalog){toast(t('orderPrivacy'));return;}
+    const button=$('#shareOrder');
+    button.disabled=true;
+    const formData=new FormData(form);
+    const payload={
+      customerName:String(formData.get('customerName')||''),
+      customerPhone:String(formData.get('customerPhone')||''),
+      customerCity:String(formData.get('customerCity')||''),
+      customerAddress:String(formData.get('customerAddress')||''),
+      customerNotes:String(formData.get('customerNotes')||''),
+      website:String(formData.get('website')||''),
+      confirmation:formData.get('orderConfirmation')==='on',
+      idempotencyKey:state.orderKey,
+      items:state.cart.map(item=>({id:item.id,qty:item.qty}))
+    };
+    try{
+      const response=await fetch(new URL('api/orders.php',document.baseURI).toString(),{
+        method:'POST',credentials:'same-origin',cache:'no-store',
+        headers:{Accept:'application/json','Content-Type':'application/json','Idempotency-Key':state.orderKey},
+        body:JSON.stringify(payload)
+      });
+      const type=(response.headers.get('content-type')||'').toLowerCase();
+      const result=type.includes('application/json')?await response.json():{};
+      if(!response.ok||result.ok!==true)throw new Error(result.error||'تعذر تسجيل الطلب؛ لم يتم تأكيد استلامه.');
+      state.orderSubmitted=true;
+      state.cart=[];
+      persist();
+      renderCart();
+      $('#orderText').value=[t('orderReceived')+' '+result.orderNumber,t('orderNotFinal'),t('productsSubtotal')+': '+money(result.subtotal)].join('\n');
+      button.disabled=true;
+      $('#copyOrder').disabled=false;
+      updateOrderModeLabels();
+      toast(t('orderReceived')+' '+result.orderNumber);
+    }catch(error){
+      button.disabled=false;
+      toast(error && error.message ? error.message : 'تعذر تسجيل الطلب؛ لم يتم تأكيد استلامه.');
+    }
+  }
   async function shareOrder(){
     const form = $('#orderDetailsForm');
+    if(liveCatalog){await submitOrder();return;}
     if(!form.checkValidity()){ form.reportValidity(); return; }
     const text = buildOrderText(true);
     $('#orderText').value = text;
@@ -411,7 +474,7 @@
   if(scrollTopButton)scrollTopButton.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
   const clearCartButton=$('#clearCartBtn');
   if(clearCartButton)clearCartButton.onclick=()=>{state.cart=[];persist();renderCart();toast(t('cleared'))};
-  $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#shareOrder').onclick=shareOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value=''};$('#modalAdd').onclick=()=>{if(state.activeProduct)add(state.activeProduct.id);closeModals()};
+  $('#checkoutBtn').onclick=checkout;$('#copyOrder').onclick=copyOrder;$('#shareOrder').onclick=shareOrder;$('#doneOrder').onclick=()=>{closeModals();$('#orderDetailsForm').reset();$('#orderText').value='';state.orderKey='';state.orderSubmitted=false;updateOrderModeLabels()};$('#modalAdd').onclick=()=>{if(state.activeProduct)add(state.activeProduct.id);closeModals()};
   $$('[data-close-modal]').forEach(b=>b.onclick=closeModals);
   $('#menuBtn').onclick=()=>{
     const expanded=$('#mobilePanel').classList.toggle('open');
@@ -450,7 +513,11 @@
     const detail = event.detail;
     if (!detail || typeof detail.respond !== 'function') return;
     const product = products.find(item => item.id === detail.id);
-    if (!product) { detail.respond(false); return; }
+    if (!product || product.inStock === false) {
+      detail.respond(false);
+      if (product) toast(t('outOfStock'));
+      return;
+    }
     const nextCart = state.cart.map(item => ({ id: item.id, qty: item.qty }));
     const row = nextCart.find(item => item.id === product.id);
     if (row && row.qty >= 99) { detail.respond(false); toast(state.lang === 'ar' ? 'وصلت للحد الأقصى للكمية' : 'Maximum quantity reached'); return; }

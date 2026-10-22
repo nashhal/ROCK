@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/order-schema.php';
 
 function rock_install_page(string $title, string $message, bool $form = false, string $status = 'info'): never
 {
@@ -142,6 +143,8 @@ try {
       INDEX idx_rock_public_catalog (active, image_approved, sort_order),
       INDEX idx_rock_product_category (category)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    rock_install_order_schema($pdo);
 
     $existingCount = (int)$pdo->query('SELECT COUNT(*) FROM rock_products')->fetchColumn();
     if ($existingCount > 0) {
