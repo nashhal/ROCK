@@ -272,7 +272,7 @@
     $('#productsView').hidden = state.view !== 'products';
     $('#ordersView').hidden = state.view !== 'orders';
     $('#newProductButton').hidden = state.view !== 'products';
-    $$('.view-tab').forEach(tab => {
+    $$$('.view-tab').forEach(tab => {
       const active = tab.dataset.adminView === state.view;
       tab.classList.toggle('active', active);
       tab.setAttribute('aria-selected', String(active));
