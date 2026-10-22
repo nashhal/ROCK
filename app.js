@@ -1,9 +1,25 @@
-(() => {
-  const catalogProducts = Array.isArray(globalThis.ROCK_PRODUCTS) ? globalThis.ROCK_PRODUCTS : [];
+(async () => {
+  const staticProducts = Array.isArray(globalThis.ROCK_PRODUCTS) ? globalThis.ROCK_PRODUCTS : [];
+  let catalogProducts = staticProducts;
+  let liveCatalog = false;
+  // Hostinger can serve the PHP/MySQL catalog. GitHub Pages remains a static fallback.
+  try {
+    const response = await fetch(new URL('api/products.php', document.baseURI).toString(), {
+      credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'application/json' }
+    });
+    if (response.ok && (response.headers.get('content-type') || '').toLowerCase().includes('application/json')) {
+      const payload = await response.json();
+      if (Array.isArray(payload.products)) {
+        catalogProducts = payload.products;
+        liveCatalog = true;
+      }
+    }
+  } catch { /* Static storefront fallback is intentional. */ }
   const photoQuality = globalThis.ROCK_PRODUCT_IMAGE_QUALITY;
   const approvedPhotoIds = new Set(photoQuality && Array.isArray(photoQuality.visibleIds) ? photoQuality.visibleIds : []);
-  // Fail closed: only list products approved by the image-quality manifest.
-  const products = catalogProducts.filter(product => approvedPhotoIds.has(product.id));
+  const products = liveCatalog
+    ? catalogProducts.filter(product => product && product.imageApproved === true && product.active !== false)
+    : staticProducts.filter(product => approvedPhotoIds.has(product.id));
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => [...document.querySelectorAll(s)];
   function storageGet(key, fallback=''){ try { const value = localStorage.getItem(key); return value === null ? fallback : value; } catch { return fallback; } }
@@ -175,7 +191,7 @@
     grid.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => openProduct(button.dataset.view)));
   }
   function safeImage(path){
-    return typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path)
+    return typeof path === 'string' && /^(?:assets|uploads)\/products\/[a-z0-9_-]+\.webp$/i.test(path)
       ? path : '';
   }
   function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}

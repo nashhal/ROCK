@@ -1,0 +1,5 @@
+# Hostinger-only secrets and user-uploaded product files
+api/config.php
+api/install.lock
+/uploads/products/*
+!/uploads/products/.htaccess

@@ -12,6 +12,9 @@ const requiredFiles = [
   'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
+  'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css',
+  'api/bootstrap.php', 'api/image-quality.php', 'api/products.php', 'api/install.php', 'api/config.example.php',
+  'HOSTINGER-ADMIN-SETUP.md', 'scripts/test_hostinger_admin.php', 'uploads/products/.htaccess',
   'scripts/sync_drive_photos.py', 'scripts/product_image_quality.py', 'scripts/test_product_image_quality.py', 'scripts/test_storefront_browser.cjs', 'data/product-image-quality.js', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
   'robots.txt', 'sitemap.xml'
@@ -276,5 +279,23 @@ for (const product of products) {
 }
 assert.ok(sitemap.includes('<loc>https://nashhal.github.io/ROCK/</loc>'), 'Homepage missing from sitemap');
 assert.ok(read('robots.txt').includes('Sitemap: https://nashhal.github.io/ROCK/sitemap.xml'), 'Sitemap missing from robots.txt');
+
+
+const hostingerAdminApi = read('admin/api.php');
+const hostingerCatalogApi = read('api/products.php');
+const hostingerBootstrap = read('api/bootstrap.php');
+const hostingerInstaller = read('api/install.php');
+const adminPage = read('admin/index.php');
+const hostingerGuide = read('HOSTINGER-ADMIN-SETUP.md');
+assert.ok(app.includes("new URL('api/products.php'") && productScript.includes("new URL('api/products.php'"), 'Home and product detail must attempt the live Hostinger catalog before static fallback');
+assert.ok(app.includes('uploads') && productScript.includes('uploads'), 'Storefront image allowlist must accept normalized Hostinger uploads');
+assert.ok(hostingerCatalogApi.includes('WHERE active = 1 AND image_approved = 1'), 'Public API must expose only active products with approved images');
+assert.ok(hostingerAdminApi.includes('rock_check_csrf()') && hostingerAdminApi.includes('rock_require_admin()'), 'Admin mutations must enforce CSRF and authentication');
+assert.ok(hostingerAdminApi.includes('password_verify') && hostingerInstaller.includes('password_hash'), 'Admin passwords must be hashed and verified');
+assert.ok(hostingerAdminApi.includes('rock_normalize_product_image'), 'Uploaded images must be normalized and checked before saving');
+assert.ok(hostingerBootstrap.includes('httponly') && hostingerBootstrap.includes('samesite'), 'Admin sessions must use protected cookies');
+assert.ok(adminPage.includes('noindex,nofollow') && adminPage.includes('meta name="csrf-token"'), 'Admin page must not be indexed and must provide a session CSRF token');
+assert.ok(hostingerGuide.includes('api/install.php') && hostingerGuide.includes('delete') && hostingerGuide.includes('public_html'), 'Hostinger setup guide must cover the installer, deleting it after setup, and upload location');
+assert.ok(workflow.includes('php scripts/test_hostinger_admin.php') && workflow.includes('node --check admin/admin.js'), 'CI must run PHP backend tests and lint the admin UI');
 
 console.log(`ROCK validation passed: ${visibleIds.size} visible product photos out of ${products.length} catalog items, all local gallery images, HTML assets, CSP, sitemap and accessibility guards.`);

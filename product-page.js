@@ -1,9 +1,24 @@
-(() => {
-  const catalogProducts = Array.isArray(globalThis.ROCK_PRODUCTS) ? globalThis.ROCK_PRODUCTS : [];
+(async () => {
+  const staticProducts = Array.isArray(globalThis.ROCK_PRODUCTS) ? globalThis.ROCK_PRODUCTS : [];
+  let catalogProducts = staticProducts;
+  let liveCatalog = false;
+  try {
+    const response = await fetch(new URL('api/products.php', document.baseURI).toString(), {
+      credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'application/json' }
+    });
+    if (response.ok && (response.headers.get('content-type') || '').toLowerCase().includes('application/json')) {
+      const payload = await response.json();
+      if (Array.isArray(payload.products)) {
+        catalogProducts = payload.products;
+        liveCatalog = true;
+      }
+    }
+  } catch { /* Static storefront fallback is intentional. */ }
   const photoQuality = globalThis.ROCK_PRODUCT_IMAGE_QUALITY;
   const approvedPhotoIds = new Set(photoQuality && Array.isArray(photoQuality.visibleIds) ? photoQuality.visibleIds : []);
-  // Hidden products should not remain accessible through direct product links.
-  const products = catalogProducts.filter(item => approvedPhotoIds.has(item.id));
+  const products = liveCatalog
+    ? catalogProducts.filter(item => item && item.imageApproved === true && item.active !== false)
+    : staticProducts.filter(item => approvedPhotoIds.has(item.id));
   const $ = selector => document.querySelector(selector);
   const params = new URLSearchParams(window.location.search);
   const product = products.find(item => item.id === params.get('id'));
@@ -49,7 +64,7 @@
   const category = key => ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[key] || 'ROCK';
   const priceText = value => { const amount=Number(value); const shown=Number.isInteger(amount)?String(amount):amount.toFixed(2); return shown+' '+t('sar'); };
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const imagePath = path => typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path) ? path : '';
+  const imagePath = path => typeof path === 'string' && /^(?:assets|uploads)\/products\/[a-z0-9_-]+\.webp$/i.test(path) ? path : '';
   function applyLanguage(){
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
