@@ -70,6 +70,8 @@ const quality = JSON.parse(qualitySource.slice(qualityStart + qualityMarker.leng
 const visibleIds = new Set(quality.visibleIds);
 assert.ok(visibleIds.size > 0, 'At least one product must have a clear white-background photo');
 assert.ok([...visibleIds].every(id => products.some(product => product.id === id)), 'Photo manifest references an unknown product');
+const homeForStoryLogo = read('index.html');
+assert.ok(homeForStoryLogo.includes('<img class="story-mark-logo" src="assets/brand/rock-logo.svg"'), 'Brand story tile must use the official ROCK logo instead of a text monogram');
 
 const ids = new Set();
 const expectedImagePath = /^assets\/products\/[a-z0-9-]+\.webp$/i;

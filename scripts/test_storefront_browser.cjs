@@ -75,6 +75,9 @@ async function waitForCatalog(page) {
     await visible(page, '.brand img', 'The original ROCK logo should remain visible');
     const logo = await page.locator('.brand img').evaluate(el => ({ complete: el.complete, width: el.naturalWidth }));
     assert.ok(logo.complete && logo.width > 0, 'The original ROCK logo asset should load');
+    await visible(page, '.story-mark-logo', 'The ROCK logo should appear inside the brand-story tile');
+    const storyLogo = await page.locator('.story-mark-logo').evaluate(el => ({ complete: el.complete, width: el.naturalWidth, alt: el.alt }));
+    assert.ok(storyLogo.complete && storyLogo.width > 0 && storyLogo.alt === 'ROCK', 'The official logo must load in the story tile');
     await noHorizontalOverflow(page, 'desktop homepage');
     await page.screenshot({ path: path.join(artifactDir, '01-home-desktop.png'), fullPage: true });
 
