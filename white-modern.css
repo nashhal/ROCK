@@ -1665,3 +1665,132 @@ html[dir="ltr"] #productGrid .product-action-btn{font-family:var(--rock-font-lat
 
 /* Respect fail-closed visibility when a product has no approved photo. */
 .visual-card[hidden],.hero-visual[hidden]{display:none!important}
+
+
+/* HERO FEATURED CARDS — cleaner editorial product display */
+.hero-visual{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+  grid-template-rows:1fr auto;
+  align-items:center;
+  gap:14px;
+  min-height:430px!important;
+  padding:8px 0 0!important;
+  position:relative!important;
+  isolation:isolate;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.hero-visual:before,.hero-visual:after,.hero-visual .visual-orbit{display:none!important;content:none!important}
+.hero-visual .visual-card,
+.hero-visual .visual-card.primary,
+.hero-visual .visual-card.secondary{
+  position:relative!important;
+  inset:auto!important;
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:space-between;
+  gap:8px;
+  width:100%!important;
+  height:clamp(285px,30vw,355px)!important;
+  min-width:0;
+  margin:0!important;
+  padding:13px!important;
+  overflow:hidden;
+  border:1px solid #e4ebf3!important;
+  border-radius:9px!important;
+  background:#fff!important;
+  box-shadow:0 9px 26px rgba(12,39,72,.055)!important;
+  transform:none!important;
+  transition:border-color .18s ease,box-shadow .18s ease!important;
+}
+.hero-visual .visual-card.primary{transform:translateY(-12px)!important}
+.hero-visual .visual-card.secondary{transform:translateY(12px)!important}
+.hero-visual .visual-card:hover{
+  border-color:#b9cee5!important;
+  box-shadow:0 14px 32px rgba(12,39,72,.085)!important;
+}
+.hero-visual .visual-card img{
+  display:block;
+  flex:1 1 auto;
+  width:100%!important;
+  height:auto!important;
+  min-height:0;
+  max-height:none!important;
+  padding:9px!important;
+  object-fit:contain!important;
+  object-position:center;
+  border-radius:0!important;
+  background:#fff!important;
+  mix-blend-mode:multiply;
+  filter:none!important;
+}
+.hero-visual .visual-card span{
+  display:block;
+  flex:0 0 auto;
+  width:100%;
+  padding:10px 4px 2px;
+  border-top:1px solid #edf1f6;
+  color:#435c78!important;
+  font-family:var(--rock-font-latin)!important;
+  font-size:10px!important;
+  font-weight:750!important;
+  line-height:1.2;
+  letter-spacing:.12em!important;
+  text-align:center;
+  direction:ltr;
+}
+.hero-visual .visual-label{
+  position:static!important;
+  grid-column:1 / -1;
+  grid-row:2;
+  align-self:end;
+  margin-top:0;
+  padding-top:3px;
+  color:#7d8fa5!important;
+  font-family:var(--rock-font-latin)!important;
+  font-size:9px!important;
+  font-weight:750!important;
+  letter-spacing:.16em!important;
+  line-height:1.2;
+  text-align:left;
+}
+html[dir="rtl"] .hero-visual .visual-label{text-align:right}
+@media(max-width:1050px){
+  .hero-visual{min-height:385px!important;gap:11px}
+  .hero-visual .visual-card,
+  .hero-visual .visual-card.primary,
+  .hero-visual .visual-card.secondary{height:clamp(265px,34vw,320px)!important}
+}
+@media(max-width:700px){
+  .hero-visual{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-rows:1fr auto;
+    gap:9px;
+    width:100%;
+    max-width:520px;
+    min-height:0!important;
+    padding:3px 0 0!important;
+    margin-inline:auto;
+  }
+  .hero-visual .visual-card,
+  .hero-visual .visual-card.primary,
+  .hero-visual .visual-card.secondary{
+    height:clamp(205px,57vw,275px)!important;
+    padding:9px!important;
+    border-radius:7px!important;
+    box-shadow:0 5px 16px rgba(12,39,72,.045)!important;
+  }
+  .hero-visual .visual-card.primary{transform:translateY(-5px)!important}
+  .hero-visual .visual-card.secondary{transform:translateY(5px)!important}
+  .hero-visual .visual-card img{padding:5px!important}
+  .hero-visual .visual-card span{padding:8px 2px 1px;font-size:9px!important;letter-spacing:.08em!important}
+  .hero-visual .visual-label{font-size:8px!important;padding-top:4px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-visual .visual-card{transition:none!important}
+}
