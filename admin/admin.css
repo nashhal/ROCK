@@ -132,3 +132,12 @@ footer span:first-child{font-weight:700;color:#526982}
 .shipping-editor p{grid-column:1/-1;margin:0;color:#70849c;font-size:11px;line-height:1.7}
 .shipping-editor .btn{min-height:43px}
 @media(max-width:540px){.shipping-editor{grid-template-columns:1fr}.shipping-editor p{grid-column:auto}.shipping-editor label{max-width:none}}
+
+
+.order-events{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:8px}
+.order-events li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid #e7edf4;border-radius:8px;background:#fff}
+.order-events li>div{display:grid;gap:4px;min-width:0}
+.order-events strong{font-size:12px;color:#243b55}
+.order-events small,.order-events time{font-size:10px;color:#8090a4}
+.order-events time{white-space:nowrap}
+@media(max-width:520px){.order-events li{align-items:flex-start;flex-direction:column}.order-events li>div:last-child{width:100%;flex-direction:row;display:flex;justify-content:space-between;gap:10px}}
