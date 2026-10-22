@@ -511,7 +511,11 @@
     const detail = event.detail;
     if (!detail || typeof detail.respond !== 'function') return;
     const product = products.find(item => item.id === detail.id);
-    if (!product) { detail.respond(false); return; }
+    if (!product || product.inStock === false) {
+      detail.respond(false);
+      if (product) toast(t('outOfStock'));
+      return;
+    }
     const nextCart = state.cart.map(item => ({ id: item.id, qty: item.qty }));
     const row = nextCart.find(item => item.id === product.id);
     if (row && row.qty >= 99) { detail.respond(false); toast(state.lang === 'ar' ? 'وصلت للحد الأقصى للكمية' : 'Maximum quantity reached'); return; }
