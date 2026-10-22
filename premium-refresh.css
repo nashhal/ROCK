@@ -427,3 +427,9 @@ footer,.site-footer{border-top:1px solid rgba(255,255,255,.1)}
 
 /* Checkout honeypot: available to bots, removed from the visual and keyboard flow. */
 .website-field{position:absolute!important;inset-inline-start:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
+
+
+/* Backend-driven stock indicators */
+.stock-flag{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:750;line-height:1.4}
+.stock-flag.is-out{background:#fff0f0;color:#a33333;border:1px solid #f3d8d8}
+.product-action-add:disabled,.product-modal-card #modalAdd:disabled,.product-page-body #detailAddButton:disabled{opacity:.55;cursor:not-allowed;filter:grayscale(.15);box-shadow:none}
