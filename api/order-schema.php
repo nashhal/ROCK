@@ -19,6 +19,7 @@ function rock_install_order_schema(PDO $pdo): void
       total DECIMAL(12,2) NOT NULL,
       source VARCHAR(20) NOT NULL DEFAULT 'web',
       idempotency_hash CHAR(64) NULL UNIQUE,
+      stock_committed TINYINT(1) NOT NULL DEFAULT 0,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       INDEX idx_rock_orders_status_created (status, created_at),
@@ -61,6 +62,19 @@ function rock_install_order_schema(PDO $pdo): void
       attempts INT UNSIGNED NOT NULL DEFAULT 0,
       blocked_until DATETIME NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    $productColumns = $pdo->query('SHOW COLUMNS FROM rock_products')->fetchAll(PDO::FETCH_COLUMN, 0);
+    if (!in_array('stock_quantity', $productColumns, true)) {
+        $pdo->exec('ALTER TABLE rock_products ADD COLUMN stock_quantity INT UNSIGNED NULL DEFAULT NULL AFTER sort_order');
+    }
+    if (!in_array('low_stock_threshold', $productColumns, true)) {
+        $pdo->exec('ALTER TABLE rock_products ADD COLUMN low_stock_threshold INT UNSIGNED NOT NULL DEFAULT 5 AFTER stock_quantity');
+    }
+
+    $orderColumns = $pdo->query('SHOW COLUMNS FROM rock_orders')->fetchAll(PDO::FETCH_COLUMN, 0);
+    if (!in_array('stock_committed', $orderColumns, true)) {
+        $pdo->exec('ALTER TABLE rock_orders ADD COLUMN stock_committed TINYINT(1) NOT NULL DEFAULT 0 AFTER idempotency_hash');
+    }
 
     $pdo->prepare("INSERT INTO rock_site_meta (meta_key, meta_value) VALUES ('orders_schema_version', '1')
       ON DUPLICATE KEY UPDATE meta_value = VALUES(meta_value)")->execute();
