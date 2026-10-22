@@ -128,7 +128,7 @@ try {
 
     $ids = array_keys($order['items']);
     $marks = implode(',', array_fill(0, count($ids), '?'));
-    $query = $pdo->prepare("SELECT id, model, name_ar, name_en, price FROM rock_products WHERE active = 1 AND image_approved = 1 AND id IN ($marks)");
+    $query = $pdo->prepare("SELECT id, model, name_ar, name_en, price, stock_quantity FROM rock_products WHERE active = 1 AND image_approved = 1 AND id IN ($marks)");
     $query->execute($ids);
     $products = [];
     foreach ($query->fetchAll() as $row) {
@@ -144,6 +144,9 @@ try {
     $preparedItems = [];
     foreach ($order['items'] as $id => $quantity) {
         $product = $products[$id];
+        if (array_key_exists('stock_quantity', $product) && $product['stock_quantity'] !== null && (int)$product['stock_quantity'] < $quantity) {
+            rock_json(['error' => 'الكمية المطلوبة غير متوفرة بالكامل للمنتج ' . (string)$product['model'] . '. حدّث السلة أو تواصل مع المتجر.'], 409);
+        }
         $unitMinor = rock_order_decimal_to_minor($product['price']);
         $lineMinor = $unitMinor * $quantity;
         $subtotalMinor += $lineMinor;
