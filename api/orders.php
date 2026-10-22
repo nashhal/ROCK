@@ -166,7 +166,7 @@ try {
         try {
             $insert = $pdo->prepare("INSERT INTO rock_orders
               (order_number, status, payment_status, customer_name, customer_phone, customer_city, customer_address, customer_notes, currency, subtotal, shipping, total, source, idempotency_hash)
-              VALUES (?, 'new', 'not_configured', ?, ?, ?, ?, ?, 'SAR', ?, '0.00', ?, 'web', ?)");
+              VALUES (?, 'new', 'not_configured', ?, ?, ?, ?, ?, 'SAR', ?, NULL, NULL, 'web', ?)");
             $insert->execute([
                 $candidate,
                 $order['customerName'],
@@ -174,7 +174,6 @@ try {
                 $order['customerCity'],
                 $order['customerAddress'],
                 $order['customerNotes'],
-                $subtotal,
                 $subtotal,
                 $idempotencyHash,
             ]);
@@ -229,10 +228,10 @@ try {
         'status' => 'new',
         'paymentStatus' => 'not_configured',
         'subtotal' => $subtotal,
-        'shipping' => '0.00',
-        'total' => $subtotal,
+        'shipping' => null,
+        'total' => null,
         'currency' => 'SAR',
-        'message' => 'تم تسجيل طلبك لدى المتجر. هذا ليس تأكيدًا للدفع أو التوفر؛ سيؤكد المتجر التفاصيل يدويًا.',
+        'message' => 'تم تسجيل طلبك لدى المتجر. التوصيل والدفع غير مؤكدين؛ سيؤكد المتجر السعر النهائي والتوفر يدويًا.',
     ], 201);
 } catch (Throwable $error) {
     if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
