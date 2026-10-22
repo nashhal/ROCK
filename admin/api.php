@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../api/bootstrap.php';
+require_once __DIR__ . '/../api/order-schema.php';
 
 rock_start_session();
 header('X-Content-Type-Options: nosniff');
@@ -127,6 +128,35 @@ try {
 
     $admin = rock_require_admin();
 
+    if ($method === 'GET' && $action === 'orders') {
+        if (!rock_order_schema_ready($pdo)) {
+            rock_json(['error' => 'جداول الطلبات غير جاهزة. شغّل api/migrate-orders.php ثم احذفه.'], 503);
+        }
+        $rows = $pdo->query("SELECT o.id, o.order_number, o.status, o.payment_status, o.customer_name, o.customer_phone,
+                o.customer_city, o.customer_address, o.customer_notes, o.currency, o.subtotal, o.shipping, o.total,
+                o.created_at, o.updated_at, COUNT(i.id) AS item_count
+            FROM rock_orders o
+            LEFT JOIN rock_order_items i ON i.order_id = o.id
+            GROUP BY o.id
+            ORDER BY o.created_at DESC
+            LIMIT 200")->fetchAll();
+        rock_json(['orders' => $rows, 'count' => count($rows)]);
+    }
+
+    if ($method === 'GET' && $action === 'order_items') {
+        if (!rock_order_schema_ready($pdo)) {
+            rock_json(['error' => 'جداول الطلبات غير جاهزة.'], 503);
+        }
+        $orderId = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
+        if ($orderId === false || $orderId < 1) {
+            rock_json(['error' => 'معرّف الطلب غير صالح.'], 422);
+        }
+        $statement = $pdo->prepare('SELECT product_id, model, name_ar, name_en, unit_price, quantity, line_total
+            FROM rock_order_items WHERE order_id = ? ORDER BY id ASC');
+        $statement->execute([$orderId]);
+        rock_json(['items' => $statement->fetchAll()]);
+    }
+
     if ($method === 'GET' && $action === 'products') {
         $rows = $pdo->query('SELECT * FROM rock_products ORDER BY active DESC, sort_order ASC, name_ar ASC')->fetchAll();
         rock_json([
@@ -145,6 +175,53 @@ try {
     }
 
     rock_check_csrf();
+
+    if ($action === 'order_status') {
+        if (!rock_order_schema_ready($pdo)) {
+            rock_json(['error' => 'جداول الطلبات غير جاهزة. شغّل api/migrate-orders.php ثم احذفه.'], 503);
+        }
+        $orderId = filter_var($_POST['order_id'] ?? null, FILTER_VALIDATE_INT);
+        $nextStatus = trim((string)($_POST['status'] ?? ''));
+        $allowed = ['new', 'confirmed', 'preparing', 'shipped', 'delivered', 'cancelled'];
+        if ($orderId === false || $orderId < 1 || !in_array($nextStatus, $allowed, true)) {
+            rock_json(['error' => 'حالة الطلب أو معرّفه غير صالح.'], 422);
+        }
+
+        $transitions = [
+            'new' => ['confirmed', 'cancelled'],
+            'confirmed' => ['preparing', 'cancelled'],
+            'preparing' => ['shipped', 'cancelled'],
+            'shipped' => ['delivered'],
+            'delivered' => [],
+            'cancelled' => [],
+        ];
+
+        $pdo->beginTransaction();
+        $read = $pdo->prepare('SELECT status FROM rock_orders WHERE id = ? FOR UPDATE');
+        $read->execute([$orderId]);
+        $current = $read->fetch();
+        if (!is_array($current)) {
+            $pdo->rollBack();
+            rock_json(['error' => 'الطلب غير موجود.'], 404);
+        }
+        $fromStatus = (string)$current['status'];
+        if ($fromStatus === $nextStatus) {
+            $pdo->commit();
+            rock_json(['ok' => true, 'id' => $orderId, 'status' => $nextStatus, 'unchanged' => true]);
+        }
+        if (!in_array($nextStatus, $transitions[$fromStatus] ?? [], true)) {
+            $pdo->rollBack();
+            rock_json(['error' => 'لا يمكن نقل الطلب من الحالة الحالية إلى الحالة المطلوبة.'], 409);
+        }
+
+        $update = $pdo->prepare('UPDATE rock_orders SET status = ? WHERE id = ?');
+        $update->execute([$nextStatus, $orderId]);
+        $event = $pdo->prepare('INSERT INTO rock_order_events (order_id, actor_admin_id, actor_username, event_type, from_status, to_status)
+            VALUES (?, ?, ?, ?, ?, ?)');
+        $event->execute([$orderId, $admin['id'], $admin['username'], 'status_changed', $fromStatus, $nextStatus]);
+        $pdo->commit();
+        rock_json(['ok' => true, 'id' => $orderId, 'status' => $nextStatus]);
+    }
 
     if ($action === 'delete') {
         $id = (string)($_POST['id'] ?? '');
