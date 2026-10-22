@@ -203,6 +203,7 @@
     try {
       const payload = await api('api.php?action=order_items&id=' + encodeURIComponent(order.id));
       const items = Array.isArray(payload.items) ? payload.items : [];
+      const events = Array.isArray(payload.events) ? payload.events : [];
       const fields = [
         ['العميل', order.customer_name],
         ['الجوال', order.customer_phone],
@@ -221,6 +222,10 @@
       ).join('');
       const itemRows = items.map(item => '<tr><td><strong>' + escapeHtml(item.name_ar) + '</strong><small class="order-subtext" dir="ltr">' + escapeHtml(item.model) + '</small></td><td>' + escapeHtml(item.quantity) + '</td><td>' + escapeHtml(money(item.unit_price)) + '</td><td>' + escapeHtml(money(item.line_total)) + '</td></tr>').join('');
       const notes = String(order.customer_notes || '').trim();
+      const eventLabels = { order_received: 'استلام الطلب', status_changed: 'تغيير حالة الطلب', shipping_updated: 'تحديث رسوم الشحن' };
+      const eventsHtml = events.length
+        ? '<ol class="order-events">' + events.map(event => '<li><div><strong>' + escapeHtml(eventLabels[event.event_type] || event.event_type) + '</strong><small>' + escapeHtml(event.actor_username || '—') + '</small></div><div><span>' + escapeHtml(event.from_status || '—') + ' → ' + escapeHtml(event.to_status || '—') + '</span><time>' + escapeHtml(orderDate(event.created_at)) + '</time></div></li>').join('') + '</ol>'
+        : '<p class="order-detail-notes">لا يوجد سجل تغييرات إضافي.</p>';
       const shippingEditor = order.status === 'new'
         ? '<form id="orderShippingForm" data-order-id="' + escapeHtml(order.id) + '" class="shipping-editor"><label for="orderShippingInput">رسوم الشحن (ر.س)<input id="orderShippingInput" name="shipping" type="number" min="0" max="999999999" step="0.01" inputmode="decimal" value="' + escapeHtml(order.shipping == null ? '' : order.shipping) + '" required></label><button class="btn btn-primary" type="submit">حفظ رسوم الشحن</button><p>أدخل السعر الفعلي للشحن. اكتب 0 فقط إذا كان التوصيل مجانيًا فعلًا.</p></form>'
         : '<div class="order-payment-note">تم إغلاق تعديل الشحن بعد بدء تنفيذ الطلب. أي تعديل استثنائي يحتاج إلى إجراء موثق منفصل.</div>';
@@ -230,6 +235,7 @@
         '<h3 style="font-size:13px;margin:0 0 8px">المنتجات</h3>' +
         '<div class="table-scroll"><table class="order-items-table"><thead><tr><th>المنتج / الموديل</th><th>الكمية</th><th>سعر الوحدة</th><th>المجموع</th></tr></thead><tbody>' +
         (itemRows || '<tr><td colspan="4" class="empty-cell">لا توجد عناصر.</td></tr>') + '</tbody></table></div>' +
+        '<h3 style="font-size:13px;margin:18px 0 8px">سجل تغييرات الطلب</h3>' + eventsHtml +
         '<h3 style="font-size:13px;margin:16px 0 8px">ملاحظات العميل</h3><div class="order-detail-notes">' + escapeHtml(notes || 'لا توجد ملاحظات.') + '</div>' +
         '<div class="order-payment-note">لا يوجد مزود دفع أو شحن متصل بهذه النسخة. لا تعتبر حالة الدفع أو قيمة الشحن مؤكدة.</div>';
     } catch (error) {
