@@ -272,7 +272,7 @@
     $('#productsView').hidden = state.view !== 'products';
     $('#ordersView').hidden = state.view !== 'orders';
     $('#newProductButton').hidden = state.view !== 'products';
-    $('.view-tab').forEach(tab => {
+    $$('.view-tab').forEach(tab => {
       const active = tab.dataset.adminView === state.view;
       tab.classList.toggle('active', active);
       tab.setAttribute('aria-selected', String(active));
@@ -469,7 +469,7 @@
     const button = event.target.closest('[data-order-details]');
     if (button) openOrderDetails(button.dataset.orderDetails);
   });
-  $('[data-close-order-dialog]').forEach(node => node.addEventListener('click', closeOrderDetails));
+  $$('[data-close-order-dialog]').forEach(node => node.addEventListener('click', closeOrderDetails));
   $('#orderDetailBody')?.addEventListener('submit', event => {
     if (event.target.id === 'orderShippingForm') {
       event.preventDefault();
