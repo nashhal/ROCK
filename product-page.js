@@ -30,7 +30,7 @@
       openMenu:'فتح القائمة',switchLanguage:'تغيير اللغة',viewCart:'عرض السلة',navigationMenu:'قائمة التنقل',
       announcement:'ROCK | فجر جديد مع روك',brandTagline:'فجر جديد مع روك',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
       productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
-      catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',modelLabel:'الموديل',modelMissing:'غير محدد',priceLabel:'السعر',viewProduct:'عرض المنتج',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
+      catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',outOfStock:'نفد المخزون',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',modelLabel:'الموديل',modelMissing:'غير محدد',priceLabel:'السعر',viewProduct:'عرض المنتج',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
       factCompatTitle:'التوافق',factCompatText:'تحقق من توافق المنتج مع جهازك والميزات المدعومة قبل الطلب.',
       factDeliveryTitle:'التوفر والتوصيل',factDeliveryText:'يجب تأكيد المخزون ومدة التوصيل وتكلفته والضمان قبل قبول الطلب.',
       addToBag:'أضف إلى السلة',orderInfo:'معلومات الطلب والخصوصية',
@@ -46,7 +46,7 @@
       openMenu:'Open menu',switchLanguage:'Switch language',viewCart:'View cart',navigationMenu:'Navigation menu',
       announcement:'ROCK | A new dawn with ROCK',brandTagline:'A new dawn with ROCK',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
       productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
-      catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',modelLabel:'Model',modelMissing:'Not specified',priceLabel:'Price',viewProduct:'View product',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
+      catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',outOfStock:'Out of stock',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',modelLabel:'Model',modelMissing:'Not specified',priceLabel:'Price',viewProduct:'View product',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',
       factCompatTitle:'Compatibility',factCompatText:'Confirm device fit and supported features before ordering.',
       factDeliveryTitle:'Availability and delivery',factDeliveryText:'Stock, delivery time, shipping cost and warranty must be confirmed before an order is accepted.',
       addToBag:'Add to bag',orderInfo:'Order and privacy information',
@@ -159,6 +159,8 @@
     $('#detailModelCaption').textContent=product.model;
     $('#detailName').textContent=name(product);
     $('#detailPrice').textContent=priceText(product.price);$('#detailBarcode').textContent=product.barcode?t('barcodeLabel')+': '+product.barcode:'';
+    $('#detailAddButton').disabled = product.inStock === false;
+    $('#detailAddButton').textContent = t(product.inStock === false ? 'outOfStock' : 'addToBag');
     const descriptionKey={power:'descPower',audio:'descAudio',car:'descCar',lifestyle:'descLifestyle'}[product.category]||'descLifestyle';
     $('#detailDescription').textContent=lang==='en'&&product.descriptionEn?product.descriptionEn:t(descriptionKey);
     $('#breadcrumbName').textContent=name(product);
@@ -204,6 +206,7 @@
   function toast(message){const node=$('#productToast');node.textContent=message;node.classList.add('show');window.setTimeout(()=>node.classList.remove('show'),2200)}
   function addToBag(){
     if(!product)return;
+    if(product.inStock === false){toast(t('outOfStock'));return;}
     const cart=readCart();
     const row=cart.find(item=>item.id===product.id);
     if(row){if(row.qty>=99){toast(lang==='ar'?'وصلت إلى الحد الأقصى للكمية':'Maximum quantity reached');return;}row.qty++;}
