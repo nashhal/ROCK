@@ -63,7 +63,7 @@ if (!$configured) {
       <section class="catalog-panel">
         <div class="table-toolbar"><label class="search-label" for="searchProducts">بحث بالاسم أو الموديل أو الباركود</label><input id="searchProducts" type="search" placeholder="ابحث في الكتالوج…"><button id="refreshButton" class="btn btn-quiet" type="button">تحديث</button></div>
         <div id="catalogMessage" class="form-message" role="status" aria-live="polite"></div>
-        <div class="table-scroll"><table><thead><tr><th>الصورة</th><th>الموديل</th><th>اسم المنتج</th><th>السعر</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="productsBody"></tbody></table></div>
+        <div class="table-scroll"><table><thead><tr><th>الصورة</th><th>الموديل</th><th>اسم المنتج</th><th>السعر</th><th>المخزون</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="productsBody"></tbody></table></div>
         <p class="table-note">لن يظهر المنتج للزوار إلا إذا كان مفعّلًا وصورته الرئيسية واضحة بخلفية بيضاء.</p>
       </section>
       </div>
@@ -91,6 +91,8 @@ if (!$configured) {
           <label>الباركود <input name="barcode" maxlength="80" placeholder="اختياري"></label>
           <label>التصنيف <select name="category" required><option value="power">الشحن والطاقة</option><option value="audio">الصوت والسماعات</option><option value="car">إكسسوارات السيارة</option><option value="lifestyle">إكسسوارات يومية</option></select></label>
           <label>السعر (ر.س) <input name="price" type="number" inputmode="decimal" min="0" max="999999999" step="0.01" required></label>
+          <label>كمية المخزون (اختياري) <input name="stock_quantity" type="number" inputmode="numeric" min="0" max="1000000" step="1"><small>اتركه فارغًا إذا لم تكن تتتبع مخزون هذا المنتج.</small></label>
+          <label>حد تنبيه انخفاض المخزون <input name="low_stock_threshold" type="number" inputmode="numeric" min="0" max="1000000" step="1" value="5" required></label>
           <label>الاسم بالعربية <input name="name_ar" required maxlength="255"></label>
           <label class="wide-field">الاسم بالإنجليزية <input name="name_en" required maxlength="255"></label>
           <label class="wide-field">وصف مختصر بالإنجليزية <textarea name="description_en" rows="2" maxlength="12000"></textarea></label>
