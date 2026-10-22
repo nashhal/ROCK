@@ -60,6 +60,7 @@
   }
 
   async function bootstrap() {
+    if (document.body.dataset.setupNeeded === '1') return;
     try {
       const me = await api('api.php?action=me');
       state.csrf = me.csrf || state.csrf;
