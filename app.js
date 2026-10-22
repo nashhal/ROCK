@@ -244,14 +244,15 @@
       const cartImage=safeImage(p.image);
       const decreaseLabel=esc(t('decreaseQty')+' '+name(p));
       const increaseLabel=esc(t('increaseQty')+' '+name(p));
+      const available = p.inStock !== false;
       row.innerHTML=`${cartImage ? `<img data-cart-image src="${esc(cartImage)}" alt="${esc(name(p))}" loading="lazy" width="76" height="76">` : '<span class="cart-image-placeholder" aria-hidden="true">ROCK</span>'}
         <div>
           <h4>${esc(name(p))}</h4>
-          <p>${esc(p.model)} · ${money(p.price)}</p>
+          <p>${esc(p.model)} · ${money(p.price)}${available ? '' : ' · '+esc(t('outOfStock'))}</p>
           <div class="qty">
             <button type="button" data-dec="${esc(p.id)}" aria-label="${decreaseLabel}">−</button>
             <span aria-live="polite" aria-atomic="true">${item.qty}</span>
-            <button type="button" data-inc="${esc(p.id)}" aria-label="${increaseLabel}" ${item.qty>=99?'disabled':''}>+</button>
+            <button type="button" data-inc="${esc(p.id)}" aria-label="${increaseLabel}" ${item.qty>=99||!available?'disabled':''}>+</button>
           </div>
         </div>
         <strong>${money(p.price*item.qty)}</strong>`;
@@ -268,7 +269,7 @@
     wrap.querySelectorAll('[data-inc]').forEach(button=>button.onclick=()=>changeQty(button.dataset.inc,1));
     $('#cartTotal').textContent=money(total);
   }
-  function changeQty(id,d){const row=state.cart.find(x=>x.id===id);if(!row)return;row.qty=Math.min(99,row.qty+d);if(row.qty<=0)state.cart=state.cart.filter(x=>x.id!==id);persist();renderCart()}
+  function changeQty(id,d){const row=state.cart.find(x=>x.id===id);if(!row)return;const product=products.find(x=>x.id===id);if(d>0&&product?.inStock===false){toast(t('outOfStock'));return;}row.qty=Math.min(99,row.qty+d);if(row.qty<=0)state.cart=state.cart.filter(x=>x.id!==id);persist();renderCart()}
   function openCart(){
     const drawer=$('#cartDrawer');
     if(!drawer.classList.contains('open'))cartReturnFocus=document.activeElement;
@@ -337,6 +338,7 @@
   }
   function checkout(){
     if(!state.cart.length) return;
+    if(state.cart.some(item => products.find(product => product.id === item.id)?.inStock === false)) { toast(t('outOfStock')); return; }
     $('#orderDetailsForm').reset();
     state.orderKey = (globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function') ? globalThis.crypto.randomUUID() : ('rock-' + Date.now() + '-' + Math.random().toString(36).slice(2));
     state.orderSubmitted = false;
