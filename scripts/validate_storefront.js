@@ -14,6 +14,7 @@ const requiredFiles = [
   'rocky-assistant.js', 'rocky-assistant.css',
   'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css',
   'api/bootstrap.php', 'api/image-quality.php', 'api/products.php', 'api/install.php', 'api/config.example.php',
+  'api/order-domain.php', 'api/order-schema.php', 'api/orders.php', 'api/migrate-orders.php', 'scripts/test_order_domain.php',
   'HOSTINGER-ADMIN-SETUP.md', 'scripts/test_hostinger_admin.php', 'uploads/products/.htaccess',
   'scripts/sync_drive_photos.py', 'scripts/product_image_quality.py', 'scripts/test_product_image_quality.py', 'scripts/test_storefront_browser.cjs', 'data/product-image-quality.js', 'assets/brand/rock-logo.svg',
   'assets/brand/rocky-mascot.svg', 'assets/brand/rocky-avatar.webp',
@@ -297,5 +298,20 @@ assert.ok(hostingerBootstrap.includes('httponly') && hostingerBootstrap.includes
 assert.ok(adminPage.includes('noindex,nofollow') && adminPage.includes('meta name="csrf-token"'), 'Admin page must not be indexed and must provide a session CSRF token');
 assert.ok(hostingerGuide.includes('api/install.php') && hostingerGuide.includes('delete') && hostingerGuide.includes('public_html'), 'Hostinger setup guide must cover the installer, deleting it after setup, and upload location');
 assert.ok(workflow.includes('php scripts/test_hostinger_admin.php') && workflow.includes('node --check admin/admin.js'), 'CI must run PHP backend tests and lint the admin UI');
+
+const publicOrderApi = read('api/orders.php');
+const orderDomain = read('api/order-domain.php');
+const orderSchema = read('api/order-schema.php');
+assert.ok(publicOrderApi.includes('rock_validate_public_order') && publicOrderApi.includes('HTTP_IDEMPOTENCY_KEY'), 'Order intake must validate payloads and support idempotent submissions');
+assert.ok(publicOrderApi.includes('stock_quantity') && publicOrderApi.includes('rock_order_minor_to_decimal'), 'Order totals must be recomputed from database prices and tracked stock');
+assert.ok(orderSchema.includes('rock_orders') && orderSchema.includes('rock_order_items') && orderSchema.includes('rock_order_events'), 'Order schema must persist order headers, line items, and audit events');
+assert.ok(orderDomain.includes('FILTER') === false && orderDomain.includes('rock_order_normalize_phone') && orderDomain.includes('rock_order_minor_to_decimal'), 'Order validation and money helpers are required');
+assert.ok(hostingerAdminApi.includes("action === 'orders'") && hostingerAdminApi.includes("action === 'order_status'"), 'Admin must list orders and guard status transitions');
+assert.ok(hostingerAdminApi.includes("action === 'order_shipping'") && hostingerAdminApi.includes('stock_quantity = stock_quantity - ?') && hostingerAdminApi.includes('stock_quantity = stock_quantity + ?'), 'Admin must quote shipping and atomically commit or restore tracked inventory');
+assert.ok(read('admin/admin.js').includes('async function loadOrders()') && read('admin/admin.js').includes('async function saveOrderShipping'), 'Admin UI must expose order listing and shipping quotes');
+assert.ok(read('admin/index.php').includes('name="stock_quantity"') && read('admin/index.php').includes('name="low_stock_threshold"'), 'Admin product form must support inventory tracking');
+assert.ok(app.includes("async function submitOrder()") && app.includes("new URL('api/orders.php'") && app.includes("if(liveCatalog){await submitOrder();return;}"), 'Configured catalog mode must submit order requests through the backend');
+assert.ok(app.includes("if (product.inStock === false)") && productScript.includes("if(product.inStock === false)"), 'Out-of-stock items must not be added from catalog or detail pages');
+assert.ok(workflow.includes('php scripts/test_order_domain.php') && workflow.includes('php -l api/orders.php'), 'CI must lint the order API and run order-domain tests');
 
 console.log(`ROCK validation passed: ${visibleIds.size} visible product photos out of ${products.length} catalog items, all local gallery images, HTML assets, CSP, sitemap and accessibility guards.`);
