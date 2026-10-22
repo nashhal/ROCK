@@ -157,7 +157,10 @@ try {
         $statement = $pdo->prepare('SELECT product_id, model, name_ar, name_en, unit_price, quantity, line_total
             FROM rock_order_items WHERE order_id = ? ORDER BY id ASC');
         $statement->execute([$orderId]);
-        rock_json(['items' => $statement->fetchAll()]);
+        $eventStatement = $pdo->prepare('SELECT actor_username, event_type, from_status, to_status, created_at
+            FROM rock_order_events WHERE order_id = ? ORDER BY created_at ASC, id ASC');
+        $eventStatement->execute([$orderId]);
+        rock_json(['items' => $statement->fetchAll(), 'events' => $eventStatement->fetchAll()]);
     }
 
     if ($method === 'GET' && $action === 'products') {
