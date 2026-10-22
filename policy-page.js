@@ -19,7 +19,7 @@
     en:{
       announcement:'ROCK | A new dawn with ROCK',brandTagline:'A new dawn with ROCK',shop:'Shop',collections:'Collections',bag:'Bag',home:'Home',backToShop:'Back to shop',
       pageTitle:'Store information & privacy',pageIntro:'Clear information about the current ROCK storefront and its order-preparation flow.',
-      notice:'Important: this version does not receive orders automatically or process online payments. Copying an order summary does not confirm stock or acceptance.',
+      notice:'Important: order intake requires deployment to a PHP/MySQL host with the database configured. Recording a request does not confirm payment, availability, or delivery. Online payment is not enabled.',
       orderingTitle:'Preparing an order',orderingText:'You can review your bag and prepare a summary with the items and contact details you enter. Copying moves the summary to your device clipboard for you to share manually. This version does not submit it to ROCK automatically.',
       deliveryTitle:'Shipping and delivery',deliveryText:'This version does not publish confirmed shipping fees or delivery dates. Delivery costs, timeframe and service area must be confirmed before an order is accepted.',
       returnsTitle:'Returns and warranty',returnsText:'The current storefront files do not define a final returns or warranty policy. Approved terms, exceptions and coverage periods should be published before sales begin. Do not assume a particular warranty is available unless confirmed.',
