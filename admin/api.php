@@ -265,7 +265,7 @@ try {
         }
 
         if ($nextStatus === 'confirmed' && !$stockCommitted) {
-            $itemsQuery = $pdo->prepare('SELECT i.product_id, i.quantity, p.id AS existing_product_id, p.stock_quantity
+            $itemsQuery = $pdo->prepare('SELECT i.id AS order_item_id, i.product_id, i.quantity, p.id AS existing_product_id, p.stock_quantity
                 FROM rock_order_items i
                 LEFT JOIN rock_products p ON p.id = i.product_id
                 WHERE i.order_id = ?
@@ -290,6 +290,7 @@ try {
                 }
             }
             $decrement = $pdo->prepare('UPDATE rock_products SET stock_quantity = stock_quantity - ? WHERE id = ? AND stock_quantity IS NOT NULL AND stock_quantity >= ?');
+            $commitItemStock = $pdo->prepare('UPDATE rock_order_items SET stock_committed_quantity = ? WHERE id = ?');
             foreach ($stockItems as $item) {
                 if ($item['stock_quantity'] === null) {
                     continue;
@@ -300,6 +301,7 @@ try {
                     $pdo->rollBack();
                     rock_json(['error' => 'تغير المخزون أثناء تأكيد الطلب. راجع الكمية وحاول مجددًا.'], 409);
                 }
+                $commitItemStock->execute([$quantity, (int)$item['order_item_id']]);
             }
             $stockCommitted = true;
         }
@@ -308,17 +310,20 @@ try {
             && $stockCommitted
             && in_array($fromStatus, ['confirmed', 'preparing'], true);
         if ($shouldRestock) {
-            $itemsQuery = $pdo->prepare('SELECT i.product_id, i.quantity, p.stock_quantity
+            $itemsQuery = $pdo->prepare('SELECT i.id AS order_item_id, i.product_id, i.stock_committed_quantity, p.id AS existing_product_id, p.stock_quantity
                 FROM rock_order_items i
                 LEFT JOIN rock_products p ON p.id = i.product_id
                 WHERE i.order_id = ?
                 FOR UPDATE');
             $itemsQuery->execute([$orderId]);
             $restock = $pdo->prepare('UPDATE rock_products SET stock_quantity = stock_quantity + ? WHERE id = ? AND stock_quantity IS NOT NULL');
+            $clearItemStock = $pdo->prepare('UPDATE rock_order_items SET stock_committed_quantity = 0 WHERE id = ?');
             foreach ($itemsQuery->fetchAll() as $item) {
-                if ($item['stock_quantity'] !== null) {
-                    $restock->execute([(int)$item['quantity'], (string)$item['product_id']]);
+                $committedQuantity = (int)$item['stock_committed_quantity'];
+                if ($committedQuantity > 0 && $item['existing_product_id'] !== null && $item['stock_quantity'] !== null) {
+                    $restock->execute([$committedQuantity, (string)$item['product_id']]);
                 }
+                $clearItemStock->execute([(int)$item['order_item_id']]);
             }
             $stockCommitted = false;
         }
