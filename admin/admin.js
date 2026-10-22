@@ -272,7 +272,7 @@
     $('#productsView').hidden = state.view !== 'products';
     $('#ordersView').hidden = state.view !== 'orders';
     $('#newProductButton').hidden = state.view !== 'products';
-    $$$('.view-tab').forEach(tab => {
+    $$('.view-tab').forEach(tab => {
       const active = tab.dataset.adminView === state.view;
       tab.classList.toggle('active', active);
       tab.setAttribute('aria-selected', String(active));
@@ -457,7 +457,7 @@
     }
   }
 
-  $('.view-tab').forEach(tab => tab.addEventListener('click', () => setAdminView(tab.dataset.adminView)));
+  $$('.view-tab').forEach(tab => tab.addEventListener('click', () => setAdminView(tab.dataset.adminView)));
   $('#refreshOrdersButton')?.addEventListener('click', loadOrders);
   $('#refreshOrdersInline')?.addEventListener('click', loadOrders);
   $('#searchOrders')?.addEventListener('input', renderOrders);
