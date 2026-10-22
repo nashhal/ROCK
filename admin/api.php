@@ -265,7 +265,7 @@ try {
         }
 
         if ($nextStatus === 'confirmed' && !$stockCommitted) {
-            $itemsQuery = $pdo->prepare('SELECT i.product_id, i.quantity, p.stock_quantity
+            $itemsQuery = $pdo->prepare('SELECT i.product_id, i.quantity, p.id AS existing_product_id, p.stock_quantity
                 FROM rock_order_items i
                 LEFT JOIN rock_products p ON p.id = i.product_id
                 WHERE i.order_id = ?
@@ -277,6 +277,10 @@ try {
                 rock_json(['error' => 'الطلب لا يحتوي منتجات صالحة.'], 409);
             }
             foreach ($stockItems as $item) {
+                if ($item['existing_product_id'] === null) {
+                    $pdo->rollBack();
+                    rock_json(['error' => 'أحد منتجات الطلب حُذف من الكتالوج. استعد المنتج أو راجع الطلب قبل التأكيد.'], 409);
+                }
                 if ($item['stock_quantity'] === null) {
                     continue;
                 }
