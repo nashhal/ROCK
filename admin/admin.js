@@ -266,7 +266,7 @@
     if (!body) return;
     body.innerHTML = '';
     if (!state.filtered.length) {
-      body.innerHTML = '<tr><td class="empty-cell" colspan="6">لا توجد منتجات مطابقة للبحث.</td></tr>';
+      body.innerHTML = '<tr><td class="empty-cell" colspan="7">لا توجد منتجات مطابقة للبحث.</td></tr>';
       return;
     }
 
@@ -280,6 +280,7 @@
         <td><strong class="sku" dir="ltr">${escapeHtml(product.model || product.id)}</strong><small class="barcode" dir="ltr">${escapeHtml(product.barcode || '')}</small></td>
         <td><strong class="product-ar">${escapeHtml(product.nameAr)}</strong><small class="product-en" dir="ltr">${escapeHtml(product.nameEn)}</small></td>
         <td><strong class="price-value">${escapeHtml(money(product.price))}</strong></td>
+        <td><span class="stock-cell">${product.stockQuantity == null ? 'غير متتبع' : escapeHtml(String(product.stockQuantity)) + (Number(product.stockQuantity) <= Number(product.lowStockThreshold ?? 5) ? ' · منخفض' : ' وحدة')}</span></td>
         <td><span class="status-pill ${statusClass}">${escapeHtml(statusText)}</span></td>
         <td><div class="row-actions"><button class="btn btn-small btn-edit" type="button" data-edit="${escapeHtml(product.id)}">تعديل</button><button class="btn btn-small btn-delete" type="button" data-delete="${escapeHtml(product.id)}" aria-label="حذف ${escapeHtml(product.model || product.id)}">حذف</button></div></td>`;
       body.appendChild(row);
@@ -316,7 +317,9 @@
         name_ar: product.nameAr,
         name_en: product.nameEn,
         description_en: product.descriptionEn,
-        pictures_url: product.picturesUrl
+        pictures_url: product.picturesUrl,
+        stock_quantity: product.stockQuantity == null ? '' : product.stockQuantity,
+        low_stock_threshold: product.lowStockThreshold ?? 5
       })) {
         if (form.elements[field]) form.elements[field].value = value ?? '';
       }
