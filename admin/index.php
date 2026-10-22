@@ -30,7 +30,7 @@ if (!$configured) {
   <link rel="stylesheet" href="admin.css?v=20261022-admin-v1">
   <script src="admin.js?v=20261022-admin-v1" defer></script>
 </head>
-<body>
+<body data-setup-needed="<?= $notice !== '' ? '1' : '0' ?>">
   <header class="topbar">
     <a class="brand" href="../" aria-label="ROCK storefront"><img src="../assets/brand/rock-logo.svg" alt="ROCK"></a>
     <div class="top-actions"><a class="site-link" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a><button id="logoutButton" class="btn btn-quiet" type="button" hidden>تسجيل الخروج</button></div>
