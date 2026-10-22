@@ -12,6 +12,8 @@ function rock_admin_row(array $row): array
     $product = rock_public_product($row);
     $product['active'] = (bool)$row['active'];
     $product['imageApproved'] = (bool)$row['image_approved'];
+    $product['stockQuantity'] = array_key_exists('stock_quantity', $row) && $row['stock_quantity'] !== null ? (int)$row['stock_quantity'] : null;
+    $product['lowStockThreshold'] = (int)($row['low_stock_threshold'] ?? 5);
     return $product;
 }
 
@@ -254,6 +256,22 @@ try {
     $descriptionEn = trim((string)($_POST['description_en'] ?? ''));
     $picturesUrl = trim((string)($_POST['pictures_url'] ?? ''));
     $requestedActive = (string)($_POST['active'] ?? '0') === '1';
+    $stockText = trim((string)($_POST['stock_quantity'] ?? ''));
+    $thresholdText = trim((string)($_POST['low_stock_threshold'] ?? '5'));
+    $stockQuantity = null;
+    if ($stockText !== '') {
+        if (!preg_match('/^\d{1,7}$/', $stockText) || (int)$stockText > 1000000) {
+            rock_json(['error' => 'أدخل كمية مخزون صحيحة حتى مليون وحدة، أو اترك الحقل فارغًا لتعطيل تتبع المخزون.'], 422);
+        }
+        $stockQuantity = (int)$stockText;
+    }
+    if ($thresholdText === '') {
+        $thresholdText = '5';
+    }
+    if (!preg_match('/^\d{1,7}$/', $thresholdText) || (int)$thresholdText > 1000000) {
+        rock_json(['error' => 'حد التنبيه للمخزون غير صالح.'], 422);
+    }
+    $lowStockThreshold = (int)$thresholdText;
 
     if (!preg_match('/^[a-zA-Z0-9_-]{2,80}$/', $id)) {
         rock_json(['error' => 'معرّف المنتج يجب أن يحتوي على أحرف أو أرقام أو شرطة فقط.'], 422);
@@ -340,9 +358,9 @@ try {
 
     $sortOrder = $existing ? (int)$existing['sort_order'] : ((int)$pdo->query('SELECT COALESCE(MAX(sort_order), 0) + 10 FROM rock_products')->fetchColumn());
     $sql = 'INSERT INTO rock_products
-      (id, barcode, model, category, price, image, name_ar, name_en, description_en, pictures_url, images_json, active, image_approved, sort_order)
-      VALUES (:id, :barcode, :model, :category, :price, :image, :name_ar, :name_en, :description_en, :pictures_url, :images_json, :active, :image_approved, :sort_order)
-      ON DUPLICATE KEY UPDATE barcode = VALUES(barcode), model = VALUES(model), category = VALUES(category), price = VALUES(price), image = VALUES(image), name_ar = VALUES(name_ar), name_en = VALUES(name_en), description_en = VALUES(description_en), pictures_url = VALUES(pictures_url), images_json = VALUES(images_json), active = VALUES(active), image_approved = VALUES(image_approved), sort_order = VALUES(sort_order)';
+      (id, barcode, model, category, price, image, name_ar, name_en, description_en, pictures_url, images_json, active, image_approved, sort_order, stock_quantity, low_stock_threshold)
+      VALUES (:id, :barcode, :model, :category, :price, :image, :name_ar, :name_en, :description_en, :pictures_url, :images_json, :active, :image_approved, :sort_order, :stock_quantity, :low_stock_threshold)
+      ON DUPLICATE KEY UPDATE barcode = VALUES(barcode), model = VALUES(model), category = VALUES(category), price = VALUES(price), image = VALUES(image), name_ar = VALUES(name_ar), name_en = VALUES(name_en), description_en = VALUES(description_en), pictures_url = VALUES(pictures_url), images_json = VALUES(images_json), active = VALUES(active), image_approved = VALUES(image_approved), sort_order = VALUES(sort_order), stock_quantity = VALUES(stock_quantity), low_stock_threshold = VALUES(low_stock_threshold)';
     try {
         $save = $pdo->prepare($sql);
         $save->execute([
@@ -360,6 +378,8 @@ try {
             ':active' => $requestedActive ? 1 : 0,
             ':image_approved' => $imageApproved ? 1 : 0,
             ':sort_order' => $sortOrder,
+            ':stock_quantity' => $stockQuantity,
+            ':low_stock_threshold' => $lowStockThreshold,
         ]);
     } catch (Throwable $error) {
         if ($uploadedRelative !== '') {
