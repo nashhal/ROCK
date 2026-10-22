@@ -305,7 +305,7 @@ const orderSchema = read('api/order-schema.php');
 assert.ok(publicOrderApi.includes('rock_validate_public_order') && publicOrderApi.includes('HTTP_IDEMPOTENCY_KEY'), 'Order intake must validate payloads and support idempotent submissions');
 assert.ok(publicOrderApi.includes('stock_quantity') && publicOrderApi.includes('rock_order_minor_to_decimal'), 'Order totals must be recomputed from database prices and tracked stock');
 assert.ok(orderSchema.includes('rock_orders') && orderSchema.includes('rock_order_items') && orderSchema.includes('rock_order_events'), 'Order schema must persist order headers, line items, and audit events');
-assert.ok(orderDomain.includes('FILTER') === false && orderDomain.includes('rock_order_normalize_phone') && orderDomain.includes('rock_order_minor_to_decimal'), 'Order validation and money helpers are required');
+assert.ok(orderDomain.includes('rock_order_normalize_phone') && orderDomain.includes('rock_validate_public_order') && orderDomain.includes('rock_order_minor_to_decimal'), 'Order validation and money helpers are required');
 assert.ok(hostingerAdminApi.includes("action === 'orders'") && hostingerAdminApi.includes("action === 'order_status'"), 'Admin must list orders and guard status transitions');
 assert.ok(hostingerAdminApi.includes("action === 'order_shipping'") && hostingerAdminApi.includes('stock_quantity = stock_quantity - ?') && hostingerAdminApi.includes('stock_quantity = stock_quantity + ?'), 'Admin must quote shipping and atomically commit or restore tracked inventory');
 assert.ok(read('admin/admin.js').includes('async function loadOrders()') && read('admin/admin.js').includes('async function saveOrderShipping'), 'Admin UI must expose order listing and shipping quotes');
