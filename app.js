@@ -191,7 +191,7 @@
     grid.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => openProduct(button.dataset.view)));
   }
   function safeImage(path){
-    return typeof path === 'string' && /^assets\/products\/[a-z0-9-]+\.webp$/i.test(path)
+    return typeof path === 'string' && /^(?:assets|uploads)\/products\/[a-z0-9_-]+\.webp$/i.test(path)
       ? path : '';
   }
   function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
