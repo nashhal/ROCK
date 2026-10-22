@@ -189,6 +189,8 @@ function rock_public_product(array $row): array
         'images' => $gallery,
         'active' => (bool)$row['active'],
         'imageApproved' => (bool)$row['image_approved'],
+        'stockTracked' => array_key_exists('stock_quantity', $row) && $row['stock_quantity'] !== null,
+        'inStock' => !array_key_exists('stock_quantity', $row) || $row['stock_quantity'] === null || (int)$row['stock_quantity'] > 0,
     ];
 }
 
