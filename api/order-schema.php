@@ -36,6 +36,7 @@ function rock_install_order_schema(PDO $pdo): void
       name_en VARCHAR(255) NOT NULL,
       unit_price DECIMAL(12,2) NOT NULL,
       quantity SMALLINT UNSIGNED NOT NULL,
+      stock_committed_quantity SMALLINT UNSIGNED NOT NULL DEFAULT 0,
       line_total DECIMAL(12,2) NOT NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       INDEX idx_rock_order_items_order (order_id),
@@ -69,6 +70,11 @@ function rock_install_order_schema(PDO $pdo): void
     }
     if (!in_array('low_stock_threshold', $productColumns, true)) {
         $pdo->exec('ALTER TABLE rock_products ADD COLUMN low_stock_threshold INT UNSIGNED NOT NULL DEFAULT 5 AFTER stock_quantity');
+    }
+
+    $itemColumns = $pdo->query('SHOW COLUMNS FROM rock_order_items')->fetchAll(PDO::FETCH_COLUMN, 0);
+    if (!in_array('stock_committed_quantity', $itemColumns, true)) {
+        $pdo->exec('ALTER TABLE rock_order_items ADD COLUMN stock_committed_quantity SMALLINT UNSIGNED NOT NULL DEFAULT 0 AFTER quantity');
     }
 
     $orderColumns = $pdo->query('SHOW COLUMNS FROM rock_orders')->fetchAll(PDO::FETCH_COLUMN, 0);
