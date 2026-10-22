@@ -88,7 +88,7 @@ try {
             'duplicate' => true,
             'orderNumber' => (string)$existing['order_number'],
             'status' => (string)$existing['status'],
-            'total' => (string)$existing['total'],
+            'total' => $existing['total'] === null ? null : (string)$existing['total'],
             'currency' => 'SAR',
             'message' => 'تم تسجيل هذا الطلب سابقًا.',
         ]);
@@ -194,7 +194,7 @@ try {
                         'duplicate' => true,
                         'orderNumber' => (string)$retryExisting['order_number'],
                         'status' => (string)$retryExisting['status'],
-                        'total' => (string)$retryExisting['total'],
+                        'total' => $retryExisting['total'] === null ? null : (string)$retryExisting['total'],
                         'currency' => 'SAR',
                     ]);
                 }
