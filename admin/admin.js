@@ -221,8 +221,12 @@
       ).join('');
       const itemRows = items.map(item => '<tr><td><strong>' + escapeHtml(item.name_ar) + '</strong><small class="order-subtext" dir="ltr">' + escapeHtml(item.model) + '</small></td><td>' + escapeHtml(item.quantity) + '</td><td>' + escapeHtml(money(item.unit_price)) + '</td><td>' + escapeHtml(money(item.line_total)) + '</td></tr>').join('');
       const notes = String(order.customer_notes || '').trim();
+      const shippingEditor = order.status === 'new'
+        ? '<form id="orderShippingForm" data-order-id="' + escapeHtml(order.id) + '" class="shipping-editor"><label for="orderShippingInput">رسوم الشحن (ر.س)<input id="orderShippingInput" name="shipping" type="number" min="0" max="999999999" step="0.01" inputmode="decimal" value="' + escapeHtml(order.shipping == null ? '' : order.shipping) + '" required></label><button class="btn btn-primary" type="submit">حفظ رسوم الشحن</button><p>أدخل السعر الفعلي للشحن. اكتب 0 فقط إذا كان التوصيل مجانيًا فعلًا.</p></form>'
+        : '<div class="order-payment-note">تم إغلاق تعديل الشحن بعد بدء تنفيذ الطلب. أي تعديل استثنائي يحتاج إلى إجراء موثق منفصل.</div>';
       $('#orderDetailBody').innerHTML =
         '<div class="order-detail-grid">' + fieldsHtml + '</div>' +
+        shippingEditor +
         '<h3 style="font-size:13px;margin:0 0 8px">المنتجات</h3>' +
         '<div class="table-scroll"><table class="order-items-table"><thead><tr><th>المنتج / الموديل</th><th>الكمية</th><th>سعر الوحدة</th><th>المجموع</th></tr></thead><tbody>' +
         (itemRows || '<tr><td colspan="4" class="empty-cell">لا توجد عناصر.</td></tr>') + '</tbody></table></div>' +
@@ -230,6 +234,31 @@
         '<div class="order-payment-note">لا يوجد مزود دفع أو شحن متصل بهذه النسخة. لا تعتبر حالة الدفع أو قيمة الشحن مؤكدة.</div>';
     } catch (error) {
       $('#orderDetailBody').innerHTML = '<p class="form-message error">' + escapeHtml(error.message) + '</p>';
+    }
+  }
+
+  async function saveOrderShipping(form) {
+    const orderId = form.dataset.orderId;
+    const shipping = String(new FormData(form).get('shipping') || '').trim();
+    if (!orderId || !/^\d{1,9}(?:\.\d{1,2})?$/.test(shipping)) {
+      showToast('أدخل رسوم شحن صحيحة حتى منزلتين عشريتين.', 'error');
+      return;
+    }
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    const data = new FormData();
+    data.set('action', 'order_shipping');
+    data.set('order_id', orderId);
+    data.set('shipping', shipping);
+    addCsrf(data);
+    try {
+      await api('api.php?action=order_shipping', { method: 'POST', body: data });
+      showToast('تم حفظ رسوم الشحن والإجمالي المبدئي.');
+      await loadOrders();
+      await openOrderDetails(orderId);
+    } catch (error) {
+      showToast(error.message, 'error');
+      button.disabled = false;
     }
   }
 
@@ -441,6 +470,12 @@
     if (button) openOrderDetails(button.dataset.orderDetails);
   });
   $('[data-close-order-dialog]').forEach(node => node.addEventListener('click', closeOrderDetails));
+  $('#orderDetailBody')?.addEventListener('submit', event => {
+    if (event.target.id === 'orderShippingForm') {
+      event.preventDefault();
+      saveOrderShipping(event.target);
+    }
+  });
   $('#loginForm')?.addEventListener('submit', login);
   $('#productForm')?.addEventListener('submit', saveProduct);
   $('#newProductButton')?.addEventListener('click', () => openDialog());
