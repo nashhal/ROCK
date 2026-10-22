@@ -26,7 +26,7 @@ The admin manages the Hostinger database only. It does not change `products.js` 
 ## Useful checks
 
 - The hosting PHP version should be PHP 8.1 or later.
-- Required PHP extensions: `pdo_mysql`, `gd` with WebP support, and `fileinfo`.
+- Required PHP extensions: `pdo_mysql`, `gd` with WebP support, `fileinfo` and `mbstring`.
 - PHP must be allowed to write to `uploads/products/`; the API creates this folder when the first valid product image is uploaded.
 - Enable HTTPS/SSL in Hostinger before using the admin sign-in.
 - If the catalog API returns a temporary-unavailable response, check Hostinger PHP error logs and confirm the database credentials and installation marker.
