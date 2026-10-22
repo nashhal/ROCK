@@ -1794,3 +1794,23 @@ html[dir="rtl"] .hero-visual .visual-label{text-align:right}
 @media(prefers-reduced-motion:reduce){
   .hero-visual .visual-card{transition:none!important}
 }
+
+
+/* Use the official ROCK wordmark in the brand-story tile instead of a placeholder R. */
+.story-mark .story-mark-logo{
+  display:block;
+  width:82%;
+  max-width:156px;
+  max-height:52px;
+  height:auto;
+  object-fit:contain;
+  object-position:center;
+  filter:none!important;
+}
+@media(max-width:700px){
+  .story-mark .story-mark-logo{
+    width:84%;
+    max-width:56px;
+    max-height:24px;
+  }
+}
