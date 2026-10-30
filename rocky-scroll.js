@@ -97,7 +97,9 @@
     smoothPointerY = mix(smoothPointerY,pointerY,follow);
     const pointerTiltX = smoothPointerY * 4;
     const pointerTiltY = smoothPointerX * 7;
-    root.style.transform = `translate3d(${smooth.x}px,${smooth.y}px,0) translate(-50%,-50%) scale(${smooth.s}) rotateZ(${smooth.roll+velocityTilt}deg)`;
+    const halfWidth = root.offsetWidth * smooth.s * .5;
+    const safeX = clamp(smooth.x,halfWidth+18,Math.max(halfWidth+18,window.innerWidth-halfWidth-18));
+    root.style.transform = `translate3d(${safeX}px,${smooth.y}px,0) translate(-50%,-50%) scale(${smooth.s}) rotateZ(${smooth.roll+velocityTilt}deg)`;
     stage.style.transform = `rotateX(${smooth.pitch-pointerTiltX}deg) rotateY(${smooth.turn+pointerTiltY}deg)`;
     root.style.setProperty('--rocky-flight-opacity',String(smooth.alpha));
     root.classList.toggle('is-on-dark',smooth.dark);
