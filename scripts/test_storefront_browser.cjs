@@ -72,6 +72,30 @@ async function waitForCatalog(page) {
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     await page.waitForFunction(() => window.scrollY === 0, null, { timeout: 3000 });
     await page.evaluate(() => document.fonts.ready);
+    // Trigger all scroll-reveal states before capturing the full-page review image.
+    for (const selector of ['.service-item','.shop-section .section-head','.collections .section-head','.collection-card','.story-mark','.story-copy','.closing-banner>div','.closing-banner>.circle-arrow']) {
+      const items = page.locator(selector);
+      for (let i = 0; i < await items.count(); i++) {
+        await items.nth(i).scrollIntoViewIfNeeded();
+        await page.waitForTimeout(80);
+      }
+    }
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await page.waitForTimeout(250);
+    const closingVisual = await page.locator('.closing-banner h2').evaluate(el => ({
+      text: el.innerText,
+      opacity: getComputedStyle(el.parentElement).opacity,
+      bounds: el.getBoundingClientRect().toJSON()
+    }));
+    assert.ok(closingVisual.text.trim().length > 0 && Number(closingVisual.opacity) > 0.9,
+      'Final ROCK call-to-action must be visible after the scroll story has been traversed');
+    const markBounds = await page.locator('.story-mark-logo').evaluate(el => {
+      const image = el.getBoundingClientRect();
+      const tile = el.parentElement.getBoundingClientRect();
+      return { imageLeft:image.left, imageRight:image.right, tileLeft:tile.left, tileRight:tile.right };
+    });
+    assert.ok(markBounds.imageLeft >= markBounds.tileLeft - 1 && markBounds.imageRight <= markBounds.tileRight + 1,
+      'ROCK wordmark must remain contained within its brand-story tile');
     assert.equal(await page.locator('html').getAttribute('dir'), 'rtl', 'Homepage should start in Arabic RTL');
     const approvedIds = await page.evaluate(() => window.ROCK_PRODUCT_IMAGE_QUALITY.visibleIds);
     assert.equal(await page.locator('#heroProductCount').textContent(), String(approvedIds.length), 'Hero count must match approved product photos');
