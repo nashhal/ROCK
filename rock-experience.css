@@ -429,3 +429,16 @@ html[dir="ltr"] .hero h1{font-size:clamp(3.5rem,7.7vw,7.35rem);line-height:1.02}
   border:1px solid rgba(210,234,255,.42)!important;
 }
 .circle-arrow:hover{background:#fff!important;color:#071a33!important;border-color:#fff!important}
+
+
+/* Keep the three trust messages legible on the full-bleed blue band. */
+.service-strip .service-item{
+  background:transparent!important;
+  border:0!important;
+  border-inline-end:1px solid rgba(216,235,252,.17)!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.service-strip .service-item:last-child{border-inline-end:0!important}
+.service-strip .service-item h3{color:#fff!important}
+.service-strip .service-item p{color:#c2d7ea!important}
