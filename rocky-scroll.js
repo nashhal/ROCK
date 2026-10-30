@@ -101,7 +101,19 @@
     root.dataset.landmark = t.landmark;
     scrollLean *= .86;
     if (Math.abs(scrollLean)<.001) scrollLean=0;
-    frame = window.requestAnimationFrame(render);
+    const stillMoving =
+      Math.abs(smooth.x-t.x)>.35 ||
+      Math.abs(smooth.y-t.y)>.35 ||
+      Math.abs(smooth.s-t.s)>.002 ||
+      Math.abs(smooth.turn-t.turn)>.08 ||
+      Math.abs(smooth.pitch-t.pitch)>.08 ||
+      Math.abs(smooth.roll-t.roll)>.08 ||
+      Math.abs(smooth.alpha-t.alpha)>.004 ||
+      Math.abs(scrollLean)>.001 ||
+      Math.abs(pointerX)>.015 ||
+      Math.abs(pointerY)>.015;
+    if (stillMoving) frame = window.requestAnimationFrame(render);
+    else frame = 0;
   }
 
   function requestRender(){
