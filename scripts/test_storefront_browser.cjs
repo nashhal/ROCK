@@ -60,6 +60,20 @@ async function waitForCatalog(page) {
     assert.equal(await page.locator('html').getAttribute('dir'), 'rtl', 'Homepage should start in Arabic RTL');
     const approvedIds = await page.evaluate(() => window.ROCK_PRODUCT_IMAGE_QUALITY.visibleIds);
     assert.equal(await page.locator('#heroProductCount').textContent(), String(approvedIds.length), 'Hero count must match approved product photos');
+    await visible(page, '#featuredCarousel', 'Featured products carousel must be visible below the header');
+    const carouselSlides = await page.locator('#featuredTrack .featured-slide').count();
+    assert.ok(carouselSlides >= 2 && carouselSlides <= 4, 'Featured carousel should show two to four approved products');
+    const firstFeatured = await page.locator('#featuredTrack .featured-slide:not([hidden]) .featured-model b').textContent();
+    await page.locator('#featuredNext').click();
+    const secondFeatured = await page.locator('#featuredTrack .featured-slide:not([hidden]) .featured-model b').textContent();
+    assert.notEqual(secondFeatured, firstFeatured, 'Next control should change the featured product');
+    assert.equal(await page.locator('#featuredTrack .featured-slide:not([hidden])').count(), 1, 'Only the active slide should be exposed');
+    await page.locator('#featuredPause').click();
+    assert.equal(await page.locator('#featuredPause').getAttribute('aria-pressed'), 'true', 'Pause control should expose its state');
+    await page.locator('#featuredPrev').click();
+    assert.equal(await page.locator('#featuredPause').getAttribute('aria-pressed'), 'true', 'Manual navigation should not undo a user pause');
+    await page.locator('#featuredPause').click();
+    assert.equal(await page.locator('#featuredPause').getAttribute('aria-pressed'), 'false', 'Play control should resume the carousel');
     await page.locator('#productGrid [data-product-image]').evaluateAll(images => images.forEach(image => { image.loading = 'eager'; }));
     await page.waitForFunction(() => [...document.querySelectorAll('#productGrid [data-product-image]')].every(image => image.complete),
       { timeout: 15000 });
@@ -84,6 +98,8 @@ async function waitForCatalog(page) {
     // Mobile homepage: menu state, category navigation, language switch and layout width.
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => window.scrollTo(0, 0));
+    await visible(page, '#featuredCarousel', 'Featured products carousel must remain visible on mobile');
+    await noHorizontalOverflow(page, 'mobile featured carousel');
     await visible(page, '#menuBtn', 'Mobile menu button must be visible on small screens');
     await page.locator('#menuBtn').click();
     assert.equal(await page.locator('#menuBtn').getAttribute('aria-expanded'), 'true');

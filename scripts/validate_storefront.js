@@ -299,3 +299,21 @@ assert.ok(hostingerGuide.includes('api/install.php') && hostingerGuide.includes(
 assert.ok(workflow.includes('php scripts/test_hostinger_admin.php') && workflow.includes('node --check admin/admin.js'), 'CI must run PHP backend tests and lint the admin UI');
 
 console.log(`ROCK validation passed: ${visibleIds.size} visible product photos out of ${products.length} catalog items, all local gallery images, HTML assets, CSP, sitemap and accessibility guards.`);
+
+
+ // Carousel and design-layer source guards.
+ const carouselHome = read('index.html');
+ const carouselApp = read('app.js');
+ const refinedCss = read('white-modern.css');
+ assert.ok(carouselHome.includes('id="featuredCarousel"') && carouselHome.includes('aria-roledescription="carousel"'),
+   'Homepage must expose an accessible featured-product carousel region');
+ for (const control of ['featuredTrack','featuredDots','featuredPause','featuredPrevious','featuredNext']) {
+   assert.ok(carouselHome.includes(control), 'Featured carousel control is missing: ' + control);
+ }
+ for (const key of ['featuredCarousel','featuredPause','featuredPlay','featuredPrevious','featuredNext','featuredView','featuredAdd']) {
+   assert.ok(carouselApp.includes(key + ':'), 'Featured carousel translation is missing: ' + key);
+ }
+ assert.ok(carouselApp.includes('function scheduleFeaturedAutoplay()'), 'Featured carousel autoplay scheduler is missing');
+ assert.ok(carouselApp.includes('prefers-reduced-motion: reduce'), 'Featured carousel must respect reduced-motion preferences');
+ assert.ok(refinedCss.includes('ROCK Design Refinement v2'), 'Final design refinement layer is missing');
+ assert.ok(refinedCss.includes('.featured-slide[hidden]'), 'Inactive featured slides must be hidden from display and interaction');
