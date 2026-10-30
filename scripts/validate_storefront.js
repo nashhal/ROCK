@@ -329,3 +329,21 @@ assert.ok(rockyHome.includes('rocky-scroll.js?v=20261030-rocky-flight-v1'), 'Roc
 assert.ok(rockyFlightScript.includes("selector:'#collections'") && rockyFlightScript.includes("selector:'#story'"), 'Rocky must travel between real storefront sections');
 assert.ok(rockyFlightScript.includes('requestAnimationFrame') && rockyFlightScript.includes('prefers-reduced-motion'), 'Rocky flight must be scroll-driven and respect reduced motion');
 assert.ok(rockyFlightCss.includes('perspective:700px') && rockyFlightCss.includes('prefers-reduced-motion:reduce'), 'Rocky visual must provide subtle depth and reduced-motion support');
+
+// Immersive ROCK visual redesign guards.
+const experienceHome = read('index.html');
+const experienceCss = read('rock-experience.css');
+const experienceScript = read('rock-experience.js');
+assert.ok(experienceHome.includes('id="rockProgressBar"'), 'Homepage scroll progress marker is missing');
+assert.ok(experienceHome.includes('rock-experience.css?v=20261030-immersive-rock-v1'), 'Immersive ROCK stylesheet link is missing');
+assert.ok(experienceHome.includes('rock-experience.js?v=20261030-immersive-rock-v1'), 'Immersive ROCK motion script link is missing');
+assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.includes('linear-gradient(118deg,#041426'),
+  'Hero must be restyled as a full-width ROCK navy opening scene');
+assert.ok(experienceCss.includes('.service-strip.section-shell') && experienceCss.includes('.collections{'),
+  'Trust band and collection chapter must be restyled as full-width story scenes');
+assert.ok(experienceCss.includes('.rocky-flight{width:clamp(126px,13vw,184px)!important;z-index:18}'),
+  'Rocky must be visually prominent in the redesigned homepage');
+assert.ok(experienceScript.includes('rockProgressBar') && experienceScript.includes('IntersectionObserver'),
+  'Reading progress and scroll reveals must be initialized');
+assert.ok(experienceCss.includes('.service-strip .service-item{') && experienceCss.includes('background:transparent!important'),
+  'Trust message tiles must not retain opaque white cards over the blue brand band');
