@@ -43,6 +43,9 @@ body.rock-page-scrolled .site-header{
   background:rgba(255,255,255,.97);
   box-shadow:0 10px 32px rgba(7,26,51,.075);
 }
+/* The drawer direction belongs to the document language, which lives on <html>. */
+html[dir="rtl"] .cart-drawer{right:auto;left:0;transform:translateX(-105%)}
+html[dir="rtl"] .cart-drawer.open{transform:none!important}
 
 /* The hero is a full-width opening scene rather than a regular two-column banner. */
 .hero.section-shell,.hero{
