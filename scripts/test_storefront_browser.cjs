@@ -59,12 +59,12 @@ async function waitForCatalog(page) {
     await visible(page, '#rockyFlight', 'Rocky scroll character must be present on the homepage');
     const rockyAsset = await page.locator('#rockyFlight .rocky-flight__image').getAttribute('src');
     assert.equal(rockyAsset, 'assets/brand/rocky-mascot.svg', 'The official ROCKY mascot must replace the bee artwork');
-    await page.locator('#collections').scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollTo({ top: document.querySelector('#collections').offsetTop + 48, behavior: 'instant' }));
     await page.waitForFunction(() => document.querySelector('#rockyFlight')?.dataset.landmark === 'collections',
       null, { timeout: 5000 });
     const rockyFlightTransform = await page.locator('#rockyFlight').evaluate(el => el.style.transform);
     assert.ok(rockyFlightTransform.includes('translate3d('), 'Rocky must receive a scroll-driven transform');
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     await page.waitForFunction(() => window.scrollY === 0, null, { timeout: 3000 });
     await page.evaluate(() => document.fonts.ready);
     assert.equal(await page.locator('html').getAttribute('dir'), 'rtl', 'Homepage should start in Arabic RTL');
