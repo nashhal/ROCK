@@ -345,3 +345,5 @@ assert.ok(experienceCss.includes('.rocky-flight{width:clamp(126px,13vw,184px)!im
   'Rocky must be visually prominent in the redesigned homepage');
 assert.ok(experienceScript.includes('rockProgressBar') && experienceScript.includes('IntersectionObserver'),
   'Reading progress and scroll reveals must be initialized');
+assert.ok(experienceCss.includes('.service-strip .service-item{') && experienceCss.includes('background:transparent!important'),
+  'Trust message tiles must not retain opaque white cards over the blue brand band');
