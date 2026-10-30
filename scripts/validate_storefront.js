@@ -318,17 +318,12 @@ console.log(`ROCK validation passed: ${visibleIds.size} visible product photos o
  assert.ok(refinedCss.includes('ROCK Design Refinement v2'), 'Final design refinement layer is missing');
  assert.ok(refinedCss.includes('.featured-slide[hidden]'), 'Inactive featured slides must be hidden from display and interaction');
 
-// Rocky scroll-flight source guards.
-const rockyHome = read('index.html');
-const rockyFlightCss = read('rocky-scroll.css');
-const rockyFlightScript = read('rocky-scroll.js');
-assert.ok(rockyHome.includes('id="rockyFlight"'), 'Homepage must include the decorative Rocky flight layer');
-assert.ok(rockyHome.includes('assets/brand/rocky-mascot.svg'), 'The official Rocky mascot must be used for the scroll character');
-assert.ok(rockyHome.includes('rocky-scroll.css?v=20261030-rocky-flight-v1'), 'Rocky flight stylesheet cache version missing');
-assert.ok(rockyHome.includes('rocky-scroll.js?v=20261030-rocky-flight-v1'), 'Rocky flight script cache version missing');
-assert.ok(rockyFlightScript.includes("selector:'#collections'") && rockyFlightScript.includes("selector:'#story'"), 'Rocky must travel between real storefront sections');
-assert.ok(rockyFlightScript.includes('requestAnimationFrame') && rockyFlightScript.includes('prefers-reduced-motion'), 'Rocky flight must be scroll-driven and respect reduced motion');
-assert.ok(rockyFlightCss.includes('perspective:700px') && rockyFlightCss.includes('prefers-reduced-motion:reduce'), 'Rocky visual must provide subtle depth and reduced-motion support');
+// The decorative Rocky flight layer is intentionally disabled; keep the independent assistant.
+const staticMascotHome = read('index.html');
+assert.ok(staticMascotHome.includes('rocky-assistant.css?v='), 'The existing Rocky shopping assistant stylesheet must remain');
+assert.ok(staticMascotHome.includes('rocky-assistant.js?v='), 'The existing Rocky shopping assistant script must remain');
+assert.ok(!staticMascotHome.includes('rocky-flight') && !staticMascotHome.includes('rocky-scroll'),
+  'The animated Rocky flight layer must be removed from the storefront');
 
 // Immersive ROCK visual redesign guards.
 const experienceHome = read('index.html');
