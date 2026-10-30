@@ -251,18 +251,6 @@ html[dir="ltr"] .hero h1{font-size:clamp(3.5rem,7.7vw,7.35rem);line-height:1.02}
 .circle-arrow:hover{background:#fff;color:#071a33;border-color:#fff}
 .site-footer{padding-top:34px;padding-bottom:36px}
 
-/* Rocky is the visual protagonist. Keep it larger than an icon but never in the way of controls. */
-.rocky-flight{width:clamp(126px,13vw,184px)!important;z-index:18}
-.rocky-flight__image{
-  filter:drop-shadow(0 20px 22px rgba(2,12,25,.43)) drop-shadow(0 0 30px rgba(20,121,220,.4));
-}
-.rocky-flight__orbit{border-color:rgba(94,185,255,.38);border-width:1.3px}
-.rocky-flight__aura{filter:blur(15px);opacity:.95}
-.rocky-flight.is-on-dark .rocky-flight__orbit{border-color:rgba(118,203,255,.64)}
-.rocky-flight__spark{background:#b7e5ff;box-shadow:0 0 16px 4px rgba(20,121,220,.42)}
-/* The hero has its own large composition; Rocky stays outside it and can float over the scene. */
-.rocky-flight{pointer-events:none!important}
-
 /* Scroll reveals: never hide core content if JavaScript or IntersectionObserver is unavailable. */
 .rock-reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .8s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
 .rock-reveal.rock-visible{opacity:1;transform:none}
@@ -273,7 +261,6 @@ html[dir="ltr"] .hero h1{font-size:clamp(3.5rem,7.7vw,7.35rem);line-height:1.02}
   .hero.section-shell,.hero{min-height:0;grid-template-columns:minmax(0,1fr);gap:34px;padding-block:64px}
   .hero-copy{max-width:820px}
   .hero-visual.featured-carousel{min-height:430px!important}
-  .rocky-flight{width:128px!important}
 }
 @media(max-width:760px){
   .announcement{height:30px}
@@ -331,9 +318,6 @@ html[dir="ltr"] .hero h1{font-size:clamp(3.5rem,7.7vw,7.35rem);line-height:1.02}
   .circle-arrow{width:54px;height:54px}
   .site-footer{grid-template-columns:1fr 1fr;gap:20px;padding:26px 18px 30px}
   .footer-meta{grid-column:1/-1;text-align:start}
-  .rocky-flight{width:94px!important}
-  .rocky-flight__orbit{inset:9%}
-  .rocky-flight__aura{filter:blur(8px)}
   .rock-reveal{transform:translate3d(0,15px,0)}
 }
 @media(max-width:390px){
@@ -345,7 +329,6 @@ html[dir="ltr"] .hero h1{font-size:clamp(3.5rem,7.7vw,7.35rem);line-height:1.02}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
   .rock-reveal{opacity:1;transform:none}
-  .rocky-flight__image,.rocky-flight__orbit,.rocky-flight__spark{animation:none!important}
 }
 
 
