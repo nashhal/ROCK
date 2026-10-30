@@ -442,3 +442,33 @@ html[dir="ltr"] .hero h1{font-size:clamp(3.5rem,7.7vw,7.35rem);line-height:1.02}
 .service-strip .service-item:last-child{border-inline-end:0!important}
 .service-strip .service-item h3{color:#fff!important}
 .service-strip .service-item p{color:#c2d7ea!important}
+
+
+/* Keep the ROCK wordmark inside its editorial tile; never let it collide with copy. */
+.story-mark{
+  width:clamp(112px,15vw,184px)!important;
+  max-width:100%!important;
+  min-width:0!important;
+  overflow:hidden;
+}
+.story-mark .story-mark-logo{
+  display:block;
+  width:min(100%,170px)!important;
+  max-width:100%!important;
+  max-height:74px!important;
+  height:auto!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 12px 18px rgba(7,26,51,.08))!important;
+}
+@media(max-width:760px){
+  .story-mark{
+    width:100%!important;
+    max-width:none!important;
+    min-height:150px;
+  }
+  .story-mark .story-mark-logo{
+    width:min(100%,160px)!important;
+    max-width:100%!important;
+    max-height:70px!important;
+  }
+}
