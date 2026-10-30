@@ -23,6 +23,8 @@
   let scrollLean = 0;
   let pointerX = 0;
   let pointerY = 0;
+  let smoothPointerX = 0;
+  let smoothPointerY = 0;
   let smooth = null;
 
   const clamp = (value,min,max) => Math.max(min,Math.min(max,value));
@@ -91,8 +93,10 @@
     smooth.alpha = mix(smooth.alpha,t.alpha,follow);
     smooth.dark = t.dark;
     const velocityTilt = clamp(scrollLean*46,-8,8);
-    const pointerTiltX = pointerY * 4;
-    const pointerTiltY = pointerX * 7;
+    smoothPointerX = mix(smoothPointerX,pointerX,follow);
+    smoothPointerY = mix(smoothPointerY,pointerY,follow);
+    const pointerTiltX = smoothPointerY * 4;
+    const pointerTiltY = smoothPointerX * 7;
     root.style.transform = `translate3d(${smooth.x}px,${smooth.y}px,0) translate(-50%,-50%) scale(${smooth.s}) rotateZ(${smooth.roll+velocityTilt}deg)`;
     stage.style.transform = `rotateX(${smooth.pitch-pointerTiltX}deg) rotateY(${smooth.turn+pointerTiltY}deg)`;
     root.style.setProperty('--rocky-flight-opacity',String(smooth.alpha));
@@ -110,8 +114,8 @@
       Math.abs(smooth.roll-t.roll)>.08 ||
       Math.abs(smooth.alpha-t.alpha)>.004 ||
       Math.abs(scrollLean)>.001 ||
-      Math.abs(pointerX)>.015 ||
-      Math.abs(pointerY)>.015;
+      Math.abs(smoothPointerX-pointerX)>.004 ||
+      Math.abs(smoothPointerY-pointerY)>.004;
     if (stillMoving) frame = window.requestAnimationFrame(render);
     else frame = 0;
   }
@@ -144,6 +148,8 @@
       const y = first.y*window.innerHeight;
       root.style.transform = `translate3d(${x}px,${y}px,0) translate(-50%,-50%) scale(${first.s})`;
       stage.style.transform = 'none';
+      smoothPointerX=pointerX=0;
+      smoothPointerY=pointerY=0;
       root.style.setProperty('--rocky-flight-opacity',String(first.alpha));
       root.dataset.landmark = 'hero';
       root.classList.remove('is-on-dark');
