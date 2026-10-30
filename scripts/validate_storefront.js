@@ -336,8 +336,8 @@ assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.i
   'Hero must be restyled as a full-width ROCK navy opening scene');
 assert.ok(experienceCss.includes('.service-strip.section-shell') && experienceCss.includes('.collections{'),
   'Trust band and collection chapter must be restyled as full-width story scenes');
-assert.ok(experienceCss.includes('.rocky-flight{width:clamp(126px,13vw,184px)!important;z-index:18}'),
-  'Rocky must be visually prominent in the redesigned homepage');
+assert.ok(!experienceCss.includes('.rocky-flight') && !experienceCss.includes('rocky-flight__'),
+  'The immersive stylesheet must not contain the removed floating Rocky character styles');
 assert.ok(experienceScript.includes('rockProgressBar') && experienceScript.includes('IntersectionObserver'),
   'Reading progress and scroll reveals must be initialized');
 assert.ok(experienceCss.includes('.service-strip .service-item{') && experienceCss.includes('background:transparent!important'),
