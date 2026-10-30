@@ -7,8 +7,8 @@
   --rock-scene-paper:#f4f6f8;
   --rock-scene-line:#dfe5eb;
 }
-html{scroll-behavior:smooth;scroll-padding-top:100px}
-body{background:#fff;color:var(--rock-scene-navy)}
+html{scroll-behavior:smooth;scroll-padding-top:100px;overflow-x:clip}
+body{background:#fff;color:var(--rock-scene-navy);overflow-x:clip}
 .rock-progress{
   position:fixed;inset:0 0 auto;z-index:90;height:3px;pointer-events:none;
   background:rgba(7,26,51,.06);
