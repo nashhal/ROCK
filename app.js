@@ -114,12 +114,12 @@
   function setFeaturedSlide(index,restart=true){
     if(!featuredItems.length)return;
     state.featuredIndex=((index%featuredItems.length)+featuredItems.length)%featuredItems.length;
-    $('#featuredTrack [data-featured-slide]').forEach((slide,slideIndex)=>{
+    $$('#featuredTrack [data-featured-slide]').forEach((slide,slideIndex)=>{
       const active=slideIndex===state.featuredIndex;
       slide.hidden=!active;
       slide.setAttribute('aria-hidden',String(!active));
     });
-    $('#featuredDots [data-featured-index]').forEach((dot,dotIndex)=>{
+    $$('#featuredDots [data-featured-index]').forEach((dot,dotIndex)=>{
       const active=dotIndex===state.featuredIndex;
       dot.classList.toggle('is-active',active);
       if(active)dot.setAttribute('aria-current','true');
