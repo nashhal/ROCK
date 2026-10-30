@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="premium-refresh.css?v=20261022-catalog-quality">
   <link rel="stylesheet" href="rocky-assistant.css?v=20261022-catalog-quality">
   <link rel="stylesheet" href="white-modern.css?v=20261030-design-refinement-v2">
+  <link rel="stylesheet" href="rocky-scroll.css?v=20261030-rocky-flight-v1">
 </head>
 <body>
   <div class="announcement"><span>ROCK</span><span data-i18n="announcement">ROCK — فجر جديد مع روك</span><button class="announcement-close" aria-label="إغلاق" data-i18n-aria="closeAnnouncement">×</button></div>
@@ -140,6 +141,16 @@
 
   <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span data-i18n="brandTagline">فجر جديد مع روك</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">المتجر</a><a href="#collections" data-i18n="collections">التصنيفات</a><a href="#story" data-i18n="story">عن ROCK</a></div><div class="footer-meta">&copy; <span id="year"></span> ROCK</div></footer>
 
+  <div class="rocky-flight" id="rockyFlight" aria-hidden="true">
+    <span class="rocky-flight__aura"></span>
+    <span class="rocky-flight__orbit"></span>
+    <div class="rocky-flight__stage" id="rockyFlightStage">
+      <img class="rocky-flight__image" src="assets/brand/rocky-mascot.svg" alt="" width="160" height="160" decoding="async">
+    </div>
+    <span class="rocky-flight__spark rocky-flight__spark--one"></span>
+    <span class="rocky-flight__spark rocky-flight__spark--two"></span>
+  </div>
+
   <div class="overlay" id="overlay"></div>
   <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-label="السلة" data-i18n-aria="viewCart" aria-hidden="true" tabindex="-1"><div class="drawer-head"><div><span>ROCK</span><h3 id="cartTitle" data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart" type="button" aria-label="إغلاق" data-i18n-aria="closeDialog">×</button></div><div class="drawer-body"><div id="cartItems"></div><div class="drawer-foot"><div><strong id="cartTotal" aria-live="polite" aria-atomic="true">0 SAR</strong></div><div><button class="btn" id="continueBtn" data-i18n="continue">متابعة التسوق</button><button class="btn btn-dark" id="checkoutBtn" data-i18n="checkout">جهّز الطلب</button></div></div></div></aside>
 
@@ -149,5 +160,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="products.js?v=20261022-catalog-quality"></script><script src="data/product-image-quality.js?v=20261022-dawn-refresh-v1"></script><script src="app.js?v=20261030-featured-carousel-v1"></script>
   <script src="rocky-assistant.js?v=20261021-audit-release-1"></script>
+  <script src="rocky-scroll.js?v=20261030-rocky-flight-v1"></script>
 </body>
 </html>
