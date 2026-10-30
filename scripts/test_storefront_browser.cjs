@@ -17,10 +17,15 @@ async function visible(page, selector, message) {
 async function noHorizontalOverflow(page, label) {
   const metrics = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
-    document: document.documentElement.scrollWidth
+    document: document.documentElement.scrollWidth,
+    offenders: [...document.querySelectorAll('body *')].map(el => {
+      const r = el.getBoundingClientRect();
+      const s = getComputedStyle(el);
+      return { tag: el.tagName, id: el.id, className: typeof el.className === 'string' ? el.className : '', left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), position: s.position, overflowX: s.overflowX, transform: s.transform };
+    }).filter(x => x.width > 0 && (x.left < -1 || x.right > document.documentElement.clientWidth + 1)).slice(0, 14)
   }));
   assert.ok(metrics.document <= metrics.viewport + 1,
-    label + ' has horizontal overflow: document ' + metrics.document + 'px > viewport ' + metrics.viewport + 'px');
+    label + ' has horizontal overflow: document ' + metrics.document + 'px > viewport ' + metrics.viewport + 'px; elements: ' + JSON.stringify(metrics.offenders));
 }
 
 async function waitForCatalog(page) {
