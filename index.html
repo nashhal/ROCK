@@ -69,12 +69,22 @@
           <div><strong>SAR</strong><span data-i18n="currency">أسعار واضحة</span></div>
         </div>
       </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="visual-orbit orbit-a"></div><div class="visual-orbit orbit-b"></div>
-        <div class="visual-card primary"><img src="assets/products/pods700.webp" alt="ROCK Pods 700 wireless earphones" loading="eager" fetchpriority="high"><span>RO-700W</span></div>
-        <div class="visual-card secondary"><img src="assets/products/rkch765.webp" alt="ROCK RKCH765 65W GaN charger" loading="eager"><span>RKCH765</span></div>
-        <div class="visual-label">ROCK / 2026</div>
-      </div>
+      <section class="hero-visual featured-carousel" id="featuredCarousel" role="region" aria-roledescription="carousel" aria-label="منتجات ROCK المختارة" data-i18n-aria="featuredCarousel">
+        <div class="featured-carousel-heading">
+          <span class="featured-carousel-label" data-i18n="featuredLabel">مختارات ROCK</span>
+          <button class="featured-pause" id="featuredPause" type="button" aria-label="إيقاف الحركة" data-i18n-aria="featuredPause" aria-pressed="false" title="إيقاف الحركة"><span aria-hidden="true">Ⅱ</span></button>
+        </div>
+        <div class="featured-carousel-viewport">
+          <div class="featured-track" id="featuredTrack" aria-live="off"></div>
+        </div>
+        <div class="featured-carousel-footer">
+          <div class="featured-dots" id="featuredDots" role="group" aria-label="التنقل بين المنتجات" data-i18n-aria="featuredDots"></div>
+          <div class="featured-arrows">
+            <button class="featured-arrow" id="featuredPrev" type="button" aria-label="المنتج السابق" data-i18n-aria="featuredPrevious"><span aria-hidden="true">←</span></button>
+            <button class="featured-arrow" id="featuredNext" type="button" aria-label="المنتج التالي" data-i18n-aria="featuredNext"><span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </section>
     </section>
 
     <section class="service-strip section-shell">

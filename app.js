@@ -25,14 +25,16 @@
   function storageGet(key, fallback=''){ try { const value = localStorage.getItem(key); return value === null ? fallback : value; } catch { return fallback; } }
   function storageSet(key, value){ try { localStorage.setItem(key, value); return true; } catch { return false; } }
   const initialLang = storageGet('rock-lang', 'ar');
-  const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', minPrice: '', maxPrice: '', cart: safeCart(), activeProduct: null };
+  const state = { lang: initialLang === 'en' ? 'en' : 'ar', cat: 'all', query: '', sort: 'featured', minPrice: '', maxPrice: '', cart: safeCart(), activeProduct: null, featuredIndex: 0, featuredPaused: false };
+  const featuredMotion = { timer: null, hovered: false, focused: false, reduced: Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) };
+  let featuredItems = [];
   let cartReturnFocus = null;
   let modalReturnFocus = null;
 
   const copy = {
     ar: {
       pageTitle:'ROCK | ملحقات تقنية للشحن والصوت والسيارة',
-      openMenu:'فتح القائمة',search:'بحث',viewCart:'عرض السلة',closeAnnouncement:'إخفاء الشريط',shopProducts:'تصفح المنتجات',switchLanguage:'تغيير اللغة',
+      openMenu:'فتح القائمة',search:'بحث',viewCart:'عرض السلة',closeAnnouncement:'إخفاء الشريط',shopProducts:'تصفح المنتجات',switchLanguage:'تغيير اللغة',featuredCarousel:'منتجات ROCK المختارة',featuredLabel:'مختارات ROCK',featuredPause:'إيقاف الحركة',featuredPlay:'تشغيل الحركة',featuredPrevious:'المنتج السابق',featuredNext:'المنتج التالي',featuredDots:'التنقل بين المنتجات',featuredView:'عرض المنتج',featuredAdd:'أضف للسلة',
       powerLabel:'الشحن والطاقة',audioLabel:'الصوت والسماعات',driveLabel:'إكسسوارات السيارة',lifeLabel:'إكسسوارات يومية',
       brandTagline:'فجر جديد مع روك',closingTitle:'فجر جديد',closingAccent:'مع روك.',
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
@@ -50,7 +52,7 @@
     },
     en: {
       pageTitle:'ROCK | Charging, audio and car accessories',
-      openMenu:'Open menu',search:'Search',viewCart:'View cart',closeAnnouncement:'Dismiss announcement',shopProducts:'Browse products',switchLanguage:'Switch language',
+      openMenu:'Open menu',search:'Search',viewCart:'View cart',closeAnnouncement:'Dismiss announcement',shopProducts:'Browse products',switchLanguage:'Switch language',featuredCarousel:'Selected ROCK products',featuredLabel:'ROCK PICKS',featuredPause:'Pause carousel',featuredPlay:'Play carousel',featuredPrevious:'Previous product',featuredNext:'Next product',featuredDots:'Choose a featured product',featuredView:'View product',featuredAdd:'Add to bag',
       powerLabel:'POWER',audioLabel:'AUDIO',driveLabel:'CAR',lifeLabel:'EVERYDAY',
       brandTagline:'A new dawn with ROCK',closingTitle:'A new dawn',closingAccent:'with ROCK.',
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',
@@ -82,27 +84,164 @@
   function catLabel(c){return ({power:t('catPower'),audio:t('catAudio'),car:t('catDrive'),lifestyle:t('catLifestyle')})[c]||c}
   function money(v){const n=Number(v);const shown=Number.isInteger(n)?String(n):n.toFixed(2);return `${shown} ${t('sar')}`}
 
-  function updateHeroProducts(){
-    const preferredIds=['pods700','rkch765'];
-    const featured=preferredIds.map(id=>products.find(product=>product.id===id)).filter(Boolean);
-    for(const product of products){
-      if(featured.length>=2)break;
-      if(!featured.some(item=>item.id===product.id))featured.push(product);
+  function stopFeaturedAutoplay(){
+    if(featuredMotion.timer!==null){
+      window.clearTimeout(featuredMotion.timer);
+      featuredMotion.timer=null;
     }
-    const cards=$$('.hero-visual .visual-card');
-    cards.forEach((card,index)=>{
-      const product=featured[index];
-      if(!product){card.hidden=true;return}
-      const image=card.querySelector('img');
-      const label=card.querySelector('span');
-      if(image){image.src=safeImage(product.image);image.alt=name(product);image.loading='eager'}
-      if(label)label.textContent=product.model&&product.model!=='—'?product.model:(product.barcode||'ROCK');
-      card.hidden=false;
+  }
+
+  function updateFeaturedPauseButton(){
+    const button=$('#featuredPause');
+    if(!button)return;
+    const label=state.featuredPaused?t('featuredPlay'):t('featuredPause');
+    button.setAttribute('aria-label',label);
+    button.setAttribute('title',label);
+    button.setAttribute('aria-pressed',String(state.featuredPaused));
+    button.textContent=state.featuredPaused?'▶':'Ⅱ';
+  }
+
+  function scheduleFeaturedAutoplay(){
+    stopFeaturedAutoplay();
+    if(state.featuredPaused||featuredMotion.hovered||featuredMotion.focused||featuredMotion.reduced||
+       document.visibilityState==='hidden'||featuredItems.length<2)return;
+    featuredMotion.timer=window.setTimeout(()=>{
+      setFeaturedSlide(state.featuredIndex+1,false);
+      scheduleFeaturedAutoplay();
+    },5600);
+  }
+
+  function setFeaturedSlide(index,restart=true){
+    if(!featuredItems.length)return;
+    state.featuredIndex=((index%featuredItems.length)+featuredItems.length)%featuredItems.length;
+    $('#featuredTrack [data-featured-slide]').forEach((slide,slideIndex)=>{
+      const active=slideIndex===state.featuredIndex;
+      slide.hidden=!active;
+      slide.setAttribute('aria-hidden',String(!active));
     });
-    const visual=$('.hero-visual');
-    if(visual)visual.hidden=featured.length===0;
+    $('#featuredDots [data-featured-index]').forEach((dot,dotIndex)=>{
+      const active=dotIndex===state.featuredIndex;
+      dot.classList.toggle('is-active',active);
+      if(active)dot.setAttribute('aria-current','true');
+      else dot.removeAttribute('aria-current');
+    });
+    if(restart)scheduleFeaturedAutoplay();
+  }
+
+  function updateHeroProducts(){
+    const root=$('#featuredCarousel');
+    const track=$('#featuredTrack');
+    const dots=$('#featuredDots');
+    if(!root||!track||!dots)return;
+
+    const preferredIds=['rkch765','pods700','car30','rph1003'];
+    const selected=preferredIds.map(id=>products.find(product=>product.id===id))
+      .filter(product=>product&&safeImage(product.image));
+    for(const category of ['power','audio','car','lifestyle']){
+      if(selected.length>=4)break;
+      const product=products.find(item=>item.category===category&&safeImage(item.image)&&!selected.some(chosen=>chosen.id===item.id));
+      if(product)selected.push(product);
+    }
+    for(const product of products){
+      if(selected.length>=4)break;
+      if(safeImage(product.image)&&!selected.some(item=>item.id===product.id))selected.push(product);
+    }
+    featuredItems=selected.slice(0,4);
+    if(!featuredItems.length){
+      root.hidden=true;
+      stopFeaturedAutoplay();
+      return;
+    }
+    root.hidden=false;
+    state.featuredIndex=Math.min(state.featuredIndex,featuredItems.length-1);
+    track.innerHTML=featuredItems.map((product,index)=>{
+      const model=product.model&&product.model!=='—'?product.model:t('modelMissing');
+      const productUrl='product.html?id='+encodeURIComponent(product.id);
+      const slideLabel=state.lang==='ar'?'المنتج '+(index+1)+' من '+featuredItems.length:'Product '+(index+1)+' of '+featuredItems.length;
+      return `
+        <article class="featured-slide" data-featured-slide="${index}" role="group" aria-roledescription="slide" aria-label="${slideLabel}" ${index===state.featuredIndex?'':'hidden'}>
+          <div class="featured-media">
+            <img src="${esc(safeImage(product.image))}" alt="${esc(name(product))}" loading="${index===state.featuredIndex?'eager':'lazy'}" width="640" height="480">
+            <span class="featured-media-caption">ROCK / SELECTED</span>
+          </div>
+          <div class="featured-product-copy">
+            <span class="featured-category">${esc(catLabel(product.category))}</span>
+            <div class="featured-model"><span>${esc(t('modelLabel'))}</span><b dir="ltr">${esc(model)}</b></div>
+            <h2 class="featured-product-title">${esc(name(product))}</h2>
+            <div class="featured-price"><span>${esc(t('priceLabel'))}</span><strong>${money(product.price)}</strong></div>
+            <div class="featured-actions">
+              <a class="featured-view" href="${productUrl}">${esc(t('featuredView'))}<span aria-hidden="true">↗</span></a>
+              <button class="featured-add" type="button" data-featured-add="${esc(product.id)}">${esc(t('featuredAdd'))}</button>
+            </div>
+            <span class="featured-serial" aria-hidden="true">${String(index+1).padStart(2,'0')} <i>/</i> ${String(featuredItems.length).padStart(2,'0')}</span>
+          </div>
+        </article>`;
+    }).join('');
+    dots.innerHTML=featuredItems.map((product,index)=>{
+      const label=state.lang==='ar'?'عرض المنتج '+(index+1):'Show product '+(index+1);
+      return `<button class="featured-dot${index===state.featuredIndex?' is-active':''}" type="button" data-featured-index="${index}" aria-label="${label}" ${index===state.featuredIndex?'aria-current="true"':''}></button>`;
+    }).join('');
+    dots.querySelectorAll('[data-featured-index]').forEach(button=>{
+      button.addEventListener('click',()=>setFeaturedSlide(Number(button.dataset.featuredIndex)));
+    });
+    track.querySelectorAll('[data-featured-add]').forEach(button=>{
+      button.addEventListener('click',()=>add(button.dataset.featuredAdd));
+    });
+    track.querySelectorAll('.featured-media img').forEach(image=>{
+      image.addEventListener('error',()=>{
+        const media=image.closest('.featured-media');
+        if(media){
+          image.remove();
+          media.classList.add('is-image-unavailable');
+          const message=document.createElement('span');
+          message.className='featured-image-fallback';
+          message.textContent='ROCK';
+          media.appendChild(message);
+        }
+      },{once:true});
+    });
+    setFeaturedSlide(state.featuredIndex,false);
+    updateFeaturedPauseButton();
     const categories=$('.hero-meta > div:nth-child(2) strong');
     if(categories)categories.textContent=String(new Set(products.map(product=>product.category)).size);
+    scheduleFeaturedAutoplay();
+  }
+
+  function bindFeaturedCarousel(){
+    const root=$('#featuredCarousel');
+    if(!root)return;
+    root.addEventListener('mouseenter',()=>{featuredMotion.hovered=true;stopFeaturedAutoplay()});
+    root.addEventListener('mouseleave',()=>{featuredMotion.hovered=false;scheduleFeaturedAutoplay()});
+    root.addEventListener('focusin',()=>{featuredMotion.focused=true;stopFeaturedAutoplay()});
+    root.addEventListener('focusout',event=>{
+      if(!root.contains(event.relatedTarget)){
+        featuredMotion.focused=false;
+        scheduleFeaturedAutoplay();
+      }
+    });
+    $('#featuredPrev').addEventListener('click',()=>setFeaturedSlide(state.featuredIndex-1));
+    $('#featuredNext').addEventListener('click',()=>setFeaturedSlide(state.featuredIndex+1));
+    $('#featuredPause').addEventListener('click',()=>{
+      state.featuredPaused=!state.featuredPaused;
+      updateFeaturedPauseButton();
+      if(state.featuredPaused)stopFeaturedAutoplay();
+      else scheduleFeaturedAutoplay();
+    });
+    root.addEventListener('keydown',event=>{
+      if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
+      const rtl=document.documentElement.dir==='rtl';
+      const next=(event.key==='ArrowRight')!==rtl;
+      event.preventDefault();
+      setFeaturedSlide(state.featuredIndex+(next?1:-1));
+    });
+    document.addEventListener('visibilitychange',scheduleFeaturedAutoplay);
+    if(window.matchMedia){
+      const preference=window.matchMedia('(prefers-reduced-motion: reduce)');
+      preference.addEventListener?.('change',event=>{
+        featuredMotion.reduced=event.matches;
+        scheduleFeaturedAutoplay();
+      });
+    }
   }
 
   function applyLanguage(){
@@ -463,6 +602,7 @@
     detail.respond(true);
   });
 
+  bindFeaturedCarousel();
   applyLanguage();
   const params = new URLSearchParams(window.location.search);
   if(params.get('cart') === '1'){ openCart(); window.history.replaceState({}, '', window.location.pathname + window.location.hash); }
