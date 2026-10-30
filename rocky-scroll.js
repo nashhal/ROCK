@@ -7,10 +7,10 @@
 
   const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   const points = [
-    { id:'hero', selector:'.hero', desktop:{x:.075,y:.70,s:.88,turn:-12,pitch:5,roll:-7,alpha:.82}, mobile:{x:.075,y:.78,s:.56,turn:-9,pitch:3,roll:-5,alpha:.66} },
-    { id:'service', selector:'.service-strip', desktop:{x:.925,y:.34,s:.66,turn:11,pitch:-3,roll:8,alpha:.76}, mobile:{x:.925,y:.25,s:.48,turn:10,pitch:-2,roll:6,alpha:.58} },
-    { id:'shop', selector:'#shop', desktop:{x:.07,y:.19,s:.62,turn:-8,pitch:4,roll:-6,alpha:.42}, mobile:{x:.94,y:.16,s:.43,turn:8,pitch:2,roll:5,alpha:.34} },
-    { id:'collections', selector:'#collections', desktop:{x:.93,y:.25,s:.72,turn:13,pitch:-4,roll:7,alpha:.78}, mobile:{x:.075,y:.23,s:.49,turn:-10,pitch:-2,roll:-6,alpha:.62} },
+    { id:'hero', selector:'.hero', desktop:{x:.075,y:.70,s:1.02,turn:-12,pitch:5,roll:-7,alpha:.92,dark:true}, mobile:{x:.075,y:.78,s:.64,turn:-9,pitch:3,roll:-5,alpha:.74,dark:true} },
+    { id:'service', selector:'.service-strip', desktop:{x:.925,y:.34,s:.72,turn:11,pitch:-3,roll:8,alpha:.82,dark:true}, mobile:{x:.925,y:.25,s:.52,turn:10,pitch:-2,roll:6,alpha:.64,dark:true} },
+    { id:'shop', selector:'#shop', desktop:{x:.07,y:.19,s:.56,turn:-8,pitch:4,roll:-6,alpha:.54}, mobile:{x:.94,y:.16,s:.4,turn:8,pitch:2,roll:5,alpha:.42} },
+    { id:'collections', selector:'#collections', desktop:{x:.93,y:.25,s:.82,turn:13,pitch:-4,roll:7,alpha:.88,dark:true}, mobile:{x:.075,y:.23,s:.56,turn:-10,pitch:-2,roll:-6,alpha:.7,dark:true} },
     { id:'story', selector:'#story', desktop:{x:.075,y:.45,s:.86,turn:-12,pitch:5,roll:-8,alpha:.86}, mobile:{x:.925,y:.43,s:.55,turn:10,pitch:3,roll:6,alpha:.7} },
     { id:'closing', selector:'.closing-banner', desktop:{x:.91,y:.32,s:.9,turn:10,pitch:-4,roll:7,alpha:.9,dark:true}, mobile:{x:.09,y:.34,s:.59,turn:-8,pitch:-2,roll:-5,alpha:.72,dark:true} },
     { id:'footer', selector:'.site-footer', desktop:{x:.15,y:.42,s:.62,turn:-8,pitch:3,roll:-4,alpha:.68}, mobile:{x:.9,y:.39,s:.45,turn:9,pitch:2,roll:5,alpha:.55} }
