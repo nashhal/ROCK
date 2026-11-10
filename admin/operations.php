@@ -115,11 +115,11 @@ $isAdmin = $role === 'admin';
     <section class="ops-view" id="view-customers" data-section="customers" hidden>
       <div class="ops-section-intro"><div><h2>قاعدة العملاء</h2><p>تُنشأ ملفات العملاء تلقائياً عند إرسال أول طلب محفوظ.</p></div><span id="customerCount" class="ops-count">—</span></div>
       <div class="ops-toolbar"><input id="customerSearch" type="search" placeholder="ابحث بالاسم أو الجوال أو المدينة…" aria-label="بحث العملاء"><button class="ops-button ops-button-light" id="exportCustomers" type="button">تصدير CSV</button></div>
-      <div class="ops-panel"><div class="ops-table-wrap"><table><thead><tr><th>العميل</th><th>رقم الجوال</th><th>المدينة</th><th>عدد الطلبات</th><th>إجمالي المشتريات</th><th>آخر طلب</th></tr></thead><tbody id="customersBody"><tr><td colspan="6" class="ops-empty">جارٍ تحميل العملاء…</td></tr></tbody></table></div></div>
+      <div class="ops-panel"><div class="ops-table-wrap"><table><thead><tr><th>العميل</th><th>رقم الجوال</th><th>المدينة</th><th>عدد الطلبات</th><th>إجمالي قيمة الطلبات</th><th>آخر طلب</th></tr></thead><tbody id="customersBody"><tr><td colspan="6" class="ops-empty">جارٍ تحميل العملاء…</td></tr></tbody></table></div></div>
     </section>
 
     <section class="ops-view" id="view-reports" data-section="reports" hidden>
-      <div class="ops-section-intro"><div><h2>تقارير المبيعات</h2><p>الأرقام محسوبة من الطلبات المسجلة، ولا تشمل الطلبات الملغاة.</p></div></div>
+      <div class="ops-section-intro"><div><h2>تقارير الطلبات</h2><p>القيم مستخرجة من الطلبات غير الملغاة. لا تعني بالضرورة مبالغ محصلة لأن الدفع يتم خارج الموقع.</p></div></div>
       <form id="reportFilters" class="ops-toolbar ops-report-filters">
         <label>من تاريخ <input type="date" id="reportFrom" required></label>
         <label>إلى تاريخ <input type="date" id="reportTo" required></label>
@@ -127,11 +127,11 @@ $isAdmin = $role === 'admin';
         <button class="ops-button ops-button-light" id="exportReport" type="button">تصدير CSV</button>
       </form>
       <div class="ops-report-metrics" id="reportMetrics">
-        <article><span>إجمالي المبيعات</span><strong id="reportRevenue">—</strong></article>
+        <article><span>قيمة الطلبات</span><strong id="reportRevenue">—</strong></article>
         <article><span>عدد الطلبات</span><strong id="reportOrders">—</strong></article>
         <article><span>متوسط قيمة الطلب</span><strong id="reportAverage">—</strong></article>
       </div>
-      <section class="ops-panel"><div class="ops-panel-heading"><div><span class="ops-kicker">DAILY PERFORMANCE</span><h2>المبيعات حسب اليوم</h2></div></div><div id="dailyReport" class="ops-daily-report"><p class="ops-empty">اختر الفترة لعرض البيانات.</p></div></section>
+      <section class="ops-panel"><div class="ops-panel-heading"><div><span class="ops-kicker">DAILY PERFORMANCE</span><h2>القيمة الطلبات حسب اليوم</h2></div></div><div id="dailyReport" class="ops-daily-report"><p class="ops-empty">اختر الفترة لعرض البيانات.</p></div></section>
     </section>
 
     <?php if ($isAdmin): ?>
