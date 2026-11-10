@@ -14,6 +14,8 @@ on:
       - 'admin/invoice.php'
       - 'admin/api.php'
       - 'editorial-overrides.css'
+      - 'editorial-pages.css'
+      - 'admin/editorial-admin.css'
       - 'index.html'
       - 'admin/orders.php'
       - 'admin/orders-api.php'
