@@ -75,6 +75,7 @@ function rock_ensure_business_schema(PDO $pdo): void
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
     rock_ensure_column($pdo, 'rock_orders', 'shipping_fee', 'DECIMAL(12,2) NOT NULL DEFAULT 0');
+    rock_ensure_column($pdo, 'rock_order_items', 'stock_reserved', 'TINYINT(1) NOT NULL DEFAULT 0');
     rock_ensure_column($pdo, 'rock_orders', 'payment_method', "VARCHAR(32) NOT NULL DEFAULT 'cash_on_delivery'");
     rock_ensure_column($pdo, 'rock_orders', 'customer_id', 'BIGINT UNSIGNED NULL');
     rock_ensure_column($pdo, 'rock_orders', 'assigned_to', 'BIGINT UNSIGNED NULL');
