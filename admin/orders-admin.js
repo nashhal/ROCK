@@ -102,6 +102,7 @@
 
   async function loadOrders() {
     const button = $('#refreshOrders');
+    if (!button || !$('#ordersList')) return;
     button.disabled = true;
     button.textContent = 'جارٍ التحديث…';
     try {
