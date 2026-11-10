@@ -95,10 +95,10 @@ try {
             rock_json(['error' => 'تم إيقاف محاولات الدخول مؤقتًا. انتظر 15 دقيقة ثم حاول مجددًا.'], 429);
         }
 
-        $statement = $pdo->prepare('SELECT id, username, password_hash, role, full_name FROM rock_admin_users WHERE username = ? LIMIT 1');
+        $statement = $pdo->prepare('SELECT id, username, password_hash, role, full_name, is_active FROM rock_admin_users WHERE username = ? LIMIT 1');
         $statement->execute([$username]);
         $user = $statement->fetch();
-        if (!is_array($user) || !password_verify($password, (string)$user['password_hash'])) {
+        if (!is_array($user) || !(bool)($user['is_active'] ?? 1) || !password_verify($password, (string)$user['password_hash'])) {
             rock_record_login_failure($pdo, $ipHash);
             usleep(250000);
             rock_json(['error' => 'اسم المستخدم أو كلمة المرور غير صحيحة.'], 401);
