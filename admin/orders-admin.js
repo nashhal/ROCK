@@ -94,6 +94,8 @@
         (order.customerNotes ? '<div class="notes">' + escapeHtml(order.customerNotes) + '</div>' : '') + '</section>' +
         '<section><strong>تفاصيل المنتجات</strong><ul class="items">' + itemRows + '</ul></section>' +
         '<section class="order-actions"><div class="order-total">' + escapeHtml(money(order.total)) + '</div>' +
+        '<div class="order-date">قيمة المنتجات: ' + escapeHtml(money(order.subtotal)) + ' · الشحن: ' + escapeHtml(money(order.shippingFee)) + '</div>' +
+        '<div class="order-date">طريقة الدفع: ' + escapeHtml(order.paymentMethod === 'bank_transfer' ? 'تحويل بنكي' : 'الدفع عند الاستلام') + '</div>' +
         '<div class="status-row"><select aria-label="تحديث حالة الطلب" data-status-select>' +
         statusOptions(order.status) + '</select><button class="btn btn-primary" type="button" data-save-status>حفظ</button></div>' +
         (state.canAssign ? '<div class="status-row"><select aria-label="تعيين مندوب للطلب" data-assignee>' +
