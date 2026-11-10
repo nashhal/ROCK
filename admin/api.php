@@ -138,6 +138,7 @@ try {
     $admin = rock_require_admin();
 
     if ($method === 'GET' && $action === 'products') {
+        rock_require_roles(['admin', 'manager']);
         $rows = $pdo->query('SELECT * FROM rock_products ORDER BY active DESC, sort_order ASC, name_ar ASC')->fetchAll();
         rock_json([
             'products' => array_map('rock_admin_row', $rows),
