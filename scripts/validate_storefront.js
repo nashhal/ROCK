@@ -8,8 +8,8 @@ const path = require('node:path');
 const root = process.cwd();
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const requiredFiles = [
-  'index.html', 'product.html', 'policies.html', '404.html',
-  'styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'editorial-pages.css', 'product-page.css',
+  'index.html', 'product.html', 'policies.html', '404.html', 'sales-section.css',
+  'styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'editorial-pages.css', 'product-page.css', 'sales-section.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
   'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css', 'admin/editorial-admin.css', 'admin/operations.php', 'admin/operations-api.php', 'admin/operations.js', 'admin/orders.php', 'admin/orders-api.php', 'admin/orders-admin.js', 'admin/invoice.php',
@@ -84,6 +84,14 @@ assert.ok(visibleIds.size > 0, 'At least one product must have a clear white-bac
 assert.ok([...visibleIds].every(id => products.some(product => product.id === id)), 'Photo manifest references an unknown product');
 const homeForStoryLogo = read('index.html');
 assert.ok(homeForStoryLogo.includes('<img class="story-mark-logo" src="assets/brand/rock-logo.svg"'), 'Brand story tile must use the official ROCK logo instead of a text monogram');
+assert.ok(homeForStoryLogo.includes('id="sales-team"'), 'Homepage must include the ROCK sales-team section');
+assert.ok(homeForStoryLogo.includes('sales-section.css?v=20261111-sales-section-v1'), 'Homepage must load the versioned sales-team stylesheet');
+assert.ok(homeForStoryLogo.includes('href="admin/"'), 'Sales-team section must link to the protected portal entry point');
+assert.ok(homeForStoryLogo.includes('data-i18n="salesAccessNote"'), 'Sales-team portal must explain its hosting/database prerequisite');
+for (const key of ['salesNav','salesEyebrow','salesTitle','salesIntro','salesTaskOneTitle','salesTaskOneText','salesTaskTwoTitle','salesTaskTwoText','salesTaskThreeTitle','salesTaskThreeText','salesAccessLabel','salesAccessNote']) {
+  assert.ok(read('app.js').includes(key + ':'), 'Sales-team translation is missing: ' + key);
+}
+assert.ok(read('sales-section.css').includes('.sales-team-panel'), 'Sales-team layout rules are missing');
 
 const ids = new Set();
 const expectedImagePath = /^assets\/products\/[a-z0-9-]+\.webp$/i;
@@ -268,7 +276,7 @@ assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Col
 assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
 assert.match(app, /Maximum quantity reached|الحد الأقصى للكمية/, 'Cart must enforce its quantity limit');
 
-for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'editorial-pages.css', 'admin/editorial-admin.css', 'product-page.css', 'rocky-assistant.css']) {
+for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'editorial-pages.css', 'admin/editorial-admin.css', 'product-page.css', 'rocky-assistant.css', 'sales-section.css']) {
   const css = read(file);
   assert.ok(!/\[\.\.\.\]/.test(css), `Truncated CSS placeholder found in ${file}`);
   cssBraceBalance(css, file);
