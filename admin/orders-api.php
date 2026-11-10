@@ -141,6 +141,73 @@ try {
         rock_json(['error' => 'الطلب غير موجود.'], 404);
     }
     if ($oldStatus !== $newStatus) {
+        $transitions = [
+            'new' => ['waiting_rep', 'contacting', 'confirmed', 'cancelled'],
+            'waiting_rep' => ['contacting', 'confirmed', 'cancelled'],
+            'contacting' => ['confirmed', 'cancelled'],
+            'confirmed' => ['preparing', 'cancelled'],
+            'preparing' => ['out_for_delivery', 'failed_delivery', 'cancelled'],
+            'out_for_delivery' => ['delivered', 'failed_delivery'],
+            'failed_delivery' => ['preparing', 'out_for_delivery', 'cancelled'],
+            'delivered' => [],
+            'cancelled' => [],
+        ];
+        if (!in_array($newStatus, $transitions[$oldStatus] ?? [], true)) {
+            $pdo->rollBack();
+            rock_json(['error' => 'هذا الانتقال بين حالات الطلب غير مسموح. راجع حالة الطلب الحالية.'], 409);
+        }
+
+        $linesStatement = $pdo->prepare('SELECT id, product_id, quantity, stock_reserved FROM rock_order_items WHERE order_id = ? FOR UPDATE');
+        $linesStatement->execute([$id]);
+        $lines = $linesStatement->fetchAll();
+
+        if (in_array($newStatus, ['confirmed', 'preparing', 'out_for_delivery'], true)) {
+            foreach ($lines as $line) {
+                if ((bool)$line['stock_reserved']) continue;
+                $productStatement = $pdo->prepare('SELECT track_stock, stock_quantity FROM rock_products WHERE id = ? LIMIT 1 FOR UPDATE');
+                $productStatement->execute([(string)$line['product_id']]);
+                $product = $productStatement->fetch();
+                if (!is_array($product) || !(bool)$product['track_stock']) continue;
+
+                $quantity = (int)$line['quantity'];
+                $available = (int)$product['stock_quantity'];
+                if ($available < $quantity) {
+                    $pdo->rollBack();
+                    rock_json(['error' => 'لا توجد كمية كافية لتأكيد الطلب. راجع المخزون قبل المتابعة.'], 409);
+                }
+                $remaining = $available - $quantity;
+                $pdo->prepare('UPDATE rock_products SET stock_quantity = ? WHERE id = ?')->execute([$remaining, (string)$line['product_id']]);
+                $movement = $pdo->prepare("INSERT INTO rock_inventory_movements
+                    (product_id, quantity_change, quantity_after, movement_type, reason, reference_type, reference_id, created_by)
+                    VALUES (?, ?, ?, 'order_reserve', 'حجز مخزون عند تأكيد الطلب', 'order', ?, ?)");
+                $movement->execute([(string)$line['product_id'], -$quantity, $remaining, $id, $admin['id']]);
+                $pdo->prepare('UPDATE rock_order_items SET stock_reserved = 1 WHERE id = ?')->execute([(int)$line['id']]);
+            }
+        }
+
+        if (in_array($newStatus, ['cancelled', 'failed_delivery'], true)) {
+            foreach ($lines as $line) {
+                if (!(bool)$line['stock_reserved']) continue;
+                $productStatement = $pdo->prepare('SELECT stock_quantity FROM rock_products WHERE id = ? LIMIT 1 FOR UPDATE');
+                $productStatement->execute([(string)$line['product_id']]);
+                $product = $productStatement->fetch();
+                if (is_array($product)) {
+                    $quantity = (int)$line['quantity'];
+                    $restored = (int)$product['stock_quantity'] + $quantity;
+                    $pdo->prepare('UPDATE rock_products SET stock_quantity = ? WHERE id = ?')->execute([$restored, (string)$line['product_id']]);
+                    $movement = $pdo->prepare("INSERT INTO rock_inventory_movements
+                        (product_id, quantity_change, quantity_after, movement_type, reason, reference_type, reference_id, created_by)
+                        VALUES (?, ?, ?, 'order_release', 'إعادة مخزون طلب ملغي أو تعذر تسليمه', 'order', ?, ?)");
+                    $movement->execute([(string)$line['product_id'], $quantity, $restored, $id, $admin['id']]);
+                }
+                $pdo->prepare('UPDATE rock_order_items SET stock_reserved = 0 WHERE id = ?')->execute([(int)$line['id']]);
+            }
+        }
+
+        if ($newStatus === 'delivered') {
+            $pdo->prepare('UPDATE rock_order_items SET stock_reserved = 0 WHERE order_id = ?')->execute([$id]);
+        }
+
         $update = $pdo->prepare('UPDATE rock_orders SET status = ? WHERE id = ?');
         $update->execute([$newStatus, $id]);
         $history = $pdo->prepare('INSERT INTO rock_order_status_history (order_id, old_status, new_status, changed_by) VALUES (?, ?, ?, ?)');
