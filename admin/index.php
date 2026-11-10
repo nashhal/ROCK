@@ -33,7 +33,7 @@ if (!$configured) {
 <body data-setup-needed="<?= $notice !== '' ? '1' : '0' ?>">
   <header class="topbar">
     <a class="brand" href="../" aria-label="ROCK storefront"><img src="../assets/brand/rock-logo.svg" alt="ROCK"></a>
-    <div class="top-actions"><a class="site-link" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a><button id="logoutButton" class="btn btn-quiet" type="button" hidden>تسجيل الخروج</button></div>
+    <div class="top-actions"><a class="site-link" href="orders.php">إدارة الطلبات ↗</a><a class="site-link" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a><button id="logoutButton" class="btn btn-quiet" type="button" hidden>تسجيل الخروج</button></div>
   </header>
   <main class="page-shell">
     <?php if ($notice !== ''): ?>
@@ -41,7 +41,7 @@ if (!$configured) {
     <?php endif; ?>
 
     <section id="loginPanel" class="login-panel" <?= $notice !== '' ? 'hidden' : '' ?>>
-      <div class="login-brand"><span class="kicker">ROCK / ADMIN</span><h1>إدارة المتجر<br><em>ببساطة.</em></h1><p>إدارة الأسعار والمنتجات والصور من مكان واحد.</p></div>
+      <div class="login-brand"><span class="kicker">ROCK / ADMIN</span><h1>إدارة المتجر<br><em>ببساطة.</em></h1><p>إدارة الأسعار والمنتجات والصور والطلبات من مكان واحد.</p></div>
       <form id="loginForm" class="login-form">
         <h2>تسجيل الدخول</h2>
         <label for="loginUsername">اسم المستخدم</label><input id="loginUsername" name="username" required autocomplete="username" maxlength="40">
