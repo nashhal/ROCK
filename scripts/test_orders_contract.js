@@ -23,6 +23,7 @@ const storefront = read('orders-storefront.js');
 const motionLoader = read('rock-experience.js');
 const adminHome = read('admin/index.php');
 const setupGuide = read('HOSTINGER-ADMIN-SETUP.md');
+const installer = read('api/install.php');
 
 for (const table of ['rock_orders', 'rock_order_items', 'rock_order_status_history', 'rock_order_rate_limits']) {
   assert.ok(schema.includes('CREATE TABLE IF NOT EXISTS ' + table), 'Missing order table: ' + table);
@@ -42,6 +43,7 @@ assert.ok(publicApi.includes('rock_order_status_history'), 'New orders must crea
 assert.ok(!publicApi.includes("$_POST['price']"), 'Public order input must not supply trusted prices');
 
 assert.ok(adminApi.includes('rock_require_admin()') && adminApi.includes('rock_check_csrf()'), 'Order administration must enforce login and CSRF');
+assert.ok(adminApi.includes("if ($method === 'GET' && $action === 'products') {\n        rock_require_roles(['admin', 'manager']);"), 'Sales representatives must not access the admin product API');
 assert.ok(adminApi.includes('FOR UPDATE') && adminApi.includes('rock_order_status_history'), 'Status changes must be transactional and audited');
 assert.ok(adminApi.includes('LIMIT 1200'), 'Order listing must be bounded');
 assert.ok(adminApi.includes('rock_require_roles([\'sales_rep\'])') || adminApi.includes("$role === 'sales_rep'"), 'Sales reps must be scoped to orders assigned to them');
@@ -65,6 +67,7 @@ assert.ok(storefront.includes('orderConfirmation') && storefront.includes('accep
 assert.ok(storefront.includes("honeypot.name = 'website'") && storefront.includes('website: honeypot.value'), 'Checkout must submit the real hidden honeypot field');
 assert.ok(motionLoader.includes('orders-storefront.js'), 'Homepage must load the storefront order integration');
 assert.ok(setupGuide.includes('/admin/orders.php') && setupGuide.includes('keyed IP rate limit'), 'Hostinger guide must explain order administration and rate limiting');
+assert.ok(installer.includes('minlength=\"48\"') && installer.includes('strlen($configToken) < 48'), 'Installer must require a 48-character setup token');
 
 assert.ok(operationsPage.includes('data-view="inventory"') && operationsPage.includes('data-view="customers"') && operationsPage.includes('data-view="reports"'), 'Operations workspace must expose inventory, customers and reports');
 assert.ok(operationsPage.includes('data-view="staff"') && operationsPage.includes('data-view="settings"'), 'Admin workspace must expose staff and store settings');
