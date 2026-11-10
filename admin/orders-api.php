@@ -51,7 +51,7 @@ try {
         }
         $whereSql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
         $sql = "SELECT o.id, o.order_number, o.customer_name, o.customer_phone, o.customer_city,
-                    o.customer_address, o.customer_notes, o.status, o.currency, o.subtotal, o.total,
+                    o.customer_address, o.customer_notes, o.status, o.currency, o.subtotal, o.shipping_fee, o.total, o.payment_method,
                     o.created_at, o.updated_at, o.assigned_to, staff.full_name AS assigned_name,
                     i.product_id, i.model, i.name_ar, i.name_en, i.unit_price, i.quantity, i.line_total
                 FROM rock_orders o
@@ -78,6 +78,8 @@ try {
                     'status' => (string)$row['status'],
                     'currency' => (string)$row['currency'],
                     'subtotal' => (string)$row['subtotal'],
+                    'shippingFee' => (string)$row['shipping_fee'],
+                    'paymentMethod' => (string)$row['payment_method'],
                     'total' => (string)$row['total'],
                     'createdAt' => (string)$row['created_at'],
                     'updatedAt' => (string)$row['updated_at'],
