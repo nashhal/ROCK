@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/order-schema.php';
 require_once __DIR__ . '/business-schema.php';
 
 if (strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) !== 'GET') {
@@ -12,6 +13,7 @@ if (!rock_is_configured()) rock_json(['error' => 'إعداد المتجر غير
 try {
     $pdo = rock_db();
     if (!rock_is_install_complete($pdo)) rock_json(['error' => 'المتجر لم يكتمل إعداده.'], 503);
+    rock_ensure_order_schema($pdo);
     rock_ensure_business_schema($pdo);
     $rows = $pdo->query("SELECT setting_key, setting_value FROM rock_store_settings
         WHERE setting_key IN ('shipping_default_sar','free_shipping_threshold_sar','payment_methods','support_whatsapp',
