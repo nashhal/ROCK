@@ -139,6 +139,34 @@ try {
         rock_json(['ok' => true, 'productId' => $id, 'previous' => $oldQuantity, 'quantity' => $quantity, 'change' => $delta]);
     }
 
+    if ($action === 'update-order-shipping') {
+        rock_require_roles(['admin', 'manager']);
+        $orderId = filter_var($_POST['order_id'] ?? null, FILTER_VALIDATE_INT);
+        $shippingText = trim((string)($_POST['shipping_fee'] ?? ''));
+        if ($orderId === false || $orderId < 1 || !preg_match('/^\\d{1,7}(?:\\.\\d{1,2})?$/', $shippingText)) {
+            rock_json(['error' => 'تحقق من رقم الطلب ورسوم الشحن.'], 422);
+        }
+        $shippingFee = number_format((float)$shippingText, 2, '.', '');
+        $pdo->beginTransaction();
+        $find = $pdo->prepare('SELECT customer_id, subtotal, shipping_fee, total FROM rock_orders WHERE id = ? LIMIT 1 FOR UPDATE');
+        $find->execute([$orderId]);
+        $order = $find->fetch();
+        if (!is_array($order)) {
+            $pdo->rollBack();
+            rock_json(['error' => 'الطلب غير موجود.'], 404);
+        }
+        $newTotal = number_format((float)$order['subtotal'] + (float)$shippingFee, 2, '.', '');
+        $delta = (float)$newTotal - (float)$order['total'];
+        $pdo->prepare('UPDATE rock_orders SET shipping_fee = ?, total = ? WHERE id = ?')
+            ->execute([$shippingFee, $newTotal, $orderId]);
+        if (!empty($order['customer_id']) && abs($delta) > 0.0001) {
+            $pdo->prepare('UPDATE rock_customers SET total_spent = GREATEST(0, total_spent + ?) WHERE id = ?')
+                ->execute([number_format($delta, 2, '.', ''), (int)$order['customer_id']]);
+        }
+        $pdo->commit();
+        rock_json(['ok' => true, 'orderId' => $orderId, 'shippingFee' => $shippingFee, 'total' => $newTotal]);
+    }
+
     if ($action === 'assign-order') {
         rock_require_roles(['admin', 'manager']);
         $orderId = filter_var($_POST['order_id'] ?? null, FILTER_VALIDATE_INT);
