@@ -1,0 +1,189 @@
+/* ROCK Editorial Quality v3 — shared design tokens and refined storefront components. */
+:root{
+  --rock-ink:#071a33;
+  --rock-blue:#1479dc;
+  --rock-paper:#f4f6f8;
+  --rock-line:#dfe5eb;
+  --rock-muted:#52677d;
+  --rock-muted-soft:#718296;
+  --rock-page-max:1240px;
+  --rock-gutter:clamp(17px,3vw,32px);
+  --rock-space-1:4px;
+  --rock-space-2:8px;
+  --rock-space-3:12px;
+  --rock-space-4:16px;
+  --rock-space-5:20px;
+  --rock-space-6:24px;
+  --rock-space-8:32px;
+  --rock-space-10:40px;
+  --rock-space-12:48px;
+  --rock-space-16:64px;
+  --rock-radius:4px;
+}
+html{scroll-padding-top:88px;overflow-x:clip}
+body{
+  color:var(--rock-ink);
+  font-family:"IBM Plex Sans Arabic","Inter",Tahoma,Arial,sans-serif;
+  font-size:15px;line-height:1.8;
+}
+button,input,select,textarea{font:inherit}
+img{max-width:100%}
+a,button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--rock-blue)!important;outline-offset:3px!important;
+}
+button:disabled{cursor:not-allowed!important;opacity:.58}
+.site-header .header-inner{max-width:var(--rock-page-max)!important;padding-inline:var(--rock-gutter)!important}
+.site-header .desktop-nav a{font-size:13px!important;line-height:1.5!important}
+.site-header .header-actions button,.site-header .menu-btn{min-width:42px;min-height:42px}
+.hero.section-shell,.hero{max-width:var(--rock-page-max)!important;padding-inline:var(--rock-gutter)!important}
+.hero h1{max-width:660px!important;font-size:clamp(3.05rem,5.7vw,5.35rem)!important;line-height:1.2!important}
+html[dir="rtl"] .hero h1{font-size:clamp(2.75rem,5.35vw,4.8rem)!important;line-height:1.34!important;letter-spacing:normal!important}
+.hero-copy>p{max-width:520px!important;color:#52677d!important;font-size:15px!important;line-height:1.95!important}
+.hero-meta span{font-size:11px!important;color:#52677d!important}
+.service-strip .service-item p{font-size:12px!important;line-height:1.75!important}
+.shop-section{
+  width:100%!important;max-width:var(--rock-page-max)!important;margin-inline:auto!important;
+  padding:clamp(64px,7vw,92px) var(--rock-gutter)!important;
+}
+.shop-section .section-head{gap:24px!important;margin-bottom:30px!important}
+.shop-section .section-head h2{font-size:clamp(2rem,3.9vw,3.45rem)!important;line-height:1.28!important;letter-spacing:normal!important}
+.shop-intro{max-width:580px!important;color:#52677d!important;font-size:14px!important;line-height:1.85!important}
+.shop-toolbar{gap:16px!important}
+#categoryChips{gap:8px!important}
+#categoryChips .chip{min-height:42px!important;padding:8px 15px!important;font-size:12px!important;font-weight:650!important}
+.shop-tools{gap:10px!important}
+.search-box,.sort-control,.price-input{min-height:44px!important}
+.search-box input,.shop-tools select,.price-input input{
+  min-height:42px!important;color:var(--rock-ink)!important;font-size:13px!important;
+}
+.catalog-filter-row{gap:16px!important}
+.results-summary,.price-controls-label,.price-input span,.clear-filter{font-size:12px!important}
+#productGrid.product-grid{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:30px 22px!important;
+}
+#productGrid .product-card{
+  min-width:0!important;display:flex!important;flex-direction:column!important;height:100%!important;
+  overflow:hidden!important;border:1px solid var(--rock-line)!important;border-radius:var(--rock-radius)!important;
+  background:#fff!important;box-shadow:none!important;transform:none!important;animation:none!important;
+  transition:border-color .18s ease,background-color .18s ease!important;
+}
+#productGrid .product-card:hover{
+  border-color:#b7c7d7!important;background:#fff!important;box-shadow:none!important;transform:translateY(-2px)!important;
+}
+#productGrid .product-image{
+  position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;aspect-ratio:1/1!important;min-height:0!important;overflow:hidden!important;
+  padding:12px!important;background:#fff!important;border:0!important;border-bottom:1px solid #edf1f4!important;
+}
+#productGrid .product-image img{
+  display:block!important;width:86%!important;height:86%!important;max-width:100%!important;max-height:100%!important;
+  object-fit:contain!important;mix-blend-mode:normal!important;filter:none!important;transition:transform .22s ease!important;
+}
+#productGrid .product-card:hover .product-image img{transform:scale(1.025)!important}
+#productGrid .product-tag{
+  top:12px!important;inset-inline-start:12px!important;inset-inline-end:auto!important;
+  padding:5px 9px!important;border:1px solid var(--rock-line)!important;border-radius:3px!important;
+  background:#fff!important;color:#40566d!important;font-size:10px!important;line-height:1.5!important;letter-spacing:normal!important;
+}
+#productGrid .product-info{
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;gap:10px!important;
+  min-width:0!important;padding:16px!important;
+}
+#productGrid .product-model-row{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;min-height:22px!important;
+}
+#productGrid .product-field-label{color:#718296!important;font-size:11px!important;font-weight:600!important}
+#productGrid .product-model{
+  min-width:0!important;color:#52677d!important;font:600 11px/1.5 Inter,"IBM Plex Sans Arabic",sans-serif!important;
+  letter-spacing:.02em!important;overflow-wrap:anywhere!important;
+}
+#productGrid .product-title-link{color:inherit!important;text-decoration:none!important}
+#productGrid .product-name{
+  display:-webkit-box!important;min-height:3.15em!important;margin:0!important;overflow:hidden!important;
+  color:var(--rock-ink)!important;font-size:15px!important;font-weight:650!important;line-height:1.58!important;
+  letter-spacing:normal!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;
+}
+#productGrid .product-price-row{
+  display:flex!important;align-items:baseline!important;justify-content:space-between!important;gap:10px!important;
+  margin-top:auto!important;padding-top:12px!important;border-top:1px solid #edf1f4!important;
+}
+#productGrid .price-label{color:#718296!important;font-size:12px!important}
+#productGrid .price{
+  color:var(--rock-ink)!important;font:750 18px/1.35 Inter,"IBM Plex Sans Arabic",sans-serif!important;
+  font-variant-numeric:tabular-nums!important;direction:ltr!important;unicode-bidi:embed!important;
+}
+#productGrid .product-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin-top:2px!important}
+#productGrid .product-action-btn{
+  display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+  min-width:0!important;min-height:44px!important;padding:8px 9px!important;border:1px solid var(--rock-line)!important;
+  border-radius:3px!important;background:#fff!important;color:var(--rock-ink)!important;
+  font-size:12px!important;font-weight:650!important;line-height:1.4!important;white-space:normal!important;
+}
+#productGrid .product-action-view:hover{background:#f7f9fb!important;border-color:#bdcbd8!important}
+#productGrid .product-action-add{border-color:var(--rock-ink)!important;background:var(--rock-ink)!important;color:#fff!important}
+#productGrid .product-action-add:hover{border-color:var(--rock-blue)!important;background:var(--rock-blue)!important}
+#productGrid .product-photo-placeholder{
+  min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#52677d;
+}
+.empty-state{padding:56px 16px!important}
+.collections{padding-block:clamp(60px,7vw,88px)!important}
+.collections .section-head h2{line-height:1.28!important;letter-spacing:normal!important}
+.collection-card{min-width:0!important}
+.story{padding-block:clamp(64px,8vw,100px)!important}
+.story-copy h2{line-height:1.3!important;letter-spacing:normal!important}
+.story-copy p{font-size:15px!important;line-height:1.95!important}
+.closing-banner{min-height:260px!important}
+.site-footer{padding-inline:var(--rock-gutter)!important}
+.cart-btn,.featured-arrow,.featured-pause,.filter-toggle,.clear-filter{min-height:42px!important}
+@media(max-width:980px){
+  #productGrid.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:24px 16px!important}
+  .shop-tools{flex-wrap:wrap!important}
+  .shop-toolbar{align-items:flex-start!important}
+  .hero.section-shell,.hero{max-width:100%!important}
+}
+@media(max-width:700px){
+  html{scroll-padding-top:72px}
+  body{font-size:14px}
+  .hero.section-shell,.hero{padding:36px 17px 34px!important}
+  .hero h1{font-size:clamp(2.7rem,9.5vw,3.75rem)!important;line-height:1.28!important}
+  html[dir="rtl"] .hero h1{font-size:clamp(2.5rem,9vw,3.45rem)!important;line-height:1.4!important}
+  .hero-copy>p{font-size:14px!important;line-height:1.9!important}
+  .hero-meta span{font-size:10px!important}
+  .service-strip .service-item p{font-size:11px!important}
+  .shop-section{padding:58px 17px 66px!important}
+  .shop-section .section-head{align-items:flex-start!important;gap:14px!important}
+  .shop-section .section-head h2{font-size:clamp(1.9rem,7vw,2.55rem)!important}
+  .shop-intro{font-size:13px!important}
+  .shop-toolbar{display:grid!important;gap:12px!important}
+  #categoryChips{flex-wrap:wrap!important}
+  #categoryChips .chip{min-height:40px!important;padding-inline:12px!important}
+  .shop-tools{display:grid!important;grid-template-columns:1fr!important;width:100%!important}
+  .search-box{width:100%!important;min-width:0!important}
+  .catalog-filter-row{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+  .price-controls{display:flex!important;flex-wrap:wrap!important;gap:8px!important}
+  #productGrid.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px 10px!important}
+  #productGrid .product-info{gap:8px!important;padding:11px!important}
+  #productGrid .product-name{font-size:13px!important;line-height:1.55!important;min-height:3.1em!important}
+  #productGrid .product-field-label,#productGrid .product-model{font-size:10px!important}
+  #productGrid .price{font-size:16px!important}
+  #productGrid .product-actions{grid-template-columns:1fr!important;gap:6px!important}
+  #productGrid .product-action-btn{min-height:42px!important;font-size:12px!important}
+  .collections{padding:58px 17px 64px!important}
+  .collection-grid{gap:10px!important}
+  .story{grid-template-columns:1fr!important;padding:60px 17px!important}
+  .story-copy p{font-size:14px!important}
+  .closing-banner{min-height:210px!important;margin-inline:17px!important;padding:30px 20px!important}
+  .site-footer{padding:24px 17px 30px!important}
+}
+@media(max-width:380px){
+  #productGrid.product-grid{grid-template-columns:1fr!important;gap:16px!important}
+  #productGrid .product-info{padding:16px!important}
+  #productGrid .product-name{font-size:15px!important;min-height:0!important}
+  #productGrid .product-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}

@@ -1,0 +1,96 @@
+name: Validate ROCK order flow
+
+on:
+  push:
+    branches: [main, feat/order-management]
+    paths:
+      - 'api/bootstrap.php'
+      - 'api/order-schema.php'
+      - 'api/orders.php'
+      - 'api/business-schema.php'
+      - 'api/store-settings.php'
+      - 'admin/operations.php'
+      - 'admin/operations-api.php'
+      - 'admin/operations.js'
+      - 'admin/invoice.php'
+      - 'admin/api.php'
+      - 'editorial-quality-v3.css'
+      - 'editorial-overrides.css'
+      - 'editorial-pages.css'
+      - 'admin/editorial-admin.css'
+      - 'index.html'
+      - 'admin/orders.php'
+      - 'admin/orders-api.php'
+      - 'admin/orders-admin.js'
+      - 'orders-storefront.js'
+      - 'rock-experience.js'
+      - 'scripts/test_orders_contract.js'
+      - 'HOSTINGER-ADMIN-SETUP.md'
+      - '.github/workflows/orders.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'api/bootstrap.php'
+      - 'api/order-schema.php'
+      - 'api/orders.php'
+      - 'api/business-schema.php'
+      - 'api/store-settings.php'
+      - 'admin/operations.php'
+      - 'admin/operations-api.php'
+      - 'admin/operations.js'
+      - 'admin/invoice.php'
+      - 'admin/api.php'
+      - 'editorial-quality-v3.css'
+      - 'editorial-overrides.css'
+      - 'index.html'
+      - 'admin/orders.php'
+      - 'admin/orders-api.php'
+      - 'admin/orders-admin.js'
+      - 'orders-storefront.js'
+      - 'rock-experience.js'
+      - 'scripts/test_orders_contract.js'
+      - 'HOSTINGER-ADMIN-SETUP.md'
+      - '.github/workflows/orders.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-orders:
+    name: Validate order APIs and interfaces
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, mbstring
+          coverage: none
+      - name: Lint PHP order files
+        run: |
+          php -l api/order-schema.php
+          php -l api/orders.php
+          php -l api/business-schema.php
+          php -l api/store-settings.php
+          php -l admin/operations.php
+          php -l admin/operations-api.php
+          php -l admin/invoice.php
+          php -l admin/api.php
+          php -l admin/orders.php
+          php -l admin/orders-api.php
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check orders-storefront.js
+          node --check admin/orders-admin.js
+          node --check admin/operations.js
+          node --check scripts/test_orders_contract.js
+          node --check rock-experience.js
+      - name: Run order contract tests
+        run: node scripts/test_orders_contract.js

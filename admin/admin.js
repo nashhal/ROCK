@@ -2,7 +2,7 @@
   'use strict';
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
-  const state = { csrf: $('meta[name="csrf-token"]')?.content || '', products: [], filtered: [] };
+  const state = { csrf: $('meta[name="csrf-token"]')?.content || '', products: [], filtered: [], role: 'admin' };
   let toastTimer = null;
 
   function escapeHtml(value) {
@@ -46,7 +46,11 @@
     form.set('csrf', state.csrf);
   }
 
-  function setAuthenticated(username) {
+  function setAuthenticated(username, role = 'admin') {
+    state.role = role || 'admin';
+    document.body.dataset.role = state.role;
+    const operationsLink = document.querySelector('.top-actions a[href="operations.php"]');
+    if (operationsLink && state.role === 'sales_rep') operationsLink.hidden = true;
     $('#loginPanel').hidden = true;
     $('#dashboard').hidden = false;
     $('#logoutButton').hidden = false;
@@ -65,7 +69,8 @@
       const me = await api('api.php?action=me');
       state.csrf = me.csrf || state.csrf;
       if (me.authenticated) {
-        setAuthenticated(me.username);
+        if (me.role === 'sales_rep') { window.location.href = 'orders.php'; return; }
+        setAuthenticated(me.username, me.role);
         await loadProducts();
       } else {
         setLoggedOut();
@@ -162,9 +167,15 @@
         if (form.elements[field]) form.elements[field].value = value ?? '';
       }
       form.elements.active.checked = Boolean(product.active);
+      form.elements.track_stock.checked = Boolean(product.trackStock);
+      form.elements.stock_quantity.value = Number(product.stockQuantity || 0);
+      form.elements.low_stock_threshold.value = Number(product.lowStockThreshold ?? 5);
       $('#imageStatus').textContent = product.imageApproved ? 'الصورة الحالية معتمدة. اختيار صورة جديدة يستبدلها بعد فحصها.' : 'الصورة الحالية غير معتمدة؛ ارفع صورة واضحة بخلفية بيضاء قبل عرض المنتج.';
     } else {
       form.elements.active.checked = true;
+      form.elements.track_stock.checked = false;
+      form.elements.stock_quantity.value = '0';
+      form.elements.low_stock_threshold.value = '5';
       $('#imageStatus').textContent = 'الصورة الرئيسية مطلوبة للمنتج الجديد.';
     }
 
@@ -190,7 +201,8 @@
       data.set('csrf', state.csrf);
       const result = await api('api.php?action=login', { method: 'POST', body: data });
       state.csrf = result.csrf || state.csrf;
-      setAuthenticated(result.username);
+      if (result.role === 'sales_rep') { window.location.href = 'orders.php'; return; }
+      setAuthenticated(result.username, result.role);
       event.currentTarget.reset();
       setMessage('#loginMessage', '');
       await loadProducts();

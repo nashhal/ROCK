@@ -28,6 +28,10 @@
   <link rel="stylesheet" href="rocky-assistant.css?v=20261022-catalog-quality">
   <link rel="stylesheet" href="white-modern.css?v=20261030-design-refinement-v2">
   <link rel="stylesheet" href="rock-experience.css?v=20261030-immersive-rock-v1">
+  <link rel="stylesheet" href="editorial-overrides.css?v=20261110-editorial-v1">
+  <link rel="stylesheet" href="editorial-redesign-v2.css?v=20261111-editorial-redesign-v2">
+  <link rel="stylesheet" href="editorial-quality-v3.css?v=20261111-rock-quality-v3">
+  <link rel="stylesheet" href="sales-section.css?v=20261111-sales-section-v1">
 </head>
 <body>
   <div class="rock-progress" aria-hidden="true"><span id="rockProgressBar"></span></div>
@@ -41,6 +45,7 @@
         <a href="#shop" data-nav="shop" data-i18n="shop">المتجر</a>
         <a href="#collections" data-nav="collections" data-i18n="collections">التصنيفات</a>
         <a href="#story" data-nav="story" data-i18n="story">عن ROCK</a>
+        <a href="#sales-team" data-nav="sales" data-i18n="salesNav">المناديب</a>
       </nav>
       <div class="header-actions">
         <button class="text-btn" id="langBtn" data-i18n-aria="switchLanguage" aria-label="تغيير اللغة">EN</button>
@@ -52,6 +57,7 @@
       <a href="#shop" data-mobile-link data-i18n="shop">المتجر</a>
       <a href="#collections" data-mobile-link data-i18n="collections">التصنيفات</a>
       <a href="#story" data-mobile-link data-i18n="story">عن ROCK</a>
+      <a href="#sales-team" data-mobile-link data-i18n="salesNav">المناديب</a>
     </nav>
   </header>
 
@@ -137,10 +143,29 @@
       <div class="story-copy"><div class="eyebrow">03 / ROCK</div><h2 data-i18n="storyTitle">تقنية واضحة. حضور مختلف.</h2><p data-i18n="storyText">ROCK ليست مجموعة من الأجهزة المتشابهة. هي طريقة أبسط لاختيار ما تحتاجه: موديل واضح، سعر واضح، وصورة المنتج الحقيقي أمامك.</p></div>
     </section>
 
+    <section class="sales-team-section section-shell" id="sales-team" aria-labelledby="sales-team-title">
+      <div class="sales-team-panel">
+        <div class="sales-team-copy">
+          <div class="sales-team-kicker"><span>ROCK / SALES</span><span data-i18n="salesEyebrow">04 / فريق المبيعات</span></div>
+          <h2 id="sales-team-title" data-i18n="salesTitle">من الميدان، تبدأ تجربة ROCK.</h2>
+          <p class="sales-team-intro" data-i18n="salesIntro">مساحة تشغيلية مخصصة لفريق المبيعات لمتابعة الطلبات المسندة وتحديث مراحلها ومراجعة تفاصيل العملاء والتوصيل.</p>
+          <a class="sales-team-link" href="admin/" aria-label="الدخول إلى بوابة مندوبي ROCK">
+            <span data-i18n="salesAccessLabel">بوابة المندوبين</span><span aria-hidden="true">↗</span>
+          </a>
+          <p class="sales-team-note" role="note" data-i18n="salesAccessNote">تتطلب بوابة الدخول استضافة ROCK وقاعدة بيانات مفعّلة؛ نسخة GitHub Pages الحالية للعرض فقط.</p>
+        </div>
+        <ol class="sales-team-list">
+          <li><span class="sales-team-number">01</span><div><h3 data-i18n="salesTaskOneTitle">الطلبات المسندة</h3><p data-i18n="salesTaskOneText">تابع الطلبات المرتبطة بحسابك فقط.</p></div></li>
+          <li><span class="sales-team-number">02</span><div><h3 data-i18n="salesTaskTwoTitle">تحديث حالة الطلب</h3><p data-i18n="salesTaskTwoText">حدّث مراحل المتابعة من الاستلام إلى التسليم.</p></div></li>
+          <li><span class="sales-team-number">03</span><div><h3 data-i18n="salesTaskThreeTitle">تفاصيل العميل</h3><p data-i18n="salesTaskThreeText">راجع بيانات الطلب ومعلومات التوصيل اللازمة للعمل.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
     <section class="closing-banner"><div><span>ROCK</span><h2><span data-i18n="closingTitle">كل ما تحتاجه</span><em data-i18n="closingAccent">ليومك.</em></h2></div><button class="circle-arrow" id="closingShop" aria-label="تصفح المنتجات" data-i18n-aria="shopProducts">↗</button></section>
   </main>
 
-  <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span data-i18n="brandTagline">فجر جديد مع روك</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">المتجر</a><a href="#collections" data-i18n="collections">التصنيفات</a><a href="#story" data-i18n="story">عن ROCK</a></div><div class="footer-meta">&copy; <span id="year"></span> ROCK</div></footer>
+  <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span data-i18n="brandTagline">فجر جديد مع روك</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">المتجر</a><a href="#collections" data-i18n="collections">التصنيفات</a><a href="#story" data-i18n="story">عن ROCK</a><a href="#sales-team" data-i18n="salesNav">المناديب</a></div><div class="footer-meta">&copy; <span id="year"></span> ROCK</div></footer>
 
   <div class="overlay" id="overlay"></div>
   <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-label="السلة" data-i18n-aria="viewCart" aria-hidden="true" tabindex="-1"><div class="drawer-head"><div><span>ROCK</span><h3 id="cartTitle" data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart" type="button" aria-label="إغلاق" data-i18n-aria="closeDialog">×</button></div><div class="drawer-body"><div id="cartItems"></div><div class="drawer-foot"><div><strong id="cartTotal" aria-live="polite" aria-atomic="true">0 SAR</strong></div><div><button class="btn" id="continueBtn" data-i18n="continue">متابعة التسوق</button><button class="btn btn-dark" id="checkoutBtn" data-i18n="checkout">جهّز الطلب</button></div></div></div></aside>

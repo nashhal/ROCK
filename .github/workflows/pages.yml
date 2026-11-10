@@ -2,7 +2,7 @@ name: Deploy ROCK
 
 on:
   push:
-    branches: [main]
+    branches: [main, feat/order-management]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -99,9 +99,43 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+  package-source:
+    name: Package reviewed ROCK source
+    if: github.event_name == 'pull_request'
+    needs: [validate, browser-regression]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout reviewed branch head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Prepare generated catalog quality manifest
+        run: |
+          python -m pip install --disable-pip-version-check pillow requests beautifulsoup4
+          python scripts/test_product_image_quality.py
+          python scripts/product_image_quality.py
+      - name: Build source ZIP
+        run: |
+          mkdir -p "$RUNNER_TEMP/ROCK"
+          git archive --format=tar --prefix=ROCK/ HEAD | tar -xf - -C "$RUNNER_TEMP"
+          mkdir -p "$RUNNER_TEMP/ROCK/data"
+          cp data/product-image-quality.js "$RUNNER_TEMP/ROCK/data/product-image-quality.js"
+          cp sitemap.xml "$RUNNER_TEMP/ROCK/sitemap.xml"
+          (cd "$RUNNER_TEMP" && zip -qr ROCK-source.zip ROCK)
+          sha256sum "$RUNNER_TEMP/ROCK-source.zip"
+      - name: Upload source package
+        uses: actions/upload-artifact@v4
+        with:
+          name: rock-source-package-${{ github.event.pull_request.number }}
+          path: ${{ runner.temp }}/ROCK-source.zip
+          if-no-files-found: error
+          retention-days: 14
+
   deploy:
     name: Deploy to GitHub Pages
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/order-management')
     needs: [validate, browser-regression]
     runs-on: ubuntu-latest
     permissions:
@@ -118,9 +152,16 @@ jobs:
           extensions: gd, pdo_mysql, mbstring
           coverage: none
       - name: Sync official product photo galleries
+        if: github.ref == 'refs/heads/main'
         run: |
           python -m pip install --disable-pip-version-check pillow requests beautifulsoup4
           python scripts/sync_drive_photos.py
+          python scripts/test_product_image_quality.py
+          python scripts/product_image_quality.py
+      - name: Prepare local gallery manifest for development preview
+        if: github.ref == 'refs/heads/feat/order-management'
+        run: |
+          python -m pip install --disable-pip-version-check pillow requests beautifulsoup4
           python scripts/test_product_image_quality.py
           python scripts/product_image_quality.py
       - name: Validate generated storefront
@@ -147,9 +188,22 @@ jobs:
           node scripts/validate_storefront.js
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Prepare static GitHub Pages output
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp ./*.html ./*.css ./*.js ./*.txt ./*.xml _site/
+          cp -R assets data _site/
+          test -f _site/index.html
+          test -f _site/products.js
+          test -f _site/data/product-image-quality.js
+          if find _site -type f -name '*.php' | grep -q .; then
+            echo "PHP source must never be published to static GitHub Pages."
+            exit 1
+          fi
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - name: Deploy
         uses: actions/deploy-pages@v4

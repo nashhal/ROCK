@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../api/bootstrap.php';
 rock_start_session();
+if ((string)($_SESSION['rock_admin_role'] ?? 'admin') === 'sales_rep') { header('Location: orders.php'); exit; }
 $csrf = htmlspecialchars(rock_csrf_token(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $configured = rock_is_configured();
 $notice = '';
@@ -28,12 +29,13 @@ if (!$configured) {
   <title>إدارة ROCK | فجر جديد مع روك</title>
   <link rel="icon" href="../assets/brand/rock-logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="admin.css?v=20261022-admin-v1">
+  <link rel="stylesheet" href="editorial-admin.css?v=20261110-editorial-admin-v1">
   <script src="admin.js?v=20261022-admin-v1" defer></script>
 </head>
 <body data-setup-needed="<?= $notice !== '' ? '1' : '0' ?>">
   <header class="topbar">
     <a class="brand" href="../" aria-label="ROCK storefront"><img src="../assets/brand/rock-logo.svg" alt="ROCK"></a>
-    <div class="top-actions"><a class="site-link" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a><button id="logoutButton" class="btn btn-quiet" type="button" hidden>تسجيل الخروج</button></div>
+    <div class="top-actions"><a class="site-link" href="operations.php">مركز التشغيل ↗</a><a class="site-link" href="orders.php">إدارة الطلبات ↗</a><a class="site-link" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a><button id="logoutButton" class="btn btn-quiet" type="button" hidden>تسجيل الخروج</button></div>
   </header>
   <main class="page-shell">
     <?php if ($notice !== ''): ?>
@@ -41,7 +43,7 @@ if (!$configured) {
     <?php endif; ?>
 
     <section id="loginPanel" class="login-panel" <?= $notice !== '' ? 'hidden' : '' ?>>
-      <div class="login-brand"><span class="kicker">ROCK / ADMIN</span><h1>إدارة المتجر<br><em>ببساطة.</em></h1><p>إدارة الأسعار والمنتجات والصور من مكان واحد.</p></div>
+      <div class="login-brand"><span class="kicker">ROCK / ADMIN</span><h1>إدارة المتجر<br><em>ببساطة.</em></h1><p>إدارة الأسعار والمنتجات والصور والطلبات من مكان واحد.</p></div>
       <form id="loginForm" class="login-form">
         <h2>تسجيل الدخول</h2>
         <label for="loginUsername">اسم المستخدم</label><input id="loginUsername" name="username" required autocomplete="username" maxlength="40">
@@ -81,6 +83,9 @@ if (!$configured) {
           <label>الاسم بالعربية <input name="name_ar" required maxlength="255"></label>
           <label class="wide-field">الاسم بالإنجليزية <input name="name_en" required maxlength="255"></label>
           <label class="wide-field">وصف مختصر بالإنجليزية <textarea name="description_en" rows="2" maxlength="12000"></textarea></label>
+          <label>الكمية المتاحة <input name="stock_quantity" type="number" inputmode="numeric" min="0" max="10000000" step="1" value="0"></label>
+          <label>حد تنبيه انخفاض المخزون <input name="low_stock_threshold" type="number" inputmode="numeric" min="0" max="10000000" step="1" value="5"></label>
+          <label class="active-toggle"><input name="track_stock" type="checkbox" value="1"> متابعة المخزون لهذا المنتج</label>
           <label class="wide-field">رابط صور أو صفحة المورّد (اختياري) <input name="pictures_url" type="url" placeholder="https://…"></label>
           <label class="wide-field image-field">صورة المنتج الرئيسية <input id="productImage" name="image" type="file" accept="image/jpeg,image/png,image/webp"><small>JPG أو PNG أو WebP، حتى 8MB. يجب أن تكون واضحة وخلفيتها بيضاء. تُرفض صور المواصفات والشرائط والمصغّرات.</small><span id="imageStatus" class="image-status"></span></label>
           <label class="active-toggle"><input name="active" type="checkbox" value="1" checked> عرض المنتج في المتجر</label>
