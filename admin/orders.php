@@ -62,11 +62,12 @@ try {
     @media(max-width:560px){.topbar{height:60px;padding:0 14px}.brand{font-size:18px}.top-actions{gap:6px}.link-btn,.btn{min-height:38px;padding:7px 10px;font-size:11px}main{padding:26px 13px 50px}.heading{display:block}.heading .top-actions{margin-top:14px}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:21px}.toolbar{padding:12px}.toolbar input,.toolbar select{min-width:100%;width:100%}.result-count{margin-inline-start:0}.orders{padding:10px}.order{grid-template-columns:1fr;gap:12px;padding:13px}.order-actions{grid-column:auto}.order-total{text-align:right}.status-row{max-width:none}}
     @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
   </style>
+  <link rel="stylesheet" href="editorial-admin.css?v=20261110-editorial-admin-v1">
   <script src="orders-admin.js?v=20261110-orders-v1" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="../" aria-label="ROCK">ROCK</a>
+    <a class="brand" href="../" aria-label="ROCK"><img src="../assets/brand/rock-logo.svg" alt="ROCK"></a>
     <div class="top-actions"><?php if (($_SESSION['rock_admin_role'] ?? 'admin') !== 'sales_rep'): ?><a class="link-btn" href="operations.php">مركز التشغيل</a><?php endif; ?><a class="link-btn" href="./">إدارة المنتجات</a><a class="link-btn" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a></div>
   </header>
   <main>
