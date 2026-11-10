@@ -50,3 +50,25 @@ The product admin manages the Hostinger database only. It does not change `produ
 ## Local validation
 
 The GitHub Actions workflow lints the PHP files, runs image and order-contract checks, and executes the responsive storefront browser suite.
+
+## Operations workspace and inventory
+
+After signing in to `/admin/`, open **Operations workspace** at `/admin/operations.php`. On first use, the existing database receives additive migrations: stock tracking fields, customer profiles, inventory movement history, staff roles, store settings, order assignment/shipping fields, and stock reservation flags. Existing product prices and approved images are preserved. Stock tracking starts disabled on legacy products because the previous database did not contain verified quantities.
+
+The operations workspace includes:
+- Overview totals from real database rows (products, new orders, recent non-cancelled order value, low-stock alerts).
+- Inventory quantity adjustments with a reason and an immutable movement log.
+- Customer records created from saved order requests.
+- Reports grouped by date. These represent order value, not money collected; payment processing is not integrated.
+- Admin-managed manager and sales representative accounts. Sales representatives can view and update only orders assigned to them; managers can see store operations but cannot manage staff or store settings.
+- Store settings for default shipping, free-shipping threshold, allowed manual payment choices, and support WhatsApp number.
+
+## Checkout, shipping, inventory and order documents
+
+- When the live Hostinger catalog and store settings API are available, checkout displays only the payment methods enabled in store settings.
+- The server validates the selected method and calculates item prices and shipping from database values. A default shipping fee applies below the configured free-shipping threshold; managers can override the delivery fee on each order after checking the customer's city/address.
+- Inventory is opt-in per product. Confirming an order reserves tracked stock. Cancelling or marking delivery as failed releases the reservation and records a stock movement. Marking an order delivered closes the reservation without returning stock.
+- Order statuses follow a controlled sequence. Attempting an invalid transition is rejected by the server.
+- The order card's **Print / PDF** action opens a print-ready order summary. Use the browser print dialog and select **Save as PDF**. It is a non-payment order document, not a paid tax invoice or receipt.
+- A customer's order profile is created or updated from their phone number when their first request is saved. Customer accounts and SMS/OTP sign-in require a connected messaging/OTP provider and are not enabled by these files.
+
