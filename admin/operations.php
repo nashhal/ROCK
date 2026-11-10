@@ -132,7 +132,7 @@ $isAdmin = $role === 'admin';
         <article><span>عدد الطلبات</span><strong id="reportOrders">—</strong></article>
         <article><span>متوسط قيمة الطلب</span><strong id="reportAverage">—</strong></article>
       </div>
-      <section class="ops-panel"><div class="ops-panel-heading"><div><span class="ops-kicker">DAILY PERFORMANCE</span><h2>القيمة الطلبات حسب اليوم</h2></div></div><div id="dailyReport" class="ops-daily-report"><p class="ops-empty">اختر الفترة لعرض البيانات.</p></div></section>
+      <section class="ops-panel"><div class="ops-panel-heading"><div><span class="ops-kicker">DAILY PERFORMANCE</span><h2>قيمة الطلبات حسب اليوم</h2></div></div><div id="dailyReport" class="ops-daily-report"><p class="ops-empty">اختر الفترة لعرض البيانات.</p></div></section>
     </section>
 
     <?php if ($isAdmin): ?>
