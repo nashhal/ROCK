@@ -9,10 +9,10 @@ const root = process.cwd();
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const requiredFiles = [
   'index.html', 'product.html', 'policies.html', '404.html',
-  'styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'product-page.css',
+  'styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'editorial-pages.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
-  'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css',
+  'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css', 'admin/editorial-admin.css', 'admin/operations.php', 'admin/operations-api.php', 'admin/operations.js', 'admin/orders.php', 'admin/orders-api.php', 'admin/orders-admin.js', 'admin/invoice.php',
   'api/bootstrap.php', 'api/image-quality.php', 'api/products.php', 'api/install.php', 'api/config.example.php',
   'HOSTINGER-ADMIN-SETUP.md', 'scripts/test_hostinger_admin.php', 'uploads/products/.htaccess',
   'scripts/sync_drive_photos.py', 'scripts/product_image_quality.py', 'scripts/test_product_image_quality.py', 'scripts/test_storefront_browser.cjs', 'data/product-image-quality.js', 'assets/brand/rock-logo.svg',
@@ -43,6 +43,15 @@ assert.ok(designSystem.includes('html[dir="rtl"] .hero h1'), 'Arabic hero typogr
 for (const page of ['index.html', 'product.html', 'policies.html']) {
   assert.ok(read(page).includes('white-modern.css?v='), `Versioned design stylesheet link is missing in ${page}`);
 }
+
+
+for (const file of ['product.html', 'policies.html']) {
+  assert.ok(read(file).includes('editorial-pages.css?v=20261110-secondary-editorial-v1'), `Editorial secondary page styling missing in ${file}`);
+}
+assert.ok(read('admin/index.php').includes('editorial-admin.css?v=20261110-editorial-admin-v1'), 'Product administration must load the shared Editorial admin stylesheet');
+assert.ok(read('admin/orders.php').includes('editorial-admin.css?v=20261110-editorial-admin-v1'), 'Order management must load the shared Editorial admin stylesheet');
+assert.ok(read('admin/operations.php').includes('editorial-admin.css?v=20261110-editorial-admin-v1'), 'Operations workspace must load the shared Editorial admin stylesheet');
+assert.ok(read('index.html').includes('editorial-overrides.css?v=20261110-editorial-v1'), 'Homepage must load the Editorial storefront layer');
 
 const productPageCss = read('product-page.css');
 const productPageHtml = read('product.html');
@@ -259,7 +268,7 @@ assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Col
 assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
 assert.match(app, /Maximum quantity reached|الحد الأقصى للكمية/, 'Cart must enforce its quantity limit');
 
-for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css', 'rocky-assistant.css']) {
+for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'editorial-pages.css', 'admin/editorial-admin.css', 'product-page.css', 'rocky-assistant.css']) {
   const css = read(file);
   assert.ok(!/\[\.\.\.\]/.test(css), `Truncated CSS placeholder found in ${file}`);
   cssBraceBalance(css, file);
