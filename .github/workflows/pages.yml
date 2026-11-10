@@ -99,6 +99,30 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+  package-source:
+    name: Package reviewed ROCK source
+    if: github.event_name == 'pull_request'
+    needs: [validate, browser-regression]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout reviewed branch head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Build source ZIP
+        run: |
+          git archive --format=zip --prefix=ROCK/ HEAD -o "$RUNNER_TEMP/ROCK-source.zip"
+          sha256sum "$RUNNER_TEMP/ROCK-source.zip"
+      - name: Upload source package
+        uses: actions/upload-artifact@v4
+        with:
+          name: rock-source-package-${{ github.event.pull_request.number }}
+          path: ${{ runner.temp }}/ROCK-source.zip
+          if-no-files-found: error
+          retention-days: 14
+
   deploy:
     name: Deploy to GitHub Pages
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
