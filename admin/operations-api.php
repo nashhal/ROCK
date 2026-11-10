@@ -20,6 +20,9 @@ try {
     rock_ensure_business_schema($pdo);
     $admin = rock_require_admin();
     $role = rock_admin_role();
+    if (!in_array($role, ['admin', 'manager'], true)) {
+        rock_json(['error' => 'ليست لديك صلاحية للوصول إلى مساحة العمليات.'], 403);
+    }
 
     if ($method === 'GET') {
         if ($action === 'overview') {
