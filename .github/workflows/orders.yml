@@ -6,8 +6,26 @@ on:
     paths:
       - 'api/order-schema.php'
       - 'api/orders.php'
+      - 'api/business-schema.php'
+      - 'api/store-settings.php'
+      - 'admin/operations.php'
+      - 'admin/operations-api.php'
+      - 'admin/operations.js'
+      - 'admin/invoice.php'
+      - 'admin/api.php'
+      - 'editorial-overrides.css'
+      - 'index.html'
       - 'admin/orders.php'
       - 'admin/orders-api.php'
+      - 'api/business-schema.php'
+      - 'api/store-settings.php'
+      - 'admin/operations.php'
+      - 'admin/operations-api.php'
+      - 'admin/operations.js'
+      - 'admin/invoice.php'
+      - 'admin/api.php'
+      - 'editorial-overrides.css'
+      - 'index.html'
       - 'admin/orders-admin.js'
       - 'orders-storefront.js'
       - 'rock-experience.js'
@@ -49,6 +67,12 @@ jobs:
         run: |
           php -l api/order-schema.php
           php -l api/orders.php
+          php -l api/business-schema.php
+          php -l api/store-settings.php
+          php -l admin/operations.php
+          php -l admin/operations-api.php
+          php -l admin/invoice.php
+          php -l admin/api.php
           php -l admin/orders.php
           php -l admin/orders-api.php
       - name: Set up Node.js
@@ -59,6 +83,7 @@ jobs:
         run: |
           node --check orders-storefront.js
           node --check admin/orders-admin.js
+          node --check admin/operations.js
           node --check scripts/test_orders_contract.js
           node --check rock-experience.js
       - name: Run order contract tests
