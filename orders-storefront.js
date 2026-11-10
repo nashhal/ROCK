@@ -26,7 +26,16 @@
   honeypot.setAttribute('aria-hidden', 'true');
   honeypot.style.cssText = 'position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important';
 
+  const paymentLabel = document.createElement('label');
+  paymentLabel.className = 'rock-payment-choice';
+  paymentLabel.textContent = 'طريقة الدفع';
+  const paymentSelect = document.createElement('select');
+  paymentSelect.id = 'rockPaymentMethod';
+  paymentSelect.name = 'payment_method';
+  paymentLabel.appendChild(paymentSelect);
+
   actions.insertBefore(button, actions.firstChild);
+  form.insertBefore(paymentLabel, actions);
   actions.parentElement.appendChild(status);
   form.appendChild(honeypot);
 
@@ -41,7 +50,8 @@
       city: 'يرجى إدخال المدينة قبل إرسال الطلب.',
       confirmation: 'يرجى تأكيد مراجعة ملخص الطلب أولاً.',
       invalid: 'يرجى مراجعة بيانات العميل المطلوبة.',
-      orderHelp: 'سنتواصل معك لتأكيد السعر والتوفر والتوصيل. لا يتم تحصيل أي مبلغ عبر هذه الصفحة.'
+      orderHelp: 'سنتواصل معك لتأكيد السعر والتوفر والتوصيل. لا يتم تحصيل أي مبلغ عبر هذه الصفحة.',
+      paymentMethod: 'طريقة الدفع', bankTransfer: 'تحويل بنكي', cashOnDelivery: 'الدفع عند الاستلام'
     },
     en: {
       submit: 'Send order to ROCK',
@@ -52,7 +62,8 @@
       city: 'Please enter your city before submitting.',
       confirmation: 'Please confirm that you reviewed the order summary.',
       invalid: 'Please review the required customer details.',
-      orderHelp: 'We will contact you to confirm price, availability and delivery. No payment is collected on this page.'
+      orderHelp: 'We will contact you to confirm price, availability and delivery. No payment is collected on this page.',
+      paymentMethod: 'Payment method', bankTransfer: 'Bank transfer', cashOnDelivery: 'Cash on delivery'
     }
   };
   const t = key => copy[isEnglish() ? 'en' : 'ar'][key];
@@ -79,9 +90,29 @@
       if (payload.source !== 'hostinger-mysql' || !Array.isArray(payload.products)) {
         throw new Error('live catalog not active');
       }
-      button.hidden = false;
+      const settingsResponse = await fetch(new URL('api/store-settings.php', document.baseURI), {
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' }
+      });
+      if (!settingsResponse.ok) throw new Error('store settings unavailable');
+      const settings = await settingsResponse.json();
+      const paymentMethods = Array.isArray(settings.paymentMethods) ? settings.paymentMethods : [];
+      if (!paymentMethods.length) throw new Error('no payment methods configured');
+      paymentSelect.replaceChildren();
+      for (const method of paymentMethods) {
+        if (!['bank_transfer', 'cash_on_delivery'].includes(method)) continue;
+        const option = document.createElement('option');
+        option.value = method;
+        option.textContent = method === 'bank_transfer' ? t('bankTransfer') : t('cashOnDelivery');
+        paymentSelect.appendChild(option);
+      }
+      if (!paymentSelect.options.length) throw new Error('no payment methods configured');
+      paymentLabel.firstChild.textContent = t('paymentMethod');
+      paymentLabel.style.display = '';
       const city = document.getElementById('customerCity');
       if (city) city.required = true;
+      button.hidden = false;
       status.textContent = t('orderHelp');
       status.style.display = 'block';
       status.style.background = '#f2f7fd';
@@ -142,7 +173,7 @@
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ customer, items, website: honeypot.value })
+        body: JSON.stringify({ customer, items, paymentMethod: paymentSelect.value, website: honeypot.value })
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || !payload.ok || !payload.orderNumber) {
@@ -150,7 +181,8 @@
       }
       accepted = true;
       button.textContent = isEnglish() ? 'Order received' : 'تم استلام الطلب';
-      showMessage(t('success') + payload.orderNumber + ' — ' + t('orderHelp'), true);
+      const totalLabel = payload.total ? ' — ' + (isEnglish() ? 'Total: ' : 'الإجمالي مع الشحن: ') + payload.total + ' SAR' : '';
+      showMessage(t('success') + payload.orderNumber + totalLabel + ' — ' + t('orderHelp'), true);
     } catch (error) {
       showMessage(error.message || t('fail'));
       button.disabled = false;
@@ -162,7 +194,7 @@
 
   button.addEventListener('click', submitOrder);
   const languageObserver = new MutationObserver(() => {
-    if (!busy && !accepted && !button.hidden) button.textContent = t('submit');
+    if (!busy && !accepted && !button.hidden) { button.textContent = t('submit'); paymentLabel.firstChild.textContent = t('paymentMethod'); [...paymentSelect.options].forEach(option => { option.textContent = option.value === 'bank_transfer' ? t('bankTransfer') : t('cashOnDelivery'); }); }
     if (accepted) button.textContent = isEnglish() ? 'Order received' : 'تم استلام الطلب';
   });
   languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang', 'dir'] });
