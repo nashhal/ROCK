@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../api/bootstrap.php';
+require_once __DIR__ . '/../api/business-schema.php';
 
 rock_start_session();
 header('X-Content-Type-Options: nosniff');
@@ -11,6 +12,9 @@ function rock_admin_row(array $row): array
     $product = rock_public_product($row);
     $product['active'] = (bool)$row['active'];
     $product['imageApproved'] = (bool)$row['image_approved'];
+    $product['trackStock'] = (bool)($row['track_stock'] ?? false);
+    $product['stockQuantity'] = (int)($row['stock_quantity'] ?? 0);
+    $product['lowStockThreshold'] = (int)($row['low_stock_threshold'] ?? 5);
     return $product;
 }
 
@@ -65,12 +69,14 @@ try {
     if (!rock_is_install_complete($pdo)) {
         rock_json(['error' => 'لم يتم تثبيت لوحة الإدارة. افتح api/install.php أولًا.'], 503);
     }
+    rock_ensure_business_schema($pdo);
 
     if ($method === 'GET' && $action === 'me') {
         $authenticated = !empty($_SESSION['rock_admin_id']) && !empty($_SESSION['rock_admin_username']);
         rock_json([
             'authenticated' => $authenticated,
             'username' => $authenticated ? (string)$_SESSION['rock_admin_username'] : '',
+            'role' => $authenticated ? rock_admin_role() : '',
             'csrf' => rock_csrf_token(),
         ]);
     }
@@ -89,7 +95,7 @@ try {
             rock_json(['error' => 'تم إيقاف محاولات الدخول مؤقتًا. انتظر 15 دقيقة ثم حاول مجددًا.'], 429);
         }
 
-        $statement = $pdo->prepare('SELECT id, username, password_hash FROM rock_admin_users WHERE username = ? LIMIT 1');
+        $statement = $pdo->prepare('SELECT id, username, password_hash, role, full_name FROM rock_admin_users WHERE username = ? LIMIT 1');
         $statement->execute([$username]);
         $user = $statement->fetch();
         if (!is_array($user) || !password_verify($password, (string)$user['password_hash'])) {
@@ -102,8 +108,10 @@ try {
         session_regenerate_id(true);
         $_SESSION['rock_admin_id'] = (int)$user['id'];
         $_SESSION['rock_admin_username'] = (string)$user['username'];
+        $_SESSION['rock_admin_role'] = in_array((string)($user['role'] ?? 'admin'), ['admin', 'manager', 'sales_rep'], true) ? (string)$user['role'] : 'admin';
+        $_SESSION['rock_admin_full_name'] = (string)($user['full_name'] ?? '');
         $_SESSION['rock_csrf'] = bin2hex(random_bytes(32));
-        rock_json(['authenticated' => true, 'username' => (string)$user['username'], 'csrf' => (string)$_SESSION['rock_csrf']]);
+        rock_json(['authenticated' => true, 'username' => (string)$user['username'], 'role' => (string)$_SESSION['rock_admin_role'], 'fullName' => (string)$_SESSION['rock_admin_full_name'], 'csrf' => (string)$_SESSION['rock_csrf']]);
     }
 
     if ($method === 'POST' && $action === 'logout') {
@@ -145,6 +153,7 @@ try {
     }
 
     rock_check_csrf();
+    $admin = rock_require_roles(['admin', 'manager']);
 
     if ($action === 'delete') {
         $id = (string)($_POST['id'] ?? '');
@@ -177,6 +186,9 @@ try {
     $descriptionEn = trim((string)($_POST['description_en'] ?? ''));
     $picturesUrl = trim((string)($_POST['pictures_url'] ?? ''));
     $requestedActive = (string)($_POST['active'] ?? '0') === '1';
+    $trackStock = (string)($_POST['track_stock'] ?? '0') === '1';
+    $stockText = trim((string)($_POST['stock_quantity'] ?? '0'));
+    $lowStockText = trim((string)($_POST['low_stock_threshold'] ?? '5'));
 
     if (!preg_match('/^[a-zA-Z0-9_-]{2,80}$/', $id)) {
         rock_json(['error' => 'معرّف المنتج يجب أن يحتوي على أحرف أو أرقام أو شرطة فقط.'], 422);
@@ -189,6 +201,9 @@ try {
     }
     if (!preg_match('/^\d{1,9}(?:\.\d{1,2})?$/', $priceText) || (float)$priceText < 0) {
         rock_json(['error' => 'أدخل سعرًا صحيحًا حتى منزلتين عشريتين.'], 422);
+    }
+    if (!preg_match('/^\\d{1,7}$/', $stockText) || !preg_match('/^\\d{1,7}$/', $lowStockText)) {
+        rock_json(['error' => 'أدخل كميات مخزون صحيحة.'], 422);
     }
     if (mb_strlen($barcode) > 80 || mb_strlen($descriptionEn) > 12000) {
         rock_json(['error' => 'بعض الحقول تتجاوز الحد المسموح.'], 422);
@@ -263,9 +278,9 @@ try {
 
     $sortOrder = $existing ? (int)$existing['sort_order'] : ((int)$pdo->query('SELECT COALESCE(MAX(sort_order), 0) + 10 FROM rock_products')->fetchColumn());
     $sql = 'INSERT INTO rock_products
-      (id, barcode, model, category, price, image, name_ar, name_en, description_en, pictures_url, images_json, active, image_approved, sort_order)
-      VALUES (:id, :barcode, :model, :category, :price, :image, :name_ar, :name_en, :description_en, :pictures_url, :images_json, :active, :image_approved, :sort_order)
-      ON DUPLICATE KEY UPDATE barcode = VALUES(barcode), model = VALUES(model), category = VALUES(category), price = VALUES(price), image = VALUES(image), name_ar = VALUES(name_ar), name_en = VALUES(name_en), description_en = VALUES(description_en), pictures_url = VALUES(pictures_url), images_json = VALUES(images_json), active = VALUES(active), image_approved = VALUES(image_approved), sort_order = VALUES(sort_order)';
+      (id, barcode, model, category, price, image, name_ar, name_en, description_en, pictures_url, images_json, active, image_approved, sort_order, track_stock, stock_quantity, low_stock_threshold)
+      VALUES (:id, :barcode, :model, :category, :price, :image, :name_ar, :name_en, :description_en, :pictures_url, :images_json, :active, :image_approved, :sort_order, :track_stock, :stock_quantity, :low_stock_threshold)
+      ON DUPLICATE KEY UPDATE barcode = VALUES(barcode), model = VALUES(model), category = VALUES(category), price = VALUES(price), image = VALUES(image), name_ar = VALUES(name_ar), name_en = VALUES(name_en), description_en = VALUES(description_en), pictures_url = VALUES(pictures_url), images_json = VALUES(images_json), active = VALUES(active), image_approved = VALUES(image_approved), sort_order = VALUES(sort_order), track_stock = VALUES(track_stock), stock_quantity = VALUES(stock_quantity), low_stock_threshold = VALUES(low_stock_threshold)';
     try {
         $save = $pdo->prepare($sql);
         $save->execute([
@@ -283,6 +298,9 @@ try {
             ':active' => $requestedActive ? 1 : 0,
             ':image_approved' => $imageApproved ? 1 : 0,
             ':sort_order' => $sortOrder,
+            ':track_stock' => $trackStock ? 1 : 0,
+            ':stock_quantity' => (int)$stockText,
+            ':low_stock_threshold' => (int)$lowStockText,
         ]);
     } catch (Throwable $error) {
         if ($uploadedRelative !== '') {
