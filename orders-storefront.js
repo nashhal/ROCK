@@ -36,7 +36,7 @@
   paymentLabel.appendChild(paymentSelect);
 
   actions.insertBefore(button, actions.firstChild);
-  form.insertBefore(paymentLabel, actions);
+  actions.parentElement.insertBefore(paymentLabel, actions);
   actions.parentElement.appendChild(status);
   form.appendChild(honeypot);
 
