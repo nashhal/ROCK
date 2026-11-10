@@ -287,3 +287,15 @@ html[dir="rtl"] .cart-drawer{left:0!important;right:auto!important}
   .order-actions{display:grid!important;grid-template-columns:1fr!important}
   .order-actions .btn{width:100%!important}
 }
+
+/* Contrast correction: the Editorial trust strip is light, so its copy must be dark.
+   This intentionally overrides the older, more-specific immersive blue-band rules. */
+.service-strip .service-item h3{
+  color:var(--rock-editorial-navy)!important;
+}
+.service-strip .service-item p{
+  color:#6d7d8d!important;
+}
+.service-strip .service-item{
+  border-color:var(--rock-editorial-line)!important;
+}
