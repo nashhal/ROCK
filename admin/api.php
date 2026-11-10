@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../api/bootstrap.php';
+require_once __DIR__ . '/../api/order-schema.php';
 require_once __DIR__ . '/../api/business-schema.php';
 
 rock_start_session();
@@ -69,6 +70,7 @@ try {
     if (!rock_is_install_complete($pdo)) {
         rock_json(['error' => 'لم يتم تثبيت لوحة الإدارة. افتح api/install.php أولًا.'], 503);
     }
+    rock_ensure_order_schema($pdo);
     rock_ensure_business_schema($pdo);
 
     if ($method === 'GET' && $action === 'me') {
