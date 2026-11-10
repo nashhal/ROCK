@@ -165,8 +165,9 @@ async function waitForCatalog(page) {
       const drawer = document.querySelector('#cartDrawer');
       if (!drawer) return false;
       const rect = drawer.getBoundingClientRect();
+      const viewportWidth = document.documentElement.clientWidth;
       return Number(getComputedStyle(drawer).opacity) > 0.98
-        && rect.right > 1 && rect.left < document.documentElement.clientWidth - 1;
+        && rect.left >= -1 && rect.right <= viewportWidth + 1;
     });
     assert.equal(await page.locator('#cartDrawer').getAttribute('aria-hidden'), 'false');
     assert.equal(await page.locator('#cartCount').textContent(), '1');
