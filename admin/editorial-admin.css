@@ -1,0 +1,155 @@
+/* ROCK Editorial — shared back-office treatment */
+:root{
+  --rock-admin-paper:#fff;
+  --rock-admin-soft:#f4f6f8;
+  --rock-admin-navy:#071a33;
+  --rock-admin-blue:#1479dc;
+  --rock-admin-line:#dfe5eb;
+  --rock-admin-muted:#718195;
+}
+body{background:#fff!important;color:var(--rock-admin-navy)!important}
+.topbar,.ops-topbar{
+  background:#fff!important;
+  border-bottom:1px solid var(--rock-admin-line)!important;
+  box-shadow:none!important;
+}
+.topbar .brand img,.ops-brand img{filter:none!important}
+.site-link,.link-btn,.ops-top-actions a,.ops-top-actions button{
+  color:#536a80!important;
+  font-size:11px!important;
+  font-weight:650!important;
+}
+.page-shell{width:min(1320px,calc(100% - 40px))!important;margin:34px auto 60px!important}
+.page-heading,.ops-page-heading{margin-bottom:24px!important}
+.page-heading p,.ops-page-heading p{color:#718195!important;font-size:11px!important}
+h1,h2{color:var(--rock-admin-navy)!important;letter-spacing:0!important}
+.kicker,.ops-kicker{color:#7c8da0!important;letter-spacing:.14em!important}
+.btn,.ops-button,.link-btn{
+  min-height:40px!important;
+  border-radius:3px!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+.btn-primary,.ops-button-dark{
+  background:var(--rock-admin-navy)!important;
+  border-color:var(--rock-admin-navy)!important;
+  color:#fff!important;
+}
+.btn-primary:hover,.ops-button-dark:hover{background:var(--rock-admin-blue)!important;border-color:var(--rock-admin-blue)!important}
+.btn-quiet,.ops-button-light,.link-btn{
+  background:#fff!important;border-color:var(--rock-admin-line)!important;color:#405971!important;
+}
+.catalog-panel,.ops-panel{
+  border:1px solid var(--rock-admin-line)!important;
+  border-radius:3px!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+.setup-notice,.ops-setup{
+  border:1px solid var(--rock-admin-line)!important;
+  border-radius:3px!important;
+  background:#f7f9fb!important;
+  box-shadow:none!important;
+}
+.stats,.ops-metrics,.ops-report-metrics{
+  gap:0!important;
+  border-block:1px solid var(--rock-admin-line)!important;
+  background:#fff!important;
+}
+.stat,.ops-metrics article,.ops-report-metrics article{
+  border:0!important;
+  border-left:1px solid var(--rock-admin-line)!important;
+  border-radius:0!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+.stat:last-child,.ops-metrics article:last-child,.ops-report-metrics article:last-child{border-left:0!important}
+.stat strong,.ops-metrics strong,.ops-report-metrics strong{color:var(--rock-admin-navy)!important}
+.stat span,.ops-metrics span,.ops-report-metrics span{color:#7a8998!important}
+.table-toolbar,.ops-toolbar{background:#fff!important;border-color:var(--rock-admin-line)!important}
+input,select,textarea,.ops-toolbar input,.ops-toolbar select,.ops-settings-form input,.ops-staff-form input,.ops-staff-form select{
+  border-radius:3px!important;
+  border-color:#d8e0e8!important;
+  box-shadow:none!important;
+}
+input:focus,select:focus,textarea:focus,.ops-toolbar input:focus,.ops-toolbar select:focus{
+  border-color:#7eacd4!important;
+  box-shadow:0 0 0 2px rgba(20,121,220,.1)!important;
+}
+table{border-collapse:collapse!important}
+thead,thead th{background:#fff!important}
+th{color:#8794a2!important;font-size:9px!important;font-weight:750!important}
+td{border-top:1px solid #e9eef3!important}
+tbody tr:hover{background:#fafbfd!important}
+.product-dialog{border-radius:3px!important;box-shadow:0 20px 65px rgba(7,26,51,.14)!important}
+.login-panel{border-radius:3px!important;box-shadow:none!important;border-color:var(--rock-admin-line)!important}
+.login-form{border-radius:3px!important;background:#fff!important;border-color:var(--rock-admin-line)!important}
+.login-form input{border-radius:3px!important}
+.status-pill,.ops-status{border-radius:3px!important;box-shadow:none!important}
+.ops-sidebar{background:#fff!important;border-left:1px solid var(--rock-admin-line)!important}
+.ops-workspace{border-bottom-color:var(--rock-admin-line)!important}
+.ops-nav button{border-radius:3px!important}
+.ops-nav button[aria-current="page"]{background:#f3f6f8!important;color:var(--rock-admin-navy)!important}
+.ops-panel-heading{border-bottom-color:var(--rock-admin-line)!important}
+.ops-attention-item{border-bottom-color:#e9eef3!important}
+.ops-day-track{background:#eef2f5!important}
+.ops-day-bar{background:var(--rock-admin-blue)!important}
+.ops-toast,.toast{border-radius:3px!important;box-shadow:0 8px 25px rgba(7,26,51,.14)!important}
+.ops-footer,footer{border-top-color:var(--rock-admin-line)!important}
+@media(max-width:760px){
+  .page-shell{width:calc(100% - 24px)!important;margin:20px auto 40px!important}
+  .ops-sidebar{border-bottom:1px solid var(--rock-admin-line)!important;border-left:0!important}
+  .ops-nav button{border-radius:3px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;scroll-behavior:auto!important}
+}
+
+/* Order queue: working surface first, ornament last. */
+body:has(#ordersList){background:#fff!important}
+body:has(#ordersList) .topbar{height:66px!important;padding-inline:max(16px,calc((100% - 1240px)/2))!important}
+body:has(#ordersList) .brand{display:flex;align-items:center;width:100px;height:34px}
+body:has(#ordersList) .brand img{width:100%;height:100%;object-fit:contain}
+body:has(#ordersList) main{max-width:1240px!important;padding:34px 22px 70px!important}
+body:has(#ordersList) .heading h1{font-size:clamp(25px,3vw,32px)!important;font-weight:750!important}
+body:has(#ordersList) .stats{margin-bottom:22px!important}
+body:has(#ordersList) .stat{padding:15px 17px!important}
+body:has(#ordersList) .panel{overflow:hidden;border:1px solid var(--rock-admin-line)!important;border-radius:3px!important;background:#fff!important}
+body:has(#ordersList) .toolbar{padding:13px 14px!important;border-bottom:1px solid var(--rock-admin-line)!important}
+body:has(#ordersList) .toolbar input,body:has(#ordersList) .toolbar select{
+  min-height:40px!important;border-radius:3px!important;border-color:#dfe5eb!important;font-size:11px!important;
+}
+body:has(#ordersList) .orders{gap:0!important;padding:0!important}
+body:has(#ordersList) .order{
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1.4fr) minmax(205px,.85fr)!important;
+  gap:20px!important;padding:18px 17px!important;
+  border:0!important;border-bottom:1px solid var(--rock-admin-line)!important;
+  border-radius:0!important;background:#fff!important;
+}
+body:has(#ordersList) .order:last-child{border-bottom:0!important}
+body:has(#ordersList) .order:hover{background:#fbfcfd!important}
+body:has(#ordersList) .order-number{color:var(--rock-admin-navy)!important;font-size:12px!important}
+body:has(#ordersList) .customer{font-size:12px!important;color:var(--rock-admin-navy)!important}
+body:has(#ordersList) .customer-detail,body:has(#ordersList) .order-date{color:#74869a!important}
+body:has(#ordersList) .order-status{border:1px solid var(--rock-admin-line)!important;border-radius:3px!important;background:#f6f8fa!important;color:#50677e!important}
+body:has(#ordersList) .items{gap:6px!important;color:#586c80!important}
+body:has(#ordersList) .items b{color:var(--rock-admin-navy)!important}
+body:has(#ordersList) .order-total{font-size:17px!important;color:var(--rock-admin-navy)!important}
+body:has(#ordersList) .status-row{gap:6px!important;margin-top:8px!important}
+body:has(#ordersList) .status-row select,body:has(#ordersList) .status-row input{
+  min-height:36px!important;border-radius:3px!important;border-color:#dfe5eb!important;font-size:10px!important;
+}
+body:has(#ordersList) .status-row .btn{min-height:36px!important;min-width:68px!important;padding:6px 9px!important;border-radius:3px!important;font-size:10px!important}
+body:has(#ordersList) .notes{border-right:2px solid #b9cad9!important;border-radius:0!important;background:#f7f9fb!important;color:#5e7287!important}
+body:has(#ordersList) footer{padding:18px!important;color:#8996a3!important}
+@media(max-width:850px){
+  body:has(#ordersList) .order{grid-template-columns:1fr 1fr!important}
+  body:has(#ordersList) .order-actions{grid-column:1/-1!important}
+}
+@media(max-width:560px){
+  body:has(#ordersList) main{padding:24px 12px 48px!important}
+  body:has(#ordersList) .order{grid-template-columns:1fr!important;gap:12px!important;padding:14px 12px!important}
+  body:has(#ordersList) .order-actions{grid-column:auto!important}
+  body:has(#ordersList) .order-total{text-align:right!important}
+  body:has(#ordersList) .toolbar{padding:11px!important}
+}
