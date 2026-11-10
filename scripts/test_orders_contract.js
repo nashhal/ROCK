@@ -39,6 +39,7 @@ assert.ok(adminPage.includes('noindex,nofollow') && adminPage.includes('meta nam
 assert.ok(adminPage.includes('orders-admin.js') && adminPage.includes('statusFilter'), 'Order admin page must load its UI and filters');
 assert.ok(adminHome.includes('href="orders.php"'), 'Main admin page must link to order management');
 assert.ok(adminUi.includes('data-save-status') && adminUi.includes('update-status'), 'Admin UI must let staff update order statuses');
+assert.ok(adminUi.includes("if (!button || !$('#ordersList')) return;"), 'Orders UI must safely handle an incomplete Hostinger setup page');
 assert.ok(adminUi.includes('text/csv') && adminUi.includes('createObjectURL'), 'Admin UI must export the visible order list to CSV');
 
 assert.ok(storefront.includes('api/products.php') && storefront.includes("payload.source !== 'hostinger-mysql'"), 'Storefront order submit button must be enabled only when the live Hostinger catalog is active');
