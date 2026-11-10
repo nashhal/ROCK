@@ -161,6 +161,13 @@ async function waitForCatalog(page) {
     // Cart flow: quantity controls, total and localized checkout form.
     await page.locator('#productGrid [data-add="rkcbl146"]').click();
     await visible(page, '#cartDrawer.open', 'Adding a product should open the cart drawer');
+    await page.waitForFunction(() => {
+      const drawer = document.querySelector('#cartDrawer');
+      if (!drawer) return false;
+      const rect = drawer.getBoundingClientRect();
+      return Number(getComputedStyle(drawer).opacity) > 0.98
+        && rect.right > 1 && rect.left < document.documentElement.clientWidth - 1;
+    });
     assert.equal(await page.locator('#cartDrawer').getAttribute('aria-hidden'), 'false');
     assert.equal(await page.locator('#cartCount').textContent(), '1');
     assert.equal(await page.locator('#cartItems .cart-row').count(), 1);
@@ -176,6 +183,17 @@ async function waitForCatalog(page) {
     assert.equal((await page.locator('#cartTotal').textContent()).trim(), '6.25 SAR');
 
     await page.locator('#checkoutBtn').click();
+    await page.waitForFunction(() => {
+      const drawer = document.querySelector('#cartDrawer');
+      const modal = document.querySelector('#checkoutModal');
+      if (!drawer || !modal || drawer.classList.contains('open') || !modal.classList.contains('show')) return false;
+      const drawerRect = drawer.getBoundingClientRect();
+      const modalRect = modal.getBoundingClientRect();
+      const drawerOffscreen = drawerRect.right <= 1 || drawerRect.left >= document.documentElement.clientWidth - 1;
+      const modalVisible = Number(getComputedStyle(modal).opacity) > 0.98
+        && modalRect.right > 1 && modalRect.left < document.documentElement.clientWidth - 1;
+      return drawerOffscreen && modalVisible;
+    }, null, { timeout: 5000 });
     assert.equal(await page.locator('#cartDrawer').getAttribute('aria-hidden'), 'true');
     assert.equal(await page.locator('#checkoutModal').getAttribute('aria-hidden'), 'false');
     assert.equal((await page.locator('label[for="customerName"] span').textContent()).trim(), 'Name');
