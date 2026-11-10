@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 global $ROCK_CONFIG;
 $submittedToken = (string)($_POST['setup_token'] ?? '');
 $configToken = (string)($ROCK_CONFIG['setup_token'] ?? '');
-if (strlen($configToken) < 40 || $submittedToken === '' || !hash_equals($configToken, $submittedToken)) {
+if (strlen($configToken) < 48 || $submittedToken === '' || !hash_equals($configToken, $submittedToken)) {
     http_response_code(403);
     rock_install_page('رمز إعداد غير صحيح', 'أدخل رمز الإعداد المطابق للقيمة التي حفظتها في api/config.php.', true, 'error');
 }
