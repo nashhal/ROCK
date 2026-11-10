@@ -98,7 +98,17 @@ try {
                 ];
             }
         }
-        rock_json(['orders' => array_values($orders), 'count' => count($orders)]);
+        $salesReps = [];
+        if (in_array($role, ['admin', 'manager'], true)) {
+            $salesReps = $pdo->query("SELECT id, full_name, username FROM rock_admin_users
+                WHERE role = 'sales_rep' AND is_active = 1 ORDER BY full_name, username")->fetchAll();
+        }
+        rock_json([
+            'orders' => array_values($orders),
+            'count' => count($orders),
+            'salesReps' => $salesReps,
+            'canAssign' => in_array($role, ['admin', 'manager'], true),
+        ]);
     }
 
     if ($method !== 'POST' || $action !== 'update-status') {
