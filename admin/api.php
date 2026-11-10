@@ -215,6 +215,7 @@ try {
     $existing = rock_read_product($pdo, $id);
     $isNew = $existing === null;
     $oldImage = $existing ? (string)$existing['image'] : '';
+    $oldStockQuantity = $existing ? (int)($existing['stock_quantity'] ?? 0) : 0;
     $image = $oldImage;
     $imageApproved = $existing ? (bool)$existing['image_approved'] : false;
     $gallery = $existing ? json_decode((string)$existing['images_json'], true) : [];
@@ -302,6 +303,13 @@ try {
             ':stock_quantity' => (int)$stockText,
             ':low_stock_threshold' => (int)$lowStockText,
         ]);
+        $stockChange = (int)$stockText - $oldStockQuantity;
+        if ($stockChange !== 0) {
+            $movement = $pdo->prepare("INSERT INTO rock_inventory_movements
+                (product_id, quantity_change, quantity_after, movement_type, reason, reference_type, created_by)
+                VALUES (?, ?, ?, 'manual', 'تحديث من نموذج المنتج', 'manual', ?)");
+            $movement->execute([$id, $stockChange, (int)$stockText, $admin['id']]);
+        }
     } catch (Throwable $error) {
         if ($uploadedRelative !== '') {
             rock_delete_uploaded_image($uploadedRelative);
