@@ -67,7 +67,7 @@ try {
 <body>
   <header class="topbar">
     <a class="brand" href="../" aria-label="ROCK">ROCK</a>
-    <div class="top-actions"><a class="link-btn" href="operations.php">مركز التشغيل</a><a class="link-btn" href="./">إدارة المنتجات</a><a class="link-btn" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a></div>
+    <div class="top-actions"><?php if (($_SESSION['rock_admin_role'] ?? 'admin') !== 'sales_rep'): ?><a class="link-btn" href="operations.php">مركز التشغيل</a><?php endif; ?><a class="link-btn" href="./">إدارة المنتجات</a><a class="link-btn" href="../" target="_blank" rel="noopener">عرض المتجر ↗</a></div>
   </header>
   <main>
     <div class="heading">
