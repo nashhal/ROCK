@@ -2,7 +2,7 @@
   'use strict';
   const $ = selector => document.querySelector(selector);
   const csrf = $('meta[name="csrf-token"]')?.content || '';
-  const state = { orders: [], visible: [] };
+  const state = { orders: [], visible: [], salesReps: [], canAssign: false };
   const statusLabels = {
     new: 'طلب جديد',
     waiting_rep: 'بانتظار المندوب',
@@ -96,6 +96,12 @@
         '<section class="order-actions"><div class="order-total">' + escapeHtml(money(order.total)) + '</div>' +
         '<div class="status-row"><select aria-label="تحديث حالة الطلب" data-status-select>' +
         statusOptions(order.status) + '</select><button class="btn btn-primary" type="button" data-save-status>حفظ</button></div>' +
+        (state.canAssign ? '<div class="status-row"><select aria-label="تعيين مندوب للطلب" data-assignee>' +
+          '<option value="">بدون تعيين</option>' + state.salesReps.map(rep =>
+            '<option value="' + Number(rep.id) + '"' + (Number(order.assignedTo) === Number(rep.id) ? ' selected' : '') + '>' +
+            escapeHtml(rep.full_name || rep.username) + '</option>'
+          ).join('') + '</select><button class="btn" type="button" data-save-assignee>تعيين</button></div>' : '') +
+        (order.assignedName ? '<div class="order-date">المندوب: ' + escapeHtml(order.assignedName) + '</div>' : '') +
         '<div class="order-date">آخر تحديث: ' + escapeHtml(date(order.updatedAt)) + '</div></section></article>';
     }).join('');
   }
@@ -108,6 +114,8 @@
     try {
       const payload = await api('orders-api.php?action=orders');
       state.orders = Array.isArray(payload.orders) ? payload.orders : [];
+      state.salesReps = Array.isArray(payload.salesReps) ? payload.salesReps : [];
+      state.canAssign = Boolean(payload.canAssign);
       updateStats();
       render();
     } catch (error) {
@@ -140,6 +148,31 @@
     } catch (error) {
       button.disabled = false;
       button.textContent = 'حفظ';
+      window.alert(error.message);
+    }
+  }
+
+  async function assignOrder(card) {
+    const select = card.querySelector('[data-assignee]');
+    const button = card.querySelector('[data-save-assignee]');
+    const data = new FormData();
+    data.set('action', 'assign-order');
+    data.set('order_id', card.dataset.orderId);
+    data.set('staff_id', select.value);
+    data.set('csrf', document.querySelector('meta[name="csrf-token"]')?.content || '');
+    button.disabled = true;
+    button.textContent = 'جارٍ الحفظ…';
+    try {
+      const response = await fetch('operations-api.php?action=assign-order', {
+        method: 'POST', credentials: 'same-origin', body: data,
+        headers: { Accept: 'application/json' }
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'تعذر إسناد الطلب.');
+      await loadOrders();
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = 'تعيين';
       window.alert(error.message);
     }
   }
@@ -178,8 +211,10 @@
   $('#statusFilter')?.addEventListener('change', render);
   $('#exportOrders')?.addEventListener('click', exportCsv);
   $('#ordersList')?.addEventListener('click', event => {
-    const button = event.target.closest('[data-save-status]');
-    if (button) updateStatus(button.closest('[data-order-id]'));
+    const statusButton = event.target.closest('[data-save-status]');
+    const assignButton = event.target.closest('[data-save-assignee]');
+    if (statusButton) updateStatus(statusButton.closest('[data-order-id]'));
+    if (assignButton) assignOrder(assignButton.closest('[data-order-id]'));
   });
   loadOrders();
 })();
