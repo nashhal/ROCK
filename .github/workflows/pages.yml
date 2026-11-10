@@ -111,9 +111,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Prepare generated catalog quality manifest
+        run: |
+          python -m pip install --disable-pip-version-check pillow requests beautifulsoup4
+          python scripts/test_product_image_quality.py
+          python scripts/product_image_quality.py
       - name: Build source ZIP
         run: |
-          git archive --format=zip --prefix=ROCK/ HEAD -o "$RUNNER_TEMP/ROCK-source.zip"
+          mkdir -p "$RUNNER_TEMP/ROCK"
+          git archive --format=tar --prefix=ROCK/ HEAD | tar -xf - -C "$RUNNER_TEMP"
+          mkdir -p "$RUNNER_TEMP/ROCK/data"
+          cp data/product-image-quality.js "$RUNNER_TEMP/ROCK/data/product-image-quality.js"
+          cp sitemap.xml "$RUNNER_TEMP/ROCK/sitemap.xml"
+          (cd "$RUNNER_TEMP" && zip -qr ROCK-source.zip ROCK)
           sha256sum "$RUNNER_TEMP/ROCK-source.zip"
       - name: Upload source package
         uses: actions/upload-artifact@v4
