@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/order-schema.php';
+require_once __DIR__ . '/business-schema.php';
 
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
@@ -56,6 +57,7 @@ try {
         rock_json(['error' => 'لم يتم إكمال إعداد متجر ROCK على الاستضافة.'], 503);
     }
     rock_ensure_order_schema($pdo);
+    rock_ensure_business_schema($pdo);
 
     // Store only a keyed hash of the source IP; never persist the raw address.
     global $ROCK_CONFIG;
@@ -114,6 +116,13 @@ try {
     }
 
     $pdo->beginTransaction();
+    $customerSave = $pdo->prepare('INSERT INTO rock_customers (customer_name, phone, city, address, notes, order_count, total_spent, last_order_at)
+        VALUES (?, ?, ?, ?, ?, 0, 0, NULL)
+        ON DUPLICATE KEY UPDATE customer_name = VALUES(customer_name), city = VALUES(city), address = VALUES(address), notes = VALUES(notes)');
+    $customerSave->execute([$name, $phone, $city, $address, $notes]);
+    $customerLookup = $pdo->prepare('SELECT id FROM rock_customers WHERE phone = ? LIMIT 1');
+    $customerLookup->execute([$phone]);
+    $customerId = (int)$customerLookup->fetchColumn();
     $productQuery = $pdo->prepare('SELECT id, model, name_ar, name_en, price
       FROM rock_products WHERE id = ? AND active = 1 AND image_approved = 1 LIMIT 1');
     $orderLines = [];
@@ -146,9 +155,9 @@ try {
     $orderNumber = 'RK-' . date('ymd') . '-' . strtoupper(bin2hex(random_bytes(3)));
     $amount = number_format($totalCents / 100, 2, '.', '');
     $insertOrder = $pdo->prepare('INSERT INTO rock_orders
-      (order_number, customer_name, customer_phone, customer_city, customer_address, customer_notes, status, currency, subtotal, total, source)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    $insertOrder->execute([$orderNumber, $name, $phone, $city, $address, $notes, 'new', 'SAR', $amount, $amount, 'storefront']);
+      (customer_id, order_number, customer_name, customer_phone, customer_city, customer_address, customer_notes, status, currency, subtotal, total, source)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $insertOrder->execute([$customerId, $orderNumber, $name, $phone, $city, $address, $notes, 'new', 'SAR', $amount, $amount, 'storefront']);
     $orderId = (int)$pdo->lastInsertId();
 
     $insertItem = $pdo->prepare('INSERT INTO rock_order_items
@@ -168,6 +177,8 @@ try {
     }
     $history = $pdo->prepare('INSERT INTO rock_order_status_history (order_id, old_status, new_status, changed_by) VALUES (?, NULL, ?, NULL)');
     $history->execute([$orderId, 'new']);
+    $customerStats = $pdo->prepare('UPDATE rock_customers SET order_count = order_count + 1, total_spent = total_spent + ?, last_order_at = NOW() WHERE id = ?');
+    $customerStats->execute([$amount, $customerId]);
     $pdo->commit();
 
     rock_json([
