@@ -2,7 +2,7 @@ name: Deploy ROCK
 
 on:
   push:
-    branches: [main]
+    branches: [main, feat/order-management]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -135,7 +135,7 @@ jobs:
 
   deploy:
     name: Deploy to GitHub Pages
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/order-management')
     needs: [validate, browser-regression]
     runs-on: ubuntu-latest
     permissions:
@@ -181,9 +181,22 @@ jobs:
           node scripts/validate_storefront.js
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Prepare static GitHub Pages output
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp ./*.html ./*.css ./*.js ./*.txt ./*.xml _site/
+          cp -R assets data _site/
+          test -f _site/index.html
+          test -f _site/products.js
+          test -f _site/data/product-image-quality.js
+          if find _site -type f -name '*.php' | grep -q .; then
+            echo "PHP source must never be published to static GitHub Pages."
+            exit 1
+          fi
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - name: Deploy
         uses: actions/deploy-pages@v4
