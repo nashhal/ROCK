@@ -2,7 +2,7 @@
   'use strict';
   const $ = selector => document.querySelector(selector);
   const csrf = $('meta[name="csrf-token"]')?.content || '';
-  const state = { orders: [], visible: [], salesReps: [], canAssign: false };
+  const state = { orders: [], visible: [], salesReps: [], canAssign: false, canManage: false };
   const statusLabels = {
     new: 'طلب جديد',
     waiting_rep: 'بانتظار المندوب',
@@ -98,6 +98,7 @@
         '<div class="order-date">طريقة الدفع: ' + escapeHtml(order.paymentMethod === 'bank_transfer' ? 'تحويل بنكي' : 'الدفع عند الاستلام') + '</div>' +
         '<div class="status-row"><select aria-label="تحديث حالة الطلب" data-status-select>' +
         statusOptions(order.status) + '</select><button class="btn btn-primary" type="button" data-save-status>حفظ</button></div>' +
+        (state.canManage ? '<div class="status-row"><input type="number" min="0" max="1000000" step="0.01" aria-label="رسوم الشحن للطلب" data-shipping-fee value="' + escapeHtml(order.shippingFee || '0') + '"><button class="btn" type="button" data-save-shipping>تحديث الشحن</button></div>' : '') +
         (state.canAssign ? '<div class="status-row"><select aria-label="تعيين مندوب للطلب" data-assignee>' +
           '<option value="">بدون تعيين</option>' + state.salesReps.map(rep =>
             '<option value="' + Number(rep.id) + '"' + (Number(order.assignedTo) === Number(rep.id) ? ' selected' : '') + '>' +
@@ -118,6 +119,7 @@
       state.orders = Array.isArray(payload.orders) ? payload.orders : [];
       state.salesReps = Array.isArray(payload.salesReps) ? payload.salesReps : [];
       state.canAssign = Boolean(payload.canAssign);
+      state.canManage = Boolean(payload.canManage);
       updateStats();
       render();
     } catch (error) {
@@ -150,6 +152,36 @@
     } catch (error) {
       button.disabled = false;
       button.textContent = 'حفظ';
+      window.alert(error.message);
+    }
+  }
+
+  async function updateShipping(card) {
+    const input = card.querySelector('[data-shipping-fee]');
+    const button = card.querySelector('[data-save-shipping]');
+    const value = String(input?.value || '');
+    if (!/^\\d{1,7}(?:\\.\\d{1,2})?$/.test(value)) {
+      window.alert('أدخل رسوم شحن صحيحة.');
+      return;
+    }
+    const data = new FormData();
+    data.set('action', 'update-order-shipping');
+    data.set('order_id', card.dataset.orderId);
+    data.set('shipping_fee', value);
+    data.set('csrf', document.querySelector('meta[name="csrf-token"]')?.content || '');
+    button.disabled = true;
+    button.textContent = 'جارٍ الحفظ…';
+    try {
+      const response = await fetch('operations-api.php?action=update-order-shipping', {
+        method: 'POST', credentials: 'same-origin', body: data,
+        headers: { Accept: 'application/json' }
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'تعذر تحديث رسوم الشحن.');
+      await loadOrders();
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = 'تحديث الشحن';
       window.alert(error.message);
     }
   }
@@ -215,8 +247,10 @@
   $('#ordersList')?.addEventListener('click', event => {
     const statusButton = event.target.closest('[data-save-status]');
     const assignButton = event.target.closest('[data-save-assignee]');
+    const shippingButton = event.target.closest('[data-save-shipping]');
     if (statusButton) updateStatus(statusButton.closest('[data-order-id]'));
     if (assignButton) assignOrder(assignButton.closest('[data-order-id]'));
+    if (shippingButton) updateShipping(shippingButton.closest('[data-order-id]'));
   });
   loadOrders();
 })();
