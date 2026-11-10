@@ -44,6 +44,7 @@ assert.ok(adminUi.includes('text/csv') && adminUi.includes('createObjectURL'), '
 assert.ok(storefront.includes('api/products.php') && storefront.includes("payload.source !== 'hostinger-mysql'"), 'Storefront order submit button must be enabled only when the live Hostinger catalog is active');
 assert.ok(storefront.includes('api/orders.php') && storefront.includes("JSON.stringify({ customer, items, website: '' })"), 'Checkout must send only cart identifiers/quantities and customer details');
 assert.ok(storefront.includes('orderConfirmation') && storefront.includes('accepted = true'), 'Checkout must require explicit confirmation and prevent repeat submission');
+assert.ok(storefront.includes("honeypot.name = 'website'") && storefront.includes('website: honeypot.value'), 'Checkout must submit the real hidden honeypot field');
 assert.ok(motionLoader.includes('orders-storefront.js'), 'Homepage must load the storefront order integration');
 assert.ok(setupGuide.includes('/admin/orders.php') && setupGuide.includes('keyed IP rate limit'), 'Hostinger guide must explain order administration and rate limiting');
 
