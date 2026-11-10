@@ -58,6 +58,14 @@ try {
     }
     rock_ensure_order_schema($pdo);
     rock_ensure_business_schema($pdo);
+    $settingsRows = $pdo->query("SELECT setting_key, setting_value FROM rock_store_settings
+        WHERE setting_key IN ('shipping_default_sar','free_shipping_threshold_sar','payment_methods')")->fetchAll();
+    $storeSettings = [];
+    foreach ($settingsRows as $setting) $storeSettings[(string)$setting['setting_key']] = (string)$setting['setting_value'];
+    $allowedPaymentMethods = json_decode($storeSettings['payment_methods'] ?? '[\"cash_on_delivery\"]', true);
+    if (!is_array($allowedPaymentMethods)) $allowedPaymentMethods = ['cash_on_delivery'];
+    $allowedPaymentMethods = array_values(array_intersect($allowedPaymentMethods, ['bank_transfer', 'cash_on_delivery']));
+    if (!$allowedPaymentMethods) $allowedPaymentMethods = ['cash_on_delivery'];
 
     // Store only a keyed hash of the source IP; never persist the raw address.
     global $ROCK_CONFIG;
@@ -75,6 +83,10 @@ try {
         rock_json(['error' => 'تم تجاوز عدد المحاولات. انتظر قليلاً ثم حاول مجددًا.'], 429);
     }
 
+    $paymentMethod = trim((string)($payload['paymentMethod'] ?? ''));
+    if (!in_array($paymentMethod, $allowedPaymentMethods, true)) {
+        rock_json(['error' => 'طريقة الدفع المحددة غير متاحة حالياً. حدّث الصفحة واختر طريقة أخرى.'], 422);
+    }
     $customer = is_array($payload['customer'] ?? null) ? $payload['customer'] : [];
     $name = rock_order_text($customer['name'] ?? '', 160);
     $phoneRaw = rock_order_text($customer['phone'] ?? '', 32);
@@ -153,11 +165,18 @@ try {
     }
 
     $orderNumber = 'RK-' . date('ymd') . '-' . strtoupper(bin2hex(random_bytes(3)));
-    $amount = number_format($totalCents / 100, 2, '.', '');
+    $subtotalCents = $totalCents;
+    $shippingDefault = max(0, (int)round((float)($storeSettings['shipping_default_sar'] ?? 20) * 100));
+    $freeThreshold = max(0, (int)round((float)($storeSettings['free_shipping_threshold_sar'] ?? 300) * 100));
+    $shippingCents = ($subtotalCents > 0 && ($freeThreshold === 0 || $subtotalCents < $freeThreshold)) ? $shippingDefault : 0;
+    $grandTotalCents = $subtotalCents + $shippingCents;
+    $subtotalAmount = number_format($subtotalCents / 100, 2, '.', '');
+    $shippingAmount = number_format($shippingCents / 100, 2, '.', '');
+    $grandAmount = number_format($grandTotalCents / 100, 2, '.', '');
     $insertOrder = $pdo->prepare('INSERT INTO rock_orders
-      (customer_id, order_number, customer_name, customer_phone, customer_city, customer_address, customer_notes, status, currency, subtotal, total, source)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    $insertOrder->execute([$customerId, $orderNumber, $name, $phone, $city, $address, $notes, 'new', 'SAR', $amount, $amount, 'storefront']);
+      (customer_id, order_number, customer_name, customer_phone, customer_city, customer_address, customer_notes, status, currency, subtotal, shipping_fee, total, payment_method, source)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $insertOrder->execute([$customerId, $orderNumber, $name, $phone, $city, $address, $notes, 'new', 'SAR', $subtotalAmount, $shippingAmount, $grandAmount, $paymentMethod, 'storefront']);
     $orderId = (int)$pdo->lastInsertId();
 
     $insertItem = $pdo->prepare('INSERT INTO rock_order_items
@@ -178,13 +197,17 @@ try {
     $history = $pdo->prepare('INSERT INTO rock_order_status_history (order_id, old_status, new_status, changed_by) VALUES (?, NULL, ?, NULL)');
     $history->execute([$orderId, 'new']);
     $customerStats = $pdo->prepare('UPDATE rock_customers SET order_count = order_count + 1, total_spent = total_spent + ?, last_order_at = NOW() WHERE id = ?');
-    $customerStats->execute([$amount, $customerId]);
+    $customerStats->execute([$grandAmount, $customerId]);
     $pdo->commit();
 
     rock_json([
         'ok' => true,
         'orderNumber' => $orderNumber,
         'status' => 'new',
+        'subtotal' => $subtotalAmount,
+        'shippingFee' => $shippingAmount,
+        'total' => $grandAmount,
+        'paymentMethod' => $paymentMethod,
         'message' => 'تم استلام طلبك، وسيتم التواصل معك لتأكيد السعر والتوفر والتوصيل.',
     ], 201);
 } catch (Throwable $error) {
