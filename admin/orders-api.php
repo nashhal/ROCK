@@ -110,6 +110,7 @@ try {
             'count' => count($orders),
             'salesReps' => $salesReps,
             'canAssign' => in_array($role, ['admin', 'manager'], true),
+            'canManage' => in_array($role, ['admin', 'manager'], true),
         ]);
     }
 
