@@ -111,10 +111,51 @@ function rock_check_csrf(): void
 function rock_require_admin(): array
 {
     rock_start_session();
-    if (empty($_SESSION['rock_admin_id']) || empty($_SESSION['rock_admin_username'])) {
+    $adminId = filter_var($_SESSION['rock_admin_id'] ?? null, FILTER_VALIDATE_INT);
+    $sessionUsername = (string)($_SESSION['rock_admin_username'] ?? '');
+    if ($adminId === false || $adminId < 1 || $sessionUsername === '') {
         rock_json(['error' => 'يلزم تسجيل الدخول.'], 401);
     }
-    return ['id' => (int)$_SESSION['rock_admin_id'], 'username' => (string)$_SESSION['rock_admin_username']];
+
+    try {
+        // Re-check the account on every protected API request so disabled users
+        // and users whose role changed cannot keep privileges through an old session.
+        $pdo = rock_db();
+        $statement = $pdo->prepare('SELECT username, role, full_name, is_active FROM rock_admin_users WHERE id = ? LIMIT 1');
+        $statement->execute([$adminId]);
+        $user = $statement->fetch();
+    } catch (Throwable $error) {
+        error_log('[ROCK auth] ' . $error->getMessage());
+        rock_json(['error' => 'تعذّر التحقق من جلسة الدخول. حاول مرة أخرى.'], 503);
+    }
+
+    $role = is_array($user) ? (string)($user['role'] ?? '') : '';
+    $validUser = is_array($user)
+        && (bool)($user['is_active'] ?? false)
+        && hash_equals((string)($user['username'] ?? ''), $sessionUsername)
+        && in_array($role, ['admin', 'manager', 'sales_rep'], true);
+
+    if (!$validUser) {
+        unset(
+            $_SESSION['rock_admin_id'],
+            $_SESSION['rock_admin_username'],
+            $_SESSION['rock_admin_role'],
+            $_SESSION['rock_admin_full_name']
+        );
+        $_SESSION['rock_csrf'] = bin2hex(random_bytes(32));
+        rock_json(['error' => 'انتهت صلاحية جلسة الدخول أو تم إيقاف الحساب. سجّل الدخول مجددًا.'], 401);
+    }
+
+    $_SESSION['rock_admin_username'] = (string)$user['username'];
+    $_SESSION['rock_admin_role'] = $role;
+    $_SESSION['rock_admin_full_name'] = (string)($user['full_name'] ?? '');
+
+    return [
+        'id' => (int)$adminId,
+        'username' => (string)$user['username'],
+        'role' => $role,
+        'full_name' => (string)($user['full_name'] ?? ''),
+    ];
 }
 
 function rock_is_install_complete(PDO $pdo): bool
