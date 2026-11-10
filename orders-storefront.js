@@ -18,8 +18,17 @@
   status.setAttribute('aria-live', 'polite');
   status.style.cssText = 'margin:10px 0 0;padding:10px 12px;border-radius:9px;background:#f2f7fd;color:#173b5e;font-size:12px;line-height:1.7;display:none';
 
+  const honeypot = document.createElement('input');
+  honeypot.type = 'text';
+  honeypot.name = 'website';
+  honeypot.autocomplete = 'off';
+  honeypot.tabIndex = -1;
+  honeypot.setAttribute('aria-hidden', 'true');
+  honeypot.style.cssText = 'position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important';
+
   actions.insertBefore(button, actions.firstChild);
   actions.parentElement.appendChild(status);
+  form.appendChild(honeypot);
 
   const isEnglish = () => (document.documentElement.lang || 'ar').toLowerCase().startsWith('en');
   const copy = {
@@ -32,7 +41,6 @@
       city: 'يرجى إدخال المدينة قبل إرسال الطلب.',
       confirmation: 'يرجى تأكيد مراجعة ملخص الطلب أولاً.',
       invalid: 'يرجى مراجعة بيانات العميل المطلوبة.',
-      unavailable: 'استقبال الطلبات غير متاح حالياً. يمكنك استخدام خيار المشاركة.',
       orderHelp: 'سنتواصل معك لتأكيد السعر والتوفر والتوصيل. لا يتم تحصيل أي مبلغ عبر هذه الصفحة.'
     },
     en: {
@@ -44,7 +52,6 @@
       city: 'Please enter your city before submitting.',
       confirmation: 'Please confirm that you reviewed the order summary.',
       invalid: 'Please review the required customer details.',
-      unavailable: 'Order submission is not available right now. You can use the share option instead.',
       orderHelp: 'We will contact you to confirm price, availability and delivery. No payment is collected on this page.'
     }
   };
@@ -135,7 +142,7 @@
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ customer, items, website: '' })
+        body: JSON.stringify({ customer, items, website: honeypot.value })
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || !payload.ok || !payload.orderNumber) {
