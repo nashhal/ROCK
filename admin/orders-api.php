@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../api/bootstrap.php';
 require_once __DIR__ . '/../api/order-schema.php';
+require_once __DIR__ . '/../api/business-schema.php';
 
 rock_start_session();
 header('X-Content-Type-Options: nosniff');
@@ -22,7 +23,9 @@ try {
         rock_json(['error' => 'لم يتم تثبيت قاعدة بيانات ROCK بعد.'], 503);
     }
     rock_ensure_order_schema($pdo);
+    rock_ensure_business_schema($pdo);
     $admin = rock_require_admin();
+    $role = rock_admin_role();
 
     if ($method === 'GET' && $action === 'orders') {
         $allowedStatuses = ['new', 'waiting_rep', 'contacting', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'failed_delivery', 'cancelled'];
@@ -37,6 +40,10 @@ try {
             $where[] = 'o.status = ?';
             $params[] = $status;
         }
+        if ($role === 'sales_rep') {
+            $where[] = 'o.assigned_to = ?';
+            $params[] = $admin['id'];
+        }
         if ($query !== '') {
             $where[] = '(o.order_number LIKE ? OR o.customer_name LIKE ? OR o.customer_phone LIKE ? OR o.customer_city LIKE ?)';
             $like = '%' . mb_substr($query, 0, 100, 'UTF-8') . '%';
@@ -45,9 +52,10 @@ try {
         $whereSql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
         $sql = "SELECT o.id, o.order_number, o.customer_name, o.customer_phone, o.customer_city,
                     o.customer_address, o.customer_notes, o.status, o.currency, o.subtotal, o.total,
-                    o.created_at, o.updated_at,
+                    o.created_at, o.updated_at, o.assigned_to, staff.full_name AS assigned_name,
                     i.product_id, i.model, i.name_ar, i.name_en, i.unit_price, i.quantity, i.line_total
                 FROM rock_orders o
+                LEFT JOIN rock_admin_users staff ON staff.id = o.assigned_to
                 LEFT JOIN rock_order_items i ON i.order_id = o.id
                 {$whereSql}
                 ORDER BY o.created_at DESC, o.id DESC
@@ -73,6 +81,8 @@ try {
                     'total' => (string)$row['total'],
                     'createdAt' => (string)$row['created_at'],
                     'updatedAt' => (string)$row['updated_at'],
+                    'assignedTo' => $row['assigned_to'] === null ? null : (int)$row['assigned_to'],
+                    'assignedName' => (string)($row['assigned_name'] ?? ''),
                     'items' => [],
                 ];
             }
@@ -105,9 +115,14 @@ try {
     }
 
     $pdo->beginTransaction();
-    $find = $pdo->prepare('SELECT status FROM rock_orders WHERE id = ? LIMIT 1 FOR UPDATE');
+    $find = $pdo->prepare('SELECT status, assigned_to FROM rock_orders WHERE id = ? LIMIT 1 FOR UPDATE');
     $find->execute([$id]);
-    $oldStatus = $find->fetchColumn();
+    $orderRow = $find->fetch();
+    $oldStatus = is_array($orderRow) ? (string)$orderRow['status'] : false;
+    if ($role === 'sales_rep' && (!is_array($orderRow) || (int)($orderRow['assigned_to'] ?? 0) !== (int)$admin['id'])) {
+        $pdo->rollBack();
+        rock_json(['error' => 'هذا الطلب غير مسند إلى حسابك.'], 403);
+    }
     if (!is_string($oldStatus)) {
         $pdo->rollBack();
         rock_json(['error' => 'الطلب غير موجود.'], 404);
