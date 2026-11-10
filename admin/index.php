@@ -29,6 +29,7 @@ if (!$configured) {
   <title>إدارة ROCK | فجر جديد مع روك</title>
   <link rel="icon" href="../assets/brand/rock-logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="admin.css?v=20261022-admin-v1">
+  <link rel="stylesheet" href="editorial-admin.css?v=20261110-editorial-admin-v1">
   <script src="admin.js?v=20261022-admin-v1" defer></script>
 </head>
 <body data-setup-needed="<?= $notice !== '' ? '1' : '0' ?>">
