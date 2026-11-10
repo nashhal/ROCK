@@ -13,6 +13,7 @@ const operationsApi = read('admin/operations-api.php');
 const operationsPage = read('admin/operations.php');
 const operationsUi = read('admin/operations.js');
 const invoice = read('admin/invoice.php');
+const home = read('index.html');
 const editorial = read('editorial-overrides.css');
 const publicApi = read('api/orders.php');
 const adminApi = read('admin/orders-api.php');
