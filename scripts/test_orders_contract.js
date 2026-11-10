@@ -6,6 +6,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const read = file => fs.readFileSync(path.join(process.cwd(), file), 'utf8');
+const bootstrap = read('api/bootstrap.php');
+const editorialQuality = read('editorial-quality-v3.css');
 const schema = read('api/order-schema.php');
 const businessSchema = read('api/business-schema.php');
 const publicSettings = read('api/store-settings.php');
@@ -30,6 +32,7 @@ for (const table of ['rock_orders', 'rock_order_items', 'rock_order_status_histo
   assert.ok(schema.includes('CREATE TABLE IF NOT EXISTS ' + table), 'Missing order table: ' + table);
 }
 assert.ok(schema.includes('ON DELETE CASCADE'), 'Order item/status history rows must be deleted with their parent order');
+assert.ok(bootstrap.includes('SELECT username, role, full_name, is_active FROM rock_admin_users WHERE id = ? LIMIT 1') && bootstrap.includes("hash_equals((string)($user['username'] ?? ''), $sessionUsername)"), 'Protected admin requests must revalidate active account identity and current role from the database');
 assert.ok(schema.includes('order_number VARCHAR(32) NOT NULL UNIQUE'), 'Order numbers must be unique');
 
 assert.ok(publicApi.includes("$_SERVER['REQUEST_METHOD']") && publicApi.includes("'POST'"), 'Public order API must accept POST only');
@@ -78,6 +81,7 @@ assert.ok(operationsApi.includes('rock_require_roles([\'admin\'])') && operation
 assert.ok(operationsUi.includes('exportCsv') && operationsUi.includes('updateStock') && operationsUi.includes('loadCustomers'), 'Operations UI must support inventory edits, customer exports and reports');
 assert.ok(invoice.includes('window.print()') && invoice.includes('noindex,nofollow'), 'Order document must be private and printable to PDF');
 assert.ok(editorial.includes('.hero.section-shell,.hero') && editorial.includes('.service-strip.section-shell') && editorial.includes('#productGrid .product-card'), 'Editorial layer must style the product-first hero, trust band and catalog');
+assert.ok(home.includes('editorial-quality-v3.css?v=20261111-rock-quality-v3') && editorialQuality.includes('--rock-space-8') && editorialQuality.includes('#productGrid .product-action-btn') && editorialQuality.includes('@media(prefers-reduced-motion:reduce)'), 'Shared Editorial quality layer must define spacing, refined product actions and reduced-motion support');
 assert.ok(home.includes('editorial-overrides.css?v='), 'Homepage must load the Editorial design layer');
 assert.ok(setupGuide.includes('Operations workspace and inventory') && setupGuide.includes('Print / PDF'), 'Hostinger guide must document operations and order documents');
 console.log('ROCK order and operations contract checks passed.');
