@@ -74,11 +74,13 @@ try {
     rock_ensure_business_schema($pdo);
 
     if ($method === 'GET' && $action === 'me') {
-        $authenticated = !empty($_SESSION['rock_admin_id']) && !empty($_SESSION['rock_admin_username']);
+        $hasSession = !empty($_SESSION['rock_admin_id']) && !empty($_SESSION['rock_admin_username']);
+        $account = $hasSession ? rock_require_admin() : null;
         rock_json([
-            'authenticated' => $authenticated,
-            'username' => $authenticated ? (string)$_SESSION['rock_admin_username'] : '',
-            'role' => $authenticated ? rock_admin_role() : '',
+            'authenticated' => $account !== null,
+            'username' => $account['username'] ?? '',
+            'role' => $account['role'] ?? '',
+            'fullName' => $account['full_name'] ?? '',
             'csrf' => rock_csrf_token(),
         ]);
     }
