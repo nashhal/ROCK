@@ -17,6 +17,7 @@ const home = read('index.html');
 const editorial = read('editorial-overrides.css');
 const publicApi = read('api/orders.php');
 const adminApi = read('admin/orders-api.php');
+const productAdminApi = read('admin/api.php');
 const adminPage = read('admin/orders.php');
 const adminUi = read('admin/orders-admin.js');
 const storefront = read('orders-storefront.js');
@@ -43,7 +44,7 @@ assert.ok(publicApi.includes('rock_order_status_history'), 'New orders must crea
 assert.ok(!publicApi.includes("$_POST['price']"), 'Public order input must not supply trusted prices');
 
 assert.ok(adminApi.includes('rock_require_admin()') && adminApi.includes('rock_check_csrf()'), 'Order administration must enforce login and CSRF');
-assert.ok(adminApi.includes("if ($method === 'GET' && $action === 'products') {\n        rock_require_roles(['admin', 'manager']);"), 'Sales representatives must not access the admin product API');
+assert.ok(productAdminApi.includes("if ($method === 'GET' && $action === 'products') {\n        rock_require_roles(['admin', 'manager']);"), 'Sales representatives must not access the admin product API');
 assert.ok(adminApi.includes('FOR UPDATE') && adminApi.includes('rock_order_status_history'), 'Status changes must be transactional and audited');
 assert.ok(adminApi.includes('LIMIT 1200'), 'Order listing must be bounded');
 assert.ok(adminApi.includes('rock_require_roles([\'sales_rep\'])') || adminApi.includes("$role === 'sales_rep'"), 'Sales reps must be scoped to orders assigned to them');
