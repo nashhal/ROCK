@@ -105,7 +105,8 @@
             escapeHtml(rep.full_name || rep.username) + '</option>'
           ).join('') + '</select><button class="btn" type="button" data-save-assignee>تعيين</button></div>' : '') +
         (order.assignedName ? '<div class="order-date">المندوب: ' + escapeHtml(order.assignedName) + '</div>' : '') +
-        '<div class="order-date">آخر تحديث: ' + escapeHtml(date(order.updatedAt)) + '</div></section></article>';
+        '<div class="order-date">آخر تحديث: ' + escapeHtml(date(order.updatedAt)) + '</div>' +
+        '<div class="status-row"><a class="btn" href="invoice.php?id=' + Number(order.id) + '" target="_blank" rel="noopener">طباعة / PDF</a></div></section></article>';
     }).join('');
   }
 
