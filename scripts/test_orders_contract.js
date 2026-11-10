@@ -69,6 +69,7 @@ assert.ok(setupGuide.includes('/admin/orders.php') && setupGuide.includes('keyed
 assert.ok(operationsPage.includes('data-view="inventory"') && operationsPage.includes('data-view="customers"') && operationsPage.includes('data-view="reports"'), 'Operations workspace must expose inventory, customers and reports');
 assert.ok(operationsPage.includes('data-view="staff"') && operationsPage.includes('data-view="settings"'), 'Admin workspace must expose staff and store settings');
 assert.ok(operationsApi.includes('update-stock') && operationsApi.includes('save-staff') && operationsApi.includes('save-settings'), 'Operations API must support stock, staff and settings changes');
+assert.ok(operationsApi.includes("if (!in_array($role, ['admin', 'manager'], true))") && operationsApi.includes('ليست لديك صلاحية للوصول إلى مساحة العمليات.'), 'Operations API must block sales representatives from customer, inventory, overview and report data');
 assert.ok(operationsApi.includes('rock_require_roles([\'admin\'])') && operationsApi.includes('rock_require_roles([\'admin\', \'manager\'])'), 'Operations API must separate administrator and manager capabilities');
 assert.ok(operationsUi.includes('exportCsv') && operationsUi.includes('updateStock') && operationsUi.includes('loadCustomers'), 'Operations UI must support inventory edits, customer exports and reports');
 assert.ok(invoice.includes('window.print()') && invoice.includes('noindex,nofollow'), 'Order document must be private and printable to PDF');
