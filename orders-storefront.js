@@ -28,6 +28,7 @@
 
   const paymentLabel = document.createElement('label');
   paymentLabel.className = 'rock-payment-choice';
+  paymentLabel.hidden = true;
   paymentLabel.textContent = 'طريقة الدفع';
   const paymentSelect = document.createElement('select');
   paymentSelect.id = 'rockPaymentMethod';
@@ -109,7 +110,7 @@
       }
       if (!paymentSelect.options.length) throw new Error('no payment methods configured');
       paymentLabel.firstChild.textContent = t('paymentMethod');
-      paymentLabel.style.display = '';
+      paymentLabel.hidden = false;
       const city = document.getElementById('customerCity');
       if (city) city.required = true;
       button.hidden = false;
