@@ -152,9 +152,16 @@ jobs:
           extensions: gd, pdo_mysql, mbstring
           coverage: none
       - name: Sync official product photo galleries
+        if: github.ref == 'refs/heads/main'
         run: |
           python -m pip install --disable-pip-version-check pillow requests beautifulsoup4
           python scripts/sync_drive_photos.py
+          python scripts/test_product_image_quality.py
+          python scripts/product_image_quality.py
+      - name: Prepare local gallery manifest for development preview
+        if: github.ref == 'refs/heads/feat/order-management'
+        run: |
+          python -m pip install --disable-pip-version-check pillow requests beautifulsoup4
           python scripts/test_product_image_quality.py
           python scripts/product_image_quality.py
       - name: Validate generated storefront
