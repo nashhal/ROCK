@@ -42,4 +42,10 @@
   }else{
     revealNodes.forEach(node=>node.classList.add('rock-visible'));
   }
+
+  // Load the order submission layer after the existing storefront has initialized.
+  const orderScript=document.createElement('script');
+  orderScript.src=new URL('orders-storefront.js',document.baseURI).toString();
+  orderScript.async=false;
+  document.body.appendChild(orderScript);
 })();
