@@ -33,6 +33,7 @@ function rock_ensure_business_schema(PDO $pdo): void
     rock_ensure_column($pdo, 'rock_products', 'low_stock_threshold', 'INT UNSIGNED NOT NULL DEFAULT 5');
     rock_ensure_column($pdo, 'rock_admin_users', 'role', "VARCHAR(24) NOT NULL DEFAULT 'admin'");
     rock_ensure_column($pdo, 'rock_admin_users', 'full_name', "VARCHAR(120) NOT NULL DEFAULT ''");
+    rock_ensure_column($pdo, 'rock_admin_users', 'is_active', 'TINYINT(1) NOT NULL DEFAULT 1');
 
     $pdo->exec("CREATE TABLE IF NOT EXISTS rock_customers (
       id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
