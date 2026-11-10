@@ -48,6 +48,7 @@ $isAdmin = $role === 'admin';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="operations.css?v=20261110-editorial-ops-v1">
+  <link rel="stylesheet" href="editorial-admin.css?v=20261110-editorial-admin-v1">
   <script src="operations.js?v=20261110-editorial-ops-v1" defer></script>
 </head>
 <body data-role="<?= htmlspecialchars($role, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>" data-admin="<?= $isAdmin ? '1' : '0' ?>">
