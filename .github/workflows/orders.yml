@@ -4,6 +4,7 @@ on:
   push:
     branches: [main, feat/order-management]
     paths:
+      - 'api/bootstrap.php'
       - 'api/order-schema.php'
       - 'api/orders.php'
       - 'api/business-schema.php'
@@ -13,6 +14,7 @@ on:
       - 'admin/operations.js'
       - 'admin/invoice.php'
       - 'admin/api.php'
+      - 'editorial-quality-v3.css'
       - 'editorial-overrides.css'
       - 'editorial-pages.css'
       - 'admin/editorial-admin.css'
@@ -28,6 +30,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'api/bootstrap.php'
       - 'api/order-schema.php'
       - 'api/orders.php'
       - 'api/business-schema.php'
@@ -37,6 +40,7 @@ on:
       - 'admin/operations.js'
       - 'admin/invoice.php'
       - 'admin/api.php'
+      - 'editorial-quality-v3.css'
       - 'editorial-overrides.css'
       - 'index.html'
       - 'admin/orders.php'
