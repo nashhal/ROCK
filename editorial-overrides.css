@@ -166,3 +166,7 @@ html[dir="rtl"] .hero h1{font-size:clamp(3rem,6vw,5.4rem)!important;line-height:
   html{scroll-behavior:auto!important}
   .rock-reveal{transition:none!important}
 }
+
+.rock-payment-choice{display:grid!important;gap:6px;margin:13px 0 10px;color:#5d7185;font-size:11px;font-weight:700}
+.rock-payment-choice select{width:100%;min-height:42px;padding:9px 11px;border:1px solid var(--rock-editorial-line);border-radius:3px;background:#fff;color:var(--rock-editorial-navy);font:600 12px var(--rock-editorial-navy)}
+.rock-payment-choice[hidden]{display:none!important}
