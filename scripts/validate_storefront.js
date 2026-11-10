@@ -9,7 +9,7 @@ const root = process.cwd();
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const requiredFiles = [
   'index.html', 'product.html', 'policies.html', '404.html',
-  'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
+  'styles.css', 'premium-refresh.css', 'white-modern.css', 'editorial-overrides.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
   'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css',
