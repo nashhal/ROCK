@@ -36,7 +36,7 @@ for (const token of ['--rock-cyan', '--rock-charcoal', '--rock-stone', '--rock-c
   assert.ok(designSystem.includes(token), `Design-system token or component is missing: ${token}`);
 }
 assert.ok(designSystem.includes('html[dir="rtl"] .hero h1'), 'Arabic hero typography refinement is missing');
-for (const page of ['index.html', 'product.html', 'policies.html']) {
+for (const page of ['index.html', 'product.html', 'policies.html', '404.html']) {
   assert.ok(read(page).includes('rock-design-system.css?v='), `Versioned design stylesheet link is missing in ${page}`);
 }
 
@@ -172,7 +172,7 @@ const jsonLd = home.match(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/s
 assert.ok(jsonLd, 'Homepage JSON-LD missing');
 assert.equal(JSON.parse(jsonLd[1]).name, 'ROCK', 'Homepage JSON-LD is invalid');
 
-for (const file of ['index.html', 'product.html', 'policies.html']) {
+for (const file of ['index.html', 'product.html', 'policies.html', '404.html']) {
   const html = read(file);
   assert.equal((html.match(/rock-design-system\.css/gi) || []).length, 1, `${file} must load the shared design stylesheet exactly once`);
 }
@@ -182,7 +182,7 @@ const sharedDesignStyles = ['index.html', 'product.html', 'policies.html', '404.
   return match[1];
 });
 assert.equal(new Set(sharedDesignStyles).size, 1, 'All pages must use the same cache version for the shared design stylesheet');
-for (const file of ['index.html', 'product.html', 'policies.html']) {
+for (const file of ['index.html', 'product.html', 'policies.html', '404.html']) {
   const html = read(file);
   assert.ok(html.includes('class="skip-link" href="#main-content"'), `${file} must provide a keyboard skip link`);
   assert.match(html, /<main[^>]*id="main-content"[^>]*tabindex="-1"/, `${file} must expose a focusable main landmark`);
