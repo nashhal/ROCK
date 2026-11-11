@@ -327,3 +327,7 @@ html[dir="rtl"] .hero h1{line-height:1.35;letter-spacing:0}
  .featured-price strong{font-size:16px}
 }
 @media(max-width:390px){.featured-slide{grid-template-columns:1fr;gap:8px}.featured-media{min-height:175px;aspect-ratio:16/9}.featured-product-copy{gap:6px}.featured-serial{display:none}}
+
+/* Consistent navigation layout on the information page */
+.policy-nav{display:flex;align-items:center;gap:clamp(18px,2.6vw,34px);margin:auto}
+@media(max-width:650px){.policy-nav{gap:12px}.policy-nav a{font-size:10px}}
