@@ -16,7 +16,7 @@
       companyKey:'المنشأة',contactKey:'مسؤول التواصل',phoneKey:'الجوال',cityKey:'المدينة',
       volumeKey:'حجم الطلب المتوقع',needsKey:'الاحتياجات',productsKey:'المنتجات المختارة',
       noProducts:'لم تُضف منتجات إلى السلة. أضف الموديلات المطلوبة أولًا أو اذكرها في خانة الاحتياجات.',
-      volumeNotSet:'غير محدد',unit:'قطعة',listedSubtotal:'إجمالي الأسعار المدرجة',disclaimer:'الأسعار المدرجة استرشادية وليست عرض سعر جملة معتمدًا. يجب تأكيد السعر النهائي والتوفر والتوصيل وشروط التوريد.',
+      volumeNotSet:'غير محدد',modelLabel:'الموديل',barcodeLabel:'الباركود',unit:'قطعة',listedSubtotal:'إجمالي الأسعار المدرجة',disclaimer:'الأسعار المدرجة استرشادية وليست عرض سعر جملة معتمدًا. يجب تأكيد السعر النهائي والتوفر والتوصيل وشروط التوريد.',
       copied:'تم نسخ طلب التسعير.',shared:'تم فتح مشاركة الطلب.',copyFailed:'تعذّر النسخ؛ حدّد النص وانسخه يدويًا.'
     },
     en: {
@@ -33,7 +33,7 @@
       companyKey:'Business',contactKey:'Contact person',phoneKey:'Mobile',cityKey:'City',
       volumeKey:'Expected order volume',needsKey:'Requested items',productsKey:'Selected products',
       noProducts:'No items are in your bag. Add the requested models first or list them in the needs field.',
-      volumeNotSet:'Not specified',unit:'units',listedSubtotal:'Listed catalog subtotal',disclaimer:'Listed prices are indicative and are not a confirmed wholesale quotation. Final price, availability, delivery and supply terms must be confirmed.',
+      volumeNotSet:'Not specified',modelLabel:'Model',barcodeLabel:'Barcode',unit:'units',listedSubtotal:'Listed catalog subtotal',disclaimer:'Listed prices are indicative and are not a confirmed wholesale quotation. Final price, availability, delivery and supply terms must be confirmed.',
       copied:'Quotation request copied.',shared:'Share sheet opened.',copyFailed:'Could not copy; select and copy the text manually.'
     }
   };
@@ -75,8 +75,8 @@
       subtotal += lineTotal;
       return [
         (lang === 'ar' ? product.nameAr : product.nameEn),
-        'Model: ' + product.model,
-        'Barcode: ' + (product.barcode || '—'),
+        t('modelLabel') + ': ' + product.model,
+        t('barcodeLabel') + ': ' + (product.barcode || '—'),
         qty + ' ' + t('unit') + ' × ' + money(price) + ' = ' + money(lineTotal)
       ].join(' | ');
     });
