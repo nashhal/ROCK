@@ -39,6 +39,8 @@ jobs:
           php -l api/install.php
           php -l admin/index.php
           php -l admin/api.php
+          php -l sales/api.php
+          php scripts/test_sales_portal.php
           php -l scripts/test_hostinger_admin.php
           php scripts/test_hostinger_admin.php
           python -m py_compile scripts/sync_drive_photos.py scripts/test_sync_drive_photos.py scripts/product_image_quality.py scripts/test_product_image_quality.py
@@ -46,6 +48,7 @@ jobs:
           python scripts/test_product_image_quality.py
           python scripts/product_image_quality.py
           node --check admin/admin.js
+          node --check sales/app.js
           node --check app.js
           node --check products.js
           node --check rocky-assistant.js
