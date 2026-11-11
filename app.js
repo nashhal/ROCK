@@ -34,7 +34,7 @@
   const copy = {
     ar: {
       pageTitle:'ROCK | ملحقات تقنية للشحن والصوت والسيارة',
-      openMenu:'فتح القائمة',search:'بحث',viewCart:'عرض السلة',closeAnnouncement:'إخفاء الشريط',shopProducts:'تصفح المنتجات',switchLanguage:'تغيير اللغة',featuredCarousel:'منتجات ROCK المختارة',featuredLabel:'مختارات ROCK',featuredPause:'إيقاف الحركة',featuredPlay:'تشغيل الحركة',featuredPrevious:'المنتج السابق',featuredNext:'المنتج التالي',featuredDots:'التنقل بين المنتجات',featuredView:'عرض المنتج',featuredAdd:'أضف للسلة',
+      skipToContent:'تجاوز إلى المحتوى',openMenu:'فتح القائمة',search:'بحث',viewCart:'عرض السلة',closeAnnouncement:'إخفاء الشريط',shopProducts:'تصفح المنتجات',switchLanguage:'تغيير اللغة',featuredCarousel:'منتجات ROCK المختارة',featuredLabel:'مختارات ROCK',featuredPause:'إيقاف الحركة',featuredPlay:'تشغيل الحركة',featuredPrevious:'المنتج السابق',featuredNext:'المنتج التالي',featuredDots:'التنقل بين المنتجات',featuredView:'عرض المنتج',featuredAdd:'أضف للسلة',
       powerLabel:'الشحن والطاقة',audioLabel:'الصوت والسماعات',driveLabel:'إكسسوارات السيارة',lifeLabel:'إكسسوارات يومية',
       brandTagline:'فجر جديد مع روك',closingTitle:'فجر جديد',closingAccent:'مع روك.',
       catAll:'الكل',catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',
@@ -52,7 +52,7 @@
     },
     en: {
       pageTitle:'ROCK | Charging, audio and car accessories',
-      openMenu:'Open menu',search:'Search',viewCart:'View cart',closeAnnouncement:'Dismiss announcement',shopProducts:'Browse products',switchLanguage:'Switch language',featuredCarousel:'Selected ROCK products',featuredLabel:'ROCK PICKS',featuredPause:'Pause carousel',featuredPlay:'Play carousel',featuredPrevious:'Previous product',featuredNext:'Next product',featuredDots:'Choose a featured product',featuredView:'View product',featuredAdd:'Add to bag',
+      skipToContent:'Skip to content',openMenu:'Open menu',search:'Search',viewCart:'View cart',closeAnnouncement:'Dismiss announcement',shopProducts:'Browse products',switchLanguage:'Switch language',featuredCarousel:'Selected ROCK products',featuredLabel:'ROCK PICKS',featuredPause:'Pause carousel',featuredPlay:'Play carousel',featuredPrevious:'Previous product',featuredNext:'Next product',featuredDots:'Choose a featured product',featuredView:'View product',featuredAdd:'Add to bag',
       powerLabel:'POWER',audioLabel:'AUDIO',driveLabel:'CAR',lifeLabel:'EVERYDAY',
       brandTagline:'A new dawn with ROCK',closingTitle:'A new dawn',closingAccent:'with ROCK.',
       catAll:'All',catPower:'Power',catAudio:'Audio',catDrive:'Drive',catLifestyle:'Lifestyle',

@@ -5,7 +5,7 @@
   let lang = getStored('rock-lang','ar') === 'en' ? 'en' : 'ar';
   const words = {
     ar:{
-      announcement:'ROCK | فجر جديد مع روك',brandTagline:'فجر جديد مع روك',shop:'المتجر',collections:'التصنيفات',bag:'السلة',home:'الرئيسية',backToShop:'العودة إلى المتجر',
+      skipToContent:'تجاوز إلى المحتوى',navigationMenu:'قائمة التنقل',switchLanguage:'تغيير اللغة',announcement:'ROCK | فجر جديد مع روك',brandTagline:'فجر جديد مع روك',shop:'المتجر',collections:'التصنيفات',bag:'السلة',home:'الرئيسية',backToShop:'العودة إلى المتجر',
       pageTitle:'معلومات المتجر والخصوصية',pageIntro:'معلومات واضحة حول النسخة الحالية من ROCK وطريقة إعداد الطلب.',
       notice:'مهم: هذه النسخة لا تستقبل الطلبات تلقائيًا ولا تنفذ الدفع الإلكتروني. نسخ ملخص الطلب لا يعني تأكيد توفر المنتج أو قبول الطلب.',
       orderingTitle:'إعداد الطلب',orderingText:'يمكنك مراجعة السلة وإعداد ملخص يتضمن العناصر وبيانات التواصل التي تدخلها. عند النسخ، يُنقل الملخص إلى حافظة جهازك لتشاركه بنفسك. لا يوجد إرسال تلقائي إلى ROCK في هذه النسخة.',
@@ -17,7 +17,7 @@
       sampleProduct:'عرض مثال لصفحة منتج'
     },
     en:{
-      announcement:'ROCK | A new dawn with ROCK',brandTagline:'A new dawn with ROCK',shop:'Shop',collections:'Collections',bag:'Bag',home:'Home',backToShop:'Back to shop',
+      skipToContent:'Skip to content',navigationMenu:'Primary navigation',switchLanguage:'Switch language',announcement:'ROCK | A new dawn with ROCK',brandTagline:'A new dawn with ROCK',shop:'Shop',collections:'Collections',bag:'Bag',home:'Home',backToShop:'Back to shop',
       pageTitle:'Store information & privacy',pageIntro:'Clear information about the current ROCK storefront and its order-preparation flow.',
       notice:'Important: this version does not receive orders automatically or process online payments. Copying an order summary does not confirm stock or acceptance.',
       orderingTitle:'Preparing an order',orderingText:'You can review your bag and prepare a summary with the items and contact details you enter. Copying moves the summary to your device clipboard for you to share manually. This version does not submit it to ROCK automatically.',
@@ -33,6 +33,7 @@
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
     document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=words[lang][el.dataset.i18n]||el.textContent});
+    document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',words[lang][el.dataset.i18nAria]||el.getAttribute('aria-label')||''));
     $('#langBtn').textContent=lang==='ar'?'EN':'AR';
     document.title=(lang==='ar'?'معلومات المتجر والخصوصية':'Store information & privacy')+' | ROCK';
     const description=document.querySelector('meta[name="description"]');

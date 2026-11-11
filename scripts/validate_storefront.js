@@ -186,6 +186,18 @@ const sharedDesignStyles = ['index.html', 'product.html', 'policies.html'].map(f
   return match[1];
 });
 assert.equal(new Set(sharedDesignStyles).size, 1, 'All pages must use the same cache version for the shared design stylesheet');
+for (const file of ['index.html', 'product.html', 'policies.html']) {
+  const html = read(file);
+  assert.ok(html.includes('class="skip-link" href="#main-content"'), `${file} must provide a keyboard skip link`);
+  assert.match(html, /<main[^>]*id="main-content"[^>]*tabindex="-1"/, `${file} must expose a focusable main landmark`);
+  assert.ok(html.includes('white-modern.css?v=20261111-rock-cyan-v1'), `${file} must use the current shared-design cache key`);
+}
+const refinedDesign = read('white-modern.css');
+assert.ok(refinedDesign.includes('--rock-cyan:#75d4e8;'), 'The restrained ROCK sky-cyan token is missing');
+assert.ok(refinedDesign.includes('.skip-link:focus-visible'), 'Keyboard skip-link focus styling is missing');
+assert.ok(refinedDesign.includes('.featured-dot:before'), 'Featured carousel controls need a larger touch target');
+assert.ok(refinedDesign.includes('min-height:44px'), 'Touch target sizing rules are missing');
+assert.ok(refinedDesign.includes('prefers-reduced-motion:reduce'), 'Reduced-motion support must remain present');
 for (const [page, script] of [['product.html','product-page.js'],['policies.html','policy-page.js']]) {
   const html = read(page);
   const copy = read(script);
