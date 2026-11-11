@@ -356,3 +356,13 @@ html[dir="ltr"] .cart-drawer.open{transform:none!important}
 html[dir="rtl"] .rock-progress span{transform-origin:right center}
 .story-mark{display:grid;place-items:center;min-width:0}
 .story-mark-logo{display:block;width:min(100%,290px);height:auto;max-height:180px;object-fit:contain;filter:brightness(0) saturate(100%) invert(10%) sepia(13%) saturate(1317%) hue-rotate(169deg) brightness(93%) contrast(91%)}
+
+/* Branded not-found page */
+.not-found{min-height:75vh;display:grid;place-items:center;padding:42px 20px;text-align:center;background:#f4f5f2}
+.not-found-inner{max-width:560px;padding:34px 26px;border:1px solid #e3e9e7;border-radius:14px;background:#fff}
+.not-found-inner>img{width:104px;height:48px;object-fit:contain;filter:brightness(0) saturate(100%) invert(10%) sepia(13%) saturate(1317%) hue-rotate(169deg) brightness(93%) contrast(91%)}
+.not-found-code{color:#238da4;font:800 clamp(76px,18vw,140px)/1 Inter,sans-serif;letter-spacing:-.08em}
+.not-found h1{margin:16px 0 10px;color:#142333;font-size:clamp(25px,5vw,38px)}
+.not-found p{color:#6d7b82;font-size:13px;line-height:1.9}
+.not-found a:not(.skip-link){display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin-top:14px;padding:12px 22px;border-radius:9px;background:#142333;color:#fff;font-size:12px;font-weight:800}
+.not-found a:not(.skip-link):hover{background:#238da4}
