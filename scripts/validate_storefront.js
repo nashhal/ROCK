@@ -45,7 +45,7 @@ const businessScript = read('dealer-request.js');
 assert.ok(businessHome.includes('id="business"') && businessHome.includes('id="dealerRequestForm"'), 'Homepage must expose the distributor quotation section');
 assert.ok(businessHome.includes('data-collection-art') && businessHome.includes('dealer-request.js?v=20261111-b2b-v1'), 'Category photography and distributor script must be wired');
 assert.ok(businessScript.includes('function buildRequest()') && businessScript.includes('navigator.share({ title: t(\'requestTitle\'), text })'), 'Distributor request must support review and manual sharing');
-assert.ok(businessScript.includes('Barcode: ') && businessScript.includes('wholesale quotation'), 'Distributor request must include product identifiers and wholesale-price caveat');
+assert.ok(businessScript.includes("barcodeLabel:'الباركود'") && businessScript.includes("barcodeLabel:'Barcode'") && businessScript.includes('wholesale quotation'), 'Distributor request must include localized product identifiers and wholesale-price caveat');
 assert.ok(read('app.js').includes('product-reference-row') && read('app.js').includes('p.barcode'), 'Catalog cards must display product barcode references');
 const productPageCss = read('product-page.css');
 const productPageHtml = read('product.html');
