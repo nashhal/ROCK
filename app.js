@@ -307,6 +307,7 @@
         </a>
         <div class="product-info">
           <div class="product-model-row"><span class="product-field-label">${esc(t('modelLabel'))}</span><span class="product-model" dir="ltr">${esc(modelText)}</span></div>
+          ${p.barcode ? `<div class="product-reference-row"><span>${state.lang==='ar'?'الباركود':'Barcode'}</span><b dir="ltr">${esc(p.barcode)}</b></div>` : ''}
           <a class="product-title-link" href="${detailUrl}"><div class="product-name">${esc(name(p))}</div></a>
           <div class="product-price-row"><span class="price-label">${esc(t('priceLabel'))}</span><span class="price">${money(p.price)}</span></div>
           <div class="product-actions">
