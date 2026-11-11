@@ -9,7 +9,7 @@ const root = process.cwd();
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const requiredFiles = [
   'index.html', 'product.html', 'policies.html', '404.html',
-  'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
+  'styles.css', 'premium-refresh.css', 'white-modern.css', 'rock-design-system.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
   'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css',
@@ -30,18 +30,14 @@ assert.ok(workflow.includes('node scripts/test_storefront_browser.cjs'), 'Browse
 assert.ok(workflow.includes('needs: [validate, browser-regression]'), 'Deployment must wait for code and browser validation');
 
 // Guard the shared design system and its stylesheet wiring against accidental removal.
-const designSystem = read('white-modern.css');
-assert.ok(designSystem.includes('ROCK Design System v1'), 'Shared ROCK design-system section is missing');
-for (const token of [
-  '--rock-font-ar', '--rock-font-latin', '--rock-text-base',
-  '--rock-leading-ar', '--rock-space-4', '--rock-content-width',
-  '--rock-radius-md', '--rock-focus-ring'
-]) {
-  assert.ok(designSystem.includes(`${token}:`), `Design-system token is missing: ${token}`);
+const designSystem = read('rock-design-system.css');
+assert.ok(designSystem.includes('Modern Industrial Catalog'), 'Shared ROCK design-system section is missing');
+for (const token of ['--rock-cyan', '--rock-charcoal', '--rock-stone', '--rock-content', '.featured-slide', '.product-card', '.policy-card']) {
+  assert.ok(designSystem.includes(token), `Design-system token or component is missing: ${token}`);
 }
 assert.ok(designSystem.includes('html[dir="rtl"] .hero h1'), 'Arabic hero typography refinement is missing');
-for (const page of ['index.html', 'product.html', 'policies.html']) {
-  assert.ok(read(page).includes('white-modern.css?v='), `Versioned design stylesheet link is missing in ${page}`);
+for (const page of ['index.html', 'product.html', 'policies.html', '404.html']) {
+  assert.ok(read(page).includes('rock-design-system.css?v='), `Versioned design stylesheet link is missing in ${page}`);
 }
 
 const productPageCss = read('product-page.css');
@@ -176,24 +172,24 @@ const jsonLd = home.match(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/s
 assert.ok(jsonLd, 'Homepage JSON-LD missing');
 assert.equal(JSON.parse(jsonLd[1]).name, 'ROCK', 'Homepage JSON-LD is invalid');
 
-for (const file of ['index.html', 'product.html', 'policies.html']) {
+for (const file of ['index.html', 'product.html', 'policies.html', '404.html']) {
   const html = read(file);
-  assert.equal((html.match(/white-modern\.css/gi) || []).length, 1, `${file} must load the white-modern stylesheet exactly once`);
+  assert.equal((html.match(/rock-design-system\.css/gi) || []).length, 1, `${file} must load the shared design stylesheet exactly once`);
 }
-const sharedDesignStyles = ['index.html', 'product.html', 'policies.html'].map(file => {
-  const match = read(file).match(/href="(white-modern\.css\?v=[^"]+)"/);
+const sharedDesignStyles = ['index.html', 'product.html', 'policies.html', '404.html'].map(file => {
+  const match = read(file).match(/href="(rock-design-system\.css\?v=[^"]+)"/);
   assert.ok(match, `Versioned white-modern stylesheet reference missing in ${file}`);
   return match[1];
 });
 assert.equal(new Set(sharedDesignStyles).size, 1, 'All pages must use the same cache version for the shared design stylesheet');
-for (const file of ['index.html', 'product.html', 'policies.html']) {
+for (const file of ['index.html', 'product.html', 'policies.html', '404.html']) {
   const html = read(file);
   assert.ok(html.includes('class="skip-link" href="#main-content"'), `${file} must provide a keyboard skip link`);
   assert.match(html, /<main[^>]*id="main-content"[^>]*tabindex="-1"/, `${file} must expose a focusable main landmark`);
-  assert.ok(html.includes('white-modern.css?v=20261111-rock-cyan-v1'), `${file} must use the current shared-design cache key`);
+  assert.ok(html.includes('rock-design-system.css?v=20261111-modern-industrial-v2'), `${file} must use the current shared-design cache key`);
 }
-const refinedDesign = read('white-modern.css');
-assert.ok(refinedDesign.includes('--rock-cyan:#75d4e8;'), 'The restrained ROCK sky-cyan token is missing');
+const refinedDesign = read('rock-design-system.css');
+assert.ok(refinedDesign.includes('--rock-cyan:#55bfd4;'), 'The restrained ROCK cyan token is missing');
 assert.ok(refinedDesign.includes('.skip-link:focus-visible'), 'Keyboard skip-link focus styling is missing');
 assert.ok(refinedDesign.includes('.featured-dot:before'), 'Featured carousel controls need a larger touch target');
 assert.ok(refinedDesign.includes('min-height:44px'), 'Touch target sizing rules are missing');
@@ -209,7 +205,7 @@ for (const [page, script] of [['product.html','product-page.js'],['policies.html
 }
 
 const policies = read('policies.html');
-assert.equal((policies.match(/premium-refresh\.css/gi) || []).length, 1, 'Policies page must load the refresh CSS only once');
+assert.equal((policies.match(/rock-design-system\.css/gi) || []).length, 1, 'Policies page must load the shared design system exactly once');
 const productPage = read('product.html');
 assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not expose a Drive-folder link');
 
@@ -253,12 +249,12 @@ assert.ok(productPageHtml.includes('id="productMenuBtn"') && productPageHtml.inc
 assert.ok(productScript.includes("productMobilePanel.querySelectorAll('[data-mobile-link]')"), 'Product mobile menu must close when a link is selected');
 assert.ok(productScript.includes("document.querySelectorAll('[data-i18n-aria]')"), 'Product page must localize accessible labels');
 assert.ok(productPageHtml.includes('data-i18n="brandTagline"'), 'Product footer brand tagline must be localized');
-const productCss = read('white-modern.css');
-for (const selector of ['Product details and cart polish', 'Dialog and hidden-state semantics', '#cartItems .cart-row', '.product-page-body .product-detail-layout', '.product-page-body .product-menu-btn']) {
+const productCss = read('rock-design-system.css');
+for (const selector of ['.product-page-body{', '.product-main-image{', '.cart-row{', '.cart-drawer[aria-hidden="true"]', '.modal[aria-hidden="true"]']) {
   assert.ok(productCss.includes(selector), `Product/cart design rule is missing: ${selector}`);
 }
 assert.ok(productCss.includes('[hidden]{display:none!important}'), 'Hidden sections must remain hidden when component rules set display');
-assert.ok(productCss.includes('#cartDrawer[aria-hidden="true"]'), 'Closed cart must be removed from pointer interaction and the tab flow');
+assert.ok(productCss.includes('.cart-drawer[aria-hidden="true"]'), 'Closed cart must be removed from pointer interaction and the tab flow');
 assert.ok(productCss.includes('.modal[aria-hidden="true"]'), 'Closed modals must not remain interactive');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
@@ -271,7 +267,7 @@ assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Col
 assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
 assert.match(app, /Maximum quantity reached|الحد الأقصى للكمية/, 'Cart must enforce its quantity limit');
 
-for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css', 'rocky-assistant.css']) {
+for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'rock-design-system.css', 'product-page.css', 'rocky-assistant.css']) {
   const css = read(file);
   assert.ok(!/\[\.\.\.\]/.test(css), `Truncated CSS placeholder found in ${file}`);
   cssBraceBalance(css, file);
@@ -316,7 +312,7 @@ console.log(`ROCK validation passed: ${visibleIds.size} visible product photos o
  // Carousel and design-layer source guards.
  const carouselHome = read('index.html');
  const carouselApp = read('app.js');
- const refinedCss = read('white-modern.css');
+ const refinedCss = read('rock-design-system.css');
  assert.ok(carouselHome.includes('id="featuredCarousel"') && carouselHome.includes('aria-roledescription="carousel"'),
    'Homepage must expose an accessible featured-product carousel region');
  for (const control of ['featuredTrack','featuredDots','featuredPause','featuredPrevious','featuredNext']) {
@@ -327,7 +323,7 @@ console.log(`ROCK validation passed: ${visibleIds.size} visible product photos o
  }
  assert.ok(carouselApp.includes('function scheduleFeaturedAutoplay()'), 'Featured carousel autoplay scheduler is missing');
  assert.ok(carouselApp.includes('prefers-reduced-motion: reduce'), 'Featured carousel must respect reduced-motion preferences');
- assert.ok(refinedCss.includes('ROCK Design Refinement v2'), 'Final design refinement layer is missing');
+ assert.ok(refinedCss.includes('Modern Industrial Catalog'), 'Unified Modern Industrial design system is missing');
  assert.ok(refinedCss.includes('.featured-slide[hidden]'), 'Inactive featured slides must be hidden from display and interaction');
 
 // The decorative Rocky flight layer is intentionally disabled; keep the independent assistant.
@@ -337,20 +333,20 @@ assert.ok(staticMascotHome.includes('rocky-assistant.js?v='), 'The existing Rock
 assert.ok(!staticMascotHome.includes('rocky-flight') && !staticMascotHome.includes('rocky-scroll'),
   'The animated Rocky flight layer must be removed from the storefront');
 
-// Immersive ROCK visual redesign guards.
+// Unified Modern Industrial redesign guards.
 const experienceHome = read('index.html');
-const experienceCss = read('rock-experience.css');
+const experienceCss = read('rock-design-system.css');
 const experienceScript = read('rock-experience.js');
 assert.ok(experienceHome.includes('id="rockProgressBar"'), 'Homepage scroll progress marker is missing');
-assert.ok(experienceHome.includes('rock-experience.css?v=20261030-immersive-rock-v1'), 'Immersive ROCK stylesheet link is missing');
-assert.ok(experienceHome.includes('rock-experience.js?v=20261030-immersive-rock-v1'), 'Immersive ROCK motion script link is missing');
-assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.includes('linear-gradient(118deg,#041426'),
-  'Hero must be restyled as a full-width ROCK navy opening scene');
-assert.ok(experienceCss.includes('.service-strip.section-shell') && experienceCss.includes('.collections{'),
-  'Trust band and collection chapter must be restyled as full-width story scenes');
+assert.ok(experienceHome.includes('rock-design-system.css?v=20261111-modern-industrial-v2'), 'Shared ROCK design system must be loaded');
+assert.ok(experienceHome.includes('rock-experience.js?v=20261030-immersive-rock-v1'), 'Existing scroll interaction script must remain available');
+assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.includes('background:#f4f5f2!important'),
+  'Hero must use the new warm-white editorial art direction');
+assert.ok(experienceCss.includes('.service-strip{') && experienceCss.includes('.collections{'),
+  'Trust band and collection chapter must share the new layout system');
 assert.ok(!experienceCss.includes('.rocky-flight') && !experienceCss.includes('rocky-flight__'),
-  'The immersive stylesheet must not contain the removed floating Rocky character styles');
+  'The shared stylesheet must not add a floating Rocky character layer');
 assert.ok(experienceScript.includes('rockProgressBar') && experienceScript.includes('IntersectionObserver'),
-  'Reading progress and scroll reveals must be initialized');
-assert.ok(experienceCss.includes('.service-strip .service-item{') && experienceCss.includes('background:transparent!important'),
-  'Trust message tiles must not retain opaque white cards over the blue brand band');
+  'Reading progress and scroll reveals must remain initialized');
+assert.ok(experienceCss.includes('.service-item{') && experienceCss.includes('border-inline-start'),
+  'Trust messages must use the shared editorial divider system');
