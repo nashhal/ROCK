@@ -90,6 +90,7 @@ jobs:
           done
           curl --silent --fail http://127.0.0.1:4173/ > /dev/null
           node scripts/test_storefront_browser.cjs
+          node scripts/test_sales_browser.cjs
       - name: Upload browser screenshots
         if: always()
         uses: actions/upload-artifact@v4

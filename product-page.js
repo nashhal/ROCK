@@ -27,7 +27,7 @@
   let lang = getStored('rock-lang', 'ar') === 'en' ? 'en' : 'ar';
   const i18n = {
     ar:{
-      openMenu:'فتح القائمة',switchLanguage:'تغيير اللغة',viewCart:'عرض السلة',navigationMenu:'قائمة التنقل',
+      skipToContent:'تجاوز إلى المحتوى',openMenu:'فتح القائمة',switchLanguage:'تغيير اللغة',viewCart:'عرض السلة',navigationMenu:'قائمة التنقل',
       announcement:'ROCK | فجر جديد مع روك',brandTagline:'فجر جديد مع روك',shop:'المتجر',collections:'التصنيفات',storeInfo:'معلومات المتجر',bag:'السلة',home:'الرئيسية',
       productDetails:'تفاصيل المنتج',notFoundTitle:'لم يتم العثور على المنتج',notFoundText:'تحقق من الرابط أو ارجع إلى قائمة المنتجات.',backToShop:'العودة إلى المتجر',
       catalogImageNote:'صورة المنتج من كتالوج ROCK',photoPending:'صورة المنتج قيد التجهيز',viewOriginalPhotos:'عرض صور المنتج الأصلية ↗',barcodeLabel:'الباركود',modelLabel:'الموديل',modelMissing:'غير محدد',priceLabel:'السعر',viewProduct:'عرض المنتج',factModelTitle:'رقم الموديل',factModelText:'استخدم رقم الموديل عند الاستفسار عن هذا المنتج.',
@@ -43,7 +43,7 @@
       catPower:'الطاقة والشحن',catAudio:'الصوت',catDrive:'السيارة',catLifestyle:'أسلوب الحياة',sar:'ر.س',added:'تمت الإضافة إلى السلة',addError:'تعذر حفظ السلة في هذا المتصفح'
     },
     en:{
-      openMenu:'Open menu',switchLanguage:'Switch language',viewCart:'View cart',navigationMenu:'Navigation menu',
+      skipToContent:'Skip to content',openMenu:'Open menu',switchLanguage:'Switch language',viewCart:'View cart',navigationMenu:'Navigation menu',
       announcement:'ROCK | A new dawn with ROCK',brandTagline:'A new dawn with ROCK',shop:'Shop',collections:'Collections',storeInfo:'Store information',bag:'Bag',home:'Home',
       productDetails:'Product details',notFoundTitle:'Product not found',notFoundText:'Check the link or return to the catalog.',backToShop:'Back to shop',
       catalogImageNote:'Product image from the ROCK catalog',photoPending:'Product photo pending',viewOriginalPhotos:'View original product photos ↗',barcodeLabel:'Barcode',modelLabel:'Model',modelMissing:'Not specified',priceLabel:'Price',viewProduct:'View product',factModelTitle:'Model reference',factModelText:'Use the model number when asking about this product.',

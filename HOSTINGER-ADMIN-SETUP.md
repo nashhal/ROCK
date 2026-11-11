@@ -35,3 +35,16 @@ The admin manages the Hostinger database only. It does not change `products.js` 
 ## Local validation
 
 The GitHub Actions workflow lints the PHP files and runs the image acceptance tests. The PHP image tests require GD with WebP support.
+
+
+## ROCK Sales portal
+
+The internal sales workspace is included in the repository under sales/. It shares the same PHP/MySQL connection and admin session as the product admin:
+
+1. Deploy the sales/ directory to the same hosting root as index.html, api/ and admin/.
+2. Open https://YOUR-DOMAIN/sales/ and sign in with the existing admin account.
+3. Add sales representatives from "إدارة المندوبين". Set the team commission percentage only from the admin-only "العمولات" page.
+4. Reps can access only their assigned customers and their own quotes/orders. Commission data is never returned to rep sessions.
+5. GitHub Pages does not execute PHP. The sales portal is not a working authenticated app on GitHub Pages alone; use the PHP/MySQL hosting deployment described above.
+
+See sales/README.md for the module list, operational boundaries and smoke-test details.
