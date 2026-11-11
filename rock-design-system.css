@@ -331,3 +331,12 @@ html[dir="rtl"] .hero h1{line-height:1.35;letter-spacing:0}
 /* Consistent navigation layout on the information page */
 .policy-nav{display:flex;align-items:center;gap:clamp(18px,2.6vw,34px);margin:auto}
 @media(max-width:650px){.policy-nav{gap:12px}.policy-nav a{font-size:10px}}
+
+/* Keyboard access and generous touch controls */
+.skip-link{position:fixed;z-index:120;top:10px;inset-inline-start:12px;transform:translateY(-160%);padding:11px 15px;border-radius:8px;background:#142333;color:#fff;font-size:12px;font-weight:800;box-shadow:0 8px 22px rgba(10,24,36,.18)}
+.skip-link:focus-visible{transform:translateY(0);outline:3px solid #55bfd4!important;outline-offset:3px}
+.featured-dot{width:38px;height:38px;display:grid;place-items:center;border:0;background:transparent!important}
+.featured-dot:before{content:"";width:7px;height:7px;border-radius:50%;background:#cbd5d8;transition:width .2s,background .2s}
+.featured-dot.is-active:before{width:22px;border-radius:5px;background:#238da4}
+.featured-arrow,.featured-pause{min-width:44px;min-height:44px}
+@media(max-width:650px){.mini-btn{min-width:36px;min-height:36px}.featured-arrow,.featured-pause{min-width:44px;min-height:44px}}
