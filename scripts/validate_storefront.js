@@ -10,7 +10,7 @@ const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const requiredFiles = [
   'index.html', 'product.html', 'policies.html', '404.html',
   'styles.css', 'premium-refresh.css', 'white-modern.css', 'rock-design-system.css', 'product-page.css',
-  'app.js', 'products.js', 'product-page.js', 'policy-page.js',
+  'app.js', 'products.js', 'product-page.js', 'policy-page.js', 'dealer-request.js',
   'rocky-assistant.js', 'rocky-assistant.css',
   'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css',
   'api/bootstrap.php', 'api/image-quality.php', 'api/products.php', 'api/install.php', 'api/config.example.php',
@@ -40,6 +40,13 @@ for (const page of ['index.html', 'product.html', 'policies.html', '404.html']) 
   assert.ok(read(page).includes('rock-design-system.css?v='), `Versioned design stylesheet link is missing in ${page}`);
 }
 
+const businessHome = read('index.html');
+const businessScript = read('dealer-request.js');
+assert.ok(businessHome.includes('id="business"') && businessHome.includes('id="dealerRequestForm"'), 'Homepage must expose the distributor quotation section');
+assert.ok(businessHome.includes('data-collection-art') && businessHome.includes('dealer-request.js?v=20261111-b2b-v1'), 'Category photography and distributor script must be wired');
+assert.ok(businessScript.includes('function buildRequest()') && businessScript.includes('navigator.share({ title: t(\'requestTitle\'), text })'), 'Distributor request must support review and manual sharing');
+assert.ok(businessScript.includes('Barcode: ') && businessScript.includes('wholesale quotation'), 'Distributor request must include product identifiers and wholesale-price caveat');
+assert.ok(read('app.js').includes('product-reference-row') && read('app.js').includes('p.barcode'), 'Catalog cards must display product barcode references');
 const productPageCss = read('product-page.css');
 const productPageHtml = read('product.html');
 assert.ok(productPageCss.includes('.product-page-body .site-header{'), 'Product page must explicitly align its header with the shared design system');
@@ -186,7 +193,7 @@ for (const file of ['index.html', 'product.html', 'policies.html', '404.html']) 
   const html = read(file);
   assert.ok(html.includes('class="skip-link" href="#main-content"'), `${file} must provide a keyboard skip link`);
   assert.match(html, /<main[^>]*id="main-content"[^>]*tabindex="-1"/, `${file} must expose a focusable main landmark`);
-  assert.ok(html.includes('rock-design-system.css?v=20261111-modern-industrial-v3'), `${file} must use the current shared-design cache key`);
+  assert.ok(html.includes('rock-design-system.css?v=20261111-modern-industrial-v4'), `${file} must use the current shared-design cache key`);
 }
 const refinedDesign = read('rock-design-system.css');
 assert.ok(refinedDesign.includes('--rock-cyan:#55bfd4;'), 'The restrained ROCK cyan token is missing');
@@ -338,7 +345,7 @@ const experienceHome = read('index.html');
 const experienceCss = read('rock-design-system.css');
 const experienceScript = read('rock-experience.js');
 assert.ok(experienceHome.includes('id="rockProgressBar"'), 'Homepage scroll progress marker is missing');
-assert.ok(experienceHome.includes('rock-design-system.css?v=20261111-modern-industrial-v3'), 'Shared ROCK design system must be loaded');
+assert.ok(experienceHome.includes('rock-design-system.css?v=20261111-modern-industrial-v4'), 'Shared ROCK design system must be loaded');
 assert.ok(experienceHome.includes('rock-experience.js?v=20261030-immersive-rock-v1'), 'Existing scroll interaction script must remain available');
 assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.includes('background:#f4f5f2!important'),
   'Hero must use the new warm-white editorial art direction');
