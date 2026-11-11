@@ -186,7 +186,7 @@ for (const file of ['index.html', 'product.html', 'policies.html', '404.html']) 
   const html = read(file);
   assert.ok(html.includes('class="skip-link" href="#main-content"'), `${file} must provide a keyboard skip link`);
   assert.match(html, /<main[^>]*id="main-content"[^>]*tabindex="-1"/, `${file} must expose a focusable main landmark`);
-  assert.ok(html.includes('rock-design-system.css?v=20261111-modern-industrial-v2'), `${file} must use the current shared-design cache key`);
+  assert.ok(html.includes('rock-design-system.css?v=20261111-modern-industrial-v3'), `${file} must use the current shared-design cache key`);
 }
 const refinedDesign = read('rock-design-system.css');
 assert.ok(refinedDesign.includes('--rock-cyan:#55bfd4;'), 'The restrained ROCK cyan token is missing');
@@ -338,7 +338,7 @@ const experienceHome = read('index.html');
 const experienceCss = read('rock-design-system.css');
 const experienceScript = read('rock-experience.js');
 assert.ok(experienceHome.includes('id="rockProgressBar"'), 'Homepage scroll progress marker is missing');
-assert.ok(experienceHome.includes('rock-design-system.css?v=20261111-modern-industrial-v2'), 'Shared ROCK design system must be loaded');
+assert.ok(experienceHome.includes('rock-design-system.css?v=20261111-modern-industrial-v3'), 'Shared ROCK design system must be loaded');
 assert.ok(experienceHome.includes('rock-experience.js?v=20261030-immersive-rock-v1'), 'Existing scroll interaction script must remain available');
 assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.includes('background:#f4f5f2!important'),
   'Hero must use the new warm-white editorial art direction');
