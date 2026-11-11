@@ -249,12 +249,12 @@ assert.ok(productPageHtml.includes('id="productMenuBtn"') && productPageHtml.inc
 assert.ok(productScript.includes("productMobilePanel.querySelectorAll('[data-mobile-link]')"), 'Product mobile menu must close when a link is selected');
 assert.ok(productScript.includes("document.querySelectorAll('[data-i18n-aria]')"), 'Product page must localize accessible labels');
 assert.ok(productPageHtml.includes('data-i18n="brandTagline"'), 'Product footer brand tagline must be localized');
-const productCss = read('white-modern.css');
-for (const selector of ['Product details and cart polish', 'Dialog and hidden-state semantics', '#cartItems .cart-row', '.product-page-body .product-detail-layout', '.product-page-body .product-menu-btn']) {
+const productCss = read('rock-design-system.css');
+for (const selector of ['.product-page-body{', '.product-main-image{', '.cart-row{', '.cart-drawer[aria-hidden="true"]', '.modal[aria-hidden="true"]']) {
   assert.ok(productCss.includes(selector), `Product/cart design rule is missing: ${selector}`);
 }
 assert.ok(productCss.includes('[hidden]{display:none!important}'), 'Hidden sections must remain hidden when component rules set display');
-assert.ok(productCss.includes('#cartDrawer[aria-hidden="true"]'), 'Closed cart must be removed from pointer interaction and the tab flow');
+assert.ok(productCss.includes('.cart-drawer[aria-hidden="true"]'), 'Closed cart must be removed from pointer interaction and the tab flow');
 assert.ok(productCss.includes('.modal[aria-hidden="true"]'), 'Closed modals must not remain interactive');
 assert.ok(!/(^|[^$])\$\('\.modal'\)\.forEach/m.test(app), 'Modal close handler must iterate a collection, not a single element');
 assert.ok(!/(^|[^$])\$\('#categoryChips \.chip'\)\.forEach/m.test(app), 'Category filter must iterate all chips');
@@ -312,7 +312,7 @@ console.log(`ROCK validation passed: ${visibleIds.size} visible product photos o
  // Carousel and design-layer source guards.
  const carouselHome = read('index.html');
  const carouselApp = read('app.js');
- const refinedCss = read('white-modern.css');
+ const refinedCss = read('rock-design-system.css');
  assert.ok(carouselHome.includes('id="featuredCarousel"') && carouselHome.includes('aria-roledescription="carousel"'),
    'Homepage must expose an accessible featured-product carousel region');
  for (const control of ['featuredTrack','featuredDots','featuredPause','featuredPrevious','featuredNext']) {
@@ -323,7 +323,7 @@ console.log(`ROCK validation passed: ${visibleIds.size} visible product photos o
  }
  assert.ok(carouselApp.includes('function scheduleFeaturedAutoplay()'), 'Featured carousel autoplay scheduler is missing');
  assert.ok(carouselApp.includes('prefers-reduced-motion: reduce'), 'Featured carousel must respect reduced-motion preferences');
- assert.ok(refinedCss.includes('ROCK Design Refinement v2'), 'Final design refinement layer is missing');
+ assert.ok(refinedCss.includes('Modern Industrial Catalog'), 'Unified Modern Industrial design system is missing');
  assert.ok(refinedCss.includes('.featured-slide[hidden]'), 'Inactive featured slides must be hidden from display and interaction');
 
 // The decorative Rocky flight layer is intentionally disabled; keep the independent assistant.
@@ -333,20 +333,20 @@ assert.ok(staticMascotHome.includes('rocky-assistant.js?v='), 'The existing Rock
 assert.ok(!staticMascotHome.includes('rocky-flight') && !staticMascotHome.includes('rocky-scroll'),
   'The animated Rocky flight layer must be removed from the storefront');
 
-// Immersive ROCK visual redesign guards.
+// Unified Modern Industrial redesign guards.
 const experienceHome = read('index.html');
-const experienceCss = read('rock-experience.css');
+const experienceCss = read('rock-design-system.css');
 const experienceScript = read('rock-experience.js');
 assert.ok(experienceHome.includes('id="rockProgressBar"'), 'Homepage scroll progress marker is missing');
-assert.ok(experienceHome.includes('rock-experience.css?v=20261030-immersive-rock-v1'), 'Immersive ROCK stylesheet link is missing');
-assert.ok(experienceHome.includes('rock-experience.js?v=20261030-immersive-rock-v1'), 'Immersive ROCK motion script link is missing');
-assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.includes('linear-gradient(118deg,#041426'),
-  'Hero must be restyled as a full-width ROCK navy opening scene');
-assert.ok(experienceCss.includes('.service-strip.section-shell') && experienceCss.includes('.collections{'),
-  'Trust band and collection chapter must be restyled as full-width story scenes');
+assert.ok(experienceHome.includes('rock-design-system.css?v=20261111-modern-industrial-v2'), 'Shared ROCK design system must be loaded');
+assert.ok(experienceHome.includes('rock-experience.js?v=20261030-immersive-rock-v1'), 'Existing scroll interaction script must remain available');
+assert.ok(experienceCss.includes('.hero.section-shell,.hero') && experienceCss.includes('background:#f4f5f2!important'),
+  'Hero must use the new warm-white editorial art direction');
+assert.ok(experienceCss.includes('.service-strip{') && experienceCss.includes('.collections{'),
+  'Trust band and collection chapter must share the new layout system');
 assert.ok(!experienceCss.includes('.rocky-flight') && !experienceCss.includes('rocky-flight__'),
-  'The immersive stylesheet must not contain the removed floating Rocky character styles');
+  'The shared stylesheet must not add a floating Rocky character layer');
 assert.ok(experienceScript.includes('rockProgressBar') && experienceScript.includes('IntersectionObserver'),
-  'Reading progress and scroll reveals must be initialized');
-assert.ok(experienceCss.includes('.service-strip .service-item{') && experienceCss.includes('background:transparent!important'),
-  'Trust message tiles must not retain opaque white cards over the blue brand band');
+  'Reading progress and scroll reveals must remain initialized');
+assert.ok(experienceCss.includes('.service-item{') && experienceCss.includes('border-inline-start'),
+  'Trust messages must use the shared editorial divider system');
