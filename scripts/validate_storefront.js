@@ -9,7 +9,7 @@ const root = process.cwd();
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 const requiredFiles = [
   'index.html', 'product.html', 'policies.html', '404.html',
-  'styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css',
+  'styles.css', 'premium-refresh.css', 'white-modern.css', 'rock-design-system.css', 'product-page.css',
   'app.js', 'products.js', 'product-page.js', 'policy-page.js',
   'rocky-assistant.js', 'rocky-assistant.css',
   'admin/index.php', 'admin/api.php', 'admin/admin.js', 'admin/admin.css',
@@ -30,18 +30,14 @@ assert.ok(workflow.includes('node scripts/test_storefront_browser.cjs'), 'Browse
 assert.ok(workflow.includes('needs: [validate, browser-regression]'), 'Deployment must wait for code and browser validation');
 
 // Guard the shared design system and its stylesheet wiring against accidental removal.
-const designSystem = read('white-modern.css');
-assert.ok(designSystem.includes('ROCK Design System v1'), 'Shared ROCK design-system section is missing');
-for (const token of [
-  '--rock-font-ar', '--rock-font-latin', '--rock-text-base',
-  '--rock-leading-ar', '--rock-space-4', '--rock-content-width',
-  '--rock-radius-md', '--rock-focus-ring'
-]) {
-  assert.ok(designSystem.includes(`${token}:`), `Design-system token is missing: ${token}`);
+const designSystem = read('rock-design-system.css');
+assert.ok(designSystem.includes('Modern Industrial Catalog'), 'Shared ROCK design-system section is missing');
+for (const token of ['--rock-cyan', '--rock-charcoal', '--rock-stone', '--rock-content', '.featured-slide', '.product-card', '.policy-card']) {
+  assert.ok(designSystem.includes(token), `Design-system token or component is missing: ${token}`);
 }
 assert.ok(designSystem.includes('html[dir="rtl"] .hero h1'), 'Arabic hero typography refinement is missing');
 for (const page of ['index.html', 'product.html', 'policies.html']) {
-  assert.ok(read(page).includes('white-modern.css?v='), `Versioned design stylesheet link is missing in ${page}`);
+  assert.ok(read(page).includes('rock-design-system.css?v='), `Versioned design stylesheet link is missing in ${page}`);
 }
 
 const productPageCss = read('product-page.css');
@@ -178,10 +174,10 @@ assert.equal(JSON.parse(jsonLd[1]).name, 'ROCK', 'Homepage JSON-LD is invalid');
 
 for (const file of ['index.html', 'product.html', 'policies.html']) {
   const html = read(file);
-  assert.equal((html.match(/white-modern\.css/gi) || []).length, 1, `${file} must load the white-modern stylesheet exactly once`);
+  assert.equal((html.match(/rock-design-system\.css/gi) || []).length, 1, `${file} must load the shared design stylesheet exactly once`);
 }
 const sharedDesignStyles = ['index.html', 'product.html', 'policies.html'].map(file => {
-  const match = read(file).match(/href="(white-modern\.css\?v=[^"]+)"/);
+  const match = read(file).match(/href="(rock-design-system\.css\?v=[^"]+)"/);
   assert.ok(match, `Versioned white-modern stylesheet reference missing in ${file}`);
   return match[1];
 });
@@ -190,10 +186,10 @@ for (const file of ['index.html', 'product.html', 'policies.html']) {
   const html = read(file);
   assert.ok(html.includes('class="skip-link" href="#main-content"'), `${file} must provide a keyboard skip link`);
   assert.match(html, /<main[^>]*id="main-content"[^>]*tabindex="-1"/, `${file} must expose a focusable main landmark`);
-  assert.ok(html.includes('white-modern.css?v=20261111-rock-cyan-v1'), `${file} must use the current shared-design cache key`);
+  assert.ok(html.includes('rock-design-system.css?v=20261111-modern-industrial-v2'), `${file} must use the current shared-design cache key`);
 }
-const refinedDesign = read('white-modern.css');
-assert.ok(refinedDesign.includes('--rock-cyan:#75d4e8;'), 'The restrained ROCK sky-cyan token is missing');
+const refinedDesign = read('rock-design-system.css');
+assert.ok(refinedDesign.includes('--rock-cyan:#55bfd4;'), 'The restrained ROCK cyan token is missing');
 assert.ok(refinedDesign.includes('.skip-link:focus-visible'), 'Keyboard skip-link focus styling is missing');
 assert.ok(refinedDesign.includes('.featured-dot:before'), 'Featured carousel controls need a larger touch target');
 assert.ok(refinedDesign.includes('min-height:44px'), 'Touch target sizing rules are missing');
@@ -209,7 +205,7 @@ for (const [page, script] of [['product.html','product-page.js'],['policies.html
 }
 
 const policies = read('policies.html');
-assert.equal((policies.match(/premium-refresh\.css/gi) || []).length, 1, 'Policies page must load the refresh CSS only once');
+assert.equal((policies.match(/rock-design-system\.css/gi) || []).length, 1, 'Policies page must load the shared design system exactly once');
 const productPage = read('product.html');
 assert.ok(!productPage.includes('id="detailPhotosLink"'), 'Product page must not expose a Drive-folder link');
 
@@ -271,7 +267,7 @@ assert.ok(app.includes("$('.collection-card').forEach(b=>b.onclick=()=>{"), 'Col
 assert.ok(app.includes("$('#categoryChips .chip').forEach"), 'Category collection selector is missing');
 assert.match(app, /Maximum quantity reached|الحد الأقصى للكمية/, 'Cart must enforce its quantity limit');
 
-for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'product-page.css', 'rocky-assistant.css']) {
+for (const file of ['styles.css', 'premium-refresh.css', 'white-modern.css', 'rock-design-system.css', 'product-page.css', 'rocky-assistant.css']) {
   const css = read(file);
   assert.ok(!/\[\.\.\.\]/.test(css), `Truncated CSS placeholder found in ${file}`);
   cssBraceBalance(css, file);
