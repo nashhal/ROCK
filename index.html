@@ -25,7 +25,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20261022-dawn-refresh-v1">
   <link rel="stylesheet" href="rocky-assistant.css?v=20261022-catalog-quality">
-  <link rel="stylesheet" href="rock-design-system.css?v=20261111-modern-industrial-v3">
+  <link rel="stylesheet" href="rock-design-system.css?v=20261111-modern-industrial-v4">
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skipToContent">تجاوز إلى المحتوى</a>
@@ -40,6 +40,7 @@
         <a href="#shop" data-nav="shop" data-i18n="shop">المتجر</a>
         <a href="#collections" data-nav="collections" data-i18n="collections">التصنيفات</a>
         <a href="#story" data-nav="story" data-i18n="story">عن ROCK</a>
+        <a href="#business" data-b2b="nav">للشركات والموزعين</a>
       </nav>
       <div class="header-actions">
         <button class="text-btn" id="langBtn" data-i18n-aria="switchLanguage" aria-label="تغيير اللغة">EN</button>
@@ -51,6 +52,7 @@
       <a href="#shop" data-mobile-link data-i18n="shop">المتجر</a>
       <a href="#collections" data-mobile-link data-i18n="collections">التصنيفات</a>
       <a href="#story" data-mobile-link data-i18n="story">عن ROCK</a>
+      <a href="#business" data-mobile-link data-b2b="nav">للشركات والموزعين</a>
     </nav>
   </header>
 
@@ -124,10 +126,44 @@
     <section class="collections section-shell" id="collections">
       <div class="section-head"><div><div class="eyebrow">02 / <span data-i18n="collectionsLabel">المجموعات</span></div><h2 data-i18n="collectionsTitle">اختر حسب يومك</h2></div></div>
       <div class="collection-grid">
-        <button class="collection-card collection-power" data-collection="power"><div><b data-i18n="powerLabel">الشحن والطاقة</b><small data-i18n="powerText">طاقة وشحن</small></div><strong>↗</strong></button>
-        <button class="collection-card collection-audio" data-collection="audio"><div><b data-i18n="audioLabel">الصوت</b><small data-i18n="audioText">صوتك في كل مكان</small></div><strong>↗</strong></button>
-        <button class="collection-card collection-drive" data-collection="car"><div><b data-i18n="driveLabel">إكسسوارات السيارة</b><small data-i18n="driveText">حلول للسيارة</small></div><strong>↗</strong></button>
-        <button class="collection-card collection-life" data-collection="lifestyle"><div><b data-i18n="lifeLabel">إكسسوارات يومية</b><small data-i18n="lifeText">تفاصيل يومية</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-power" data-collection="power"><span class="collection-card-art" data-collection-art aria-hidden="true"></span><div><b data-i18n="powerLabel">الشحن والطاقة</b><small data-i18n="powerText">طاقة وشحن</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-audio" data-collection="audio"><span class="collection-card-art" data-collection-art aria-hidden="true"></span><div><b data-i18n="audioLabel">الصوت</b><small data-i18n="audioText">صوتك في كل مكان</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-drive" data-collection="car"><span class="collection-card-art" data-collection-art aria-hidden="true"></span><div><b data-i18n="driveLabel">إكسسوارات السيارة</b><small data-i18n="driveText">حلول للسيارة</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-life" data-collection="lifestyle"><span class="collection-card-art" data-collection-art aria-hidden="true"></span><div><b data-i18n="lifeLabel">إكسسوارات يومية</b><small data-i18n="lifeText">تفاصيل يومية</small></div><strong>↗</strong></button>
+      </div>
+    </section>
+
+    <section class="dealer-section" id="business" aria-labelledby="dealerTitle">
+      <div class="dealer-copy">
+        <p class="dealer-eyebrow" data-b2b="eyebrow">ROCK / BUSINESS</p>
+        <h2 id="dealerTitle" data-b2b="title">توريد ROCK لأعمالك.</h2>
+        <p class="dealer-intro" data-b2b="intro">جهّز قائمة موديلاتك وكمياتها، ثم أنشئ طلب تسعير واحدًا لمراجعته ومشاركته.</p>
+        <ul class="dealer-benefits">
+          <li data-b2b="point1">تحديد دقيق برقم الموديل والباركود.</li>
+          <li data-b2b="point2">قائمة موحدة بالمنتجات والكميات من سلتك.</li>
+          <li data-b2b="point3">مراجعة السعر والتوفر وشروط التوريد قبل الاعتماد.</li>
+        </ul>
+        <a class="dealer-catalog-link" href="#shop" data-b2b="catalogLink">العودة إلى الكتالوج ↗</a>
+      </div>
+      <div class="dealer-panel">
+        <div class="dealer-panel-heading"><span>01 / B2B</span><h3 data-b2b="formTitle">بيانات المنشأة</h3></div>
+        <form id="dealerRequestForm">
+          <div class="dealer-form-grid">
+            <label class="dealer-field"><span data-b2b="company">اسم المنشأة أو المتجر</span><input name="company" autocomplete="organization" maxlength="120" required></label>
+            <label class="dealer-field"><span data-b2b="contact">مسؤول التواصل</span><input name="contact" autocomplete="name" maxlength="100"></label>
+            <label class="dealer-field"><span data-b2b="phone">رقم الجوال</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" required></label>
+            <label class="dealer-field"><span data-b2b="city">المدينة</span><input name="city" autocomplete="address-level2" maxlength="80"></label>
+            <label class="dealer-field dealer-field-wide"><span data-b2b="volume">حجم الطلب المتوقع</span><select name="volume"><option value="" data-b2b="volumeChoose">اختر تقديرًا</option><option value="trial" data-b2b="volumeTrial">طلب تجريبي</option><option value="50-200" data-b2b="volume50">50–200 قطعة</option><option value="201-500" data-b2b="volume200">201–500 قطعة</option><option value="500+" data-b2b="volume500">أكثر من 500 قطعة</option><option value="recurring" data-b2b="volumeRecurring">توريد دوري</option></select></label>
+            <label class="dealer-field dealer-field-wide"><span data-b2b="needs">الفئات أو الموديلات المطلوبة (اختياري)</span><textarea name="needs" rows="3" maxlength="600"></textarea></label>
+          </div>
+          <button class="dealer-submit" type="submit" data-b2b="prepare">إنشاء طلب التسعير</button>
+        </form>
+        <p class="dealer-privacy" data-b2b="privacy">يُنشأ الطلب داخل المتصفح ولا يُرسل تلقائيًا. الأسعار المدرجة ليست عرض جملة معتمدًا؛ يلزم تأكيد سعر الجملة والتوفر وشروط التوريد.</p>
+        <div id="dealerRequestResult" class="dealer-request-result" hidden aria-live="polite">
+          <label class="dealer-field"><span data-b2b="preview">معاينة طلب التسعير</span><textarea id="dealerRequestText" rows="11" readonly></textarea></label>
+          <div class="dealer-result-actions"><button class="dealer-submit" id="dealerShareRequest" type="button" data-b2b="share">مشاركة الطلب</button><button class="dealer-copy" id="dealerCopyRequest" type="button" data-b2b="copy">نسخ الطلب</button></div>
+          <p class="dealer-feedback" id="dealerFeedback" role="status" aria-live="polite"></p>
+        </div>
       </div>
     </section>
 
@@ -139,7 +175,7 @@
     <section class="closing-banner"><div><span>ROCK</span><h2><span data-i18n="closingTitle">كل ما تحتاجه</span><em data-i18n="closingAccent">ليومك.</em></h2></div><button class="circle-arrow" id="closingShop" aria-label="تصفح المنتجات" data-i18n-aria="shopProducts">↗</button></section>
   </main>
 
-  <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span data-i18n="brandTagline">فجر جديد مع روك</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">المتجر</a><a href="#collections" data-i18n="collections">التصنيفات</a><a href="#story" data-i18n="story">عن ROCK</a></div><div class="footer-meta">&copy; <span id="year"></span> ROCK</div></footer>
+  <footer class="site-footer"><div class="footer-brand"><img src="assets/brand/rock-logo.svg" alt="ROCK"><span data-i18n="brandTagline">فجر جديد مع روك</span></div><div class="footer-links"><a href="#shop" data-i18n="shop">المتجر</a><a href="#collections" data-i18n="collections">التصنيفات</a><a href="#story" data-i18n="story">عن ROCK</a><a href="#business" data-b2b="nav">للشركات والموزعين</a></div><div class="footer-meta">&copy; <span id="year"></span> ROCK</div></footer>
 
   <div class="overlay" id="overlay"></div>
   <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-label="السلة" data-i18n-aria="viewCart" aria-hidden="true" tabindex="-1"><div class="drawer-head"><div><span>ROCK</span><h3 id="cartTitle" data-i18n="bagTitle">سلتك</h3></div><button class="close-btn" id="closeCart" type="button" aria-label="إغلاق" data-i18n-aria="closeDialog">×</button></div><div class="drawer-body"><div id="cartItems"></div><div class="drawer-foot"><div><strong id="cartTotal" aria-live="polite" aria-atomic="true">0 SAR</strong></div><div><button class="btn" id="continueBtn" data-i18n="continue">متابعة التسوق</button><button class="btn btn-dark" id="checkoutBtn" data-i18n="checkout">جهّز الطلب</button></div></div></div></aside>
@@ -148,7 +184,8 @@
   <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle" aria-hidden="true"><div class="modal-card checkout-card"><button class="close-btn" type="button" data-close-modal aria-label="إغلاق" data-i18n-aria="closeDialog">×</button><form id="orderDetailsForm"><div class="checkout-shell"><h2 id="orderModalTitle" data-i18n="orderHeader">طلب ROCK</h2><div class="order-fields"><label for="customerName"><span data-i18n="customerNameLabel">الاسم</span><input id="customerName" name="customerName" autocomplete="name" required></label><label for="customerPhone"><span data-i18n="customerPhoneLabel">رقم الجوال</span><input id="customerPhone" name="customerPhone" type="tel" inputmode="tel" autocomplete="tel" required></label><label for="customerCity"><span data-i18n="customerCityLabel">المدينة</span><input id="customerCity" name="customerCity" autocomplete="address-level2"></label><label for="customerAddress"><span data-i18n="customerAddressLabel">العنوان</span><input id="customerAddress" name="customerAddress" autocomplete="street-address"></label></div><label class="order-notes" for="customerNotes"><span data-i18n="customerNotesLabel">ملاحظات (اختياري)</span><textarea id="customerNotes" name="customerNotes"></textarea></label><div class="order-privacy-note"><span data-i18n="orderPrivacy">لن تُرسل بياناتك تلقائيًا. عند النسخ أو المشاركة ستتضمن الرسالة البيانات التي أدخلتها؛ راجع المحتوى واختر الجهة المستلمة بنفسك. لا يوجد دفع إلكتروني.</span> <a class="order-privacy-link" href="policies.html" data-i18n="storeInfo">معلومات المتجر</a></div><div class="order-summary"><label class="order-summary-label" for="orderText"><span data-i18n="orderSummaryLabel">ملخص الطلب</span><textarea id="orderText" readonly></textarea></label><label class="order-confirmation" for="orderConfirmation"><input id="orderConfirmation" name="orderConfirmation" type="checkbox" required><span data-i18n="orderConfirmationLabel">أؤكد أنني راجعت الملخص وأفهم أنه ليس طلبًا مؤكدًا، وأن السعر والتوفر والتوصيل تحتاج إلى تأكيد.</span></label><div class="order-actions"><button type="button" class="btn btn-dark" id="shareOrder" data-i18n="shareOrder">مشاركة الطلب</button><button type="button" class="btn policy-secondary" id="copyOrder" data-i18n="copyOrder">نسخ تفاصيل الطلب</button><button type="button" class="btn policy-secondary" id="doneOrder" data-i18n="done">تم</button></div></div></div></form></div></div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="products.js?v=20261022-catalog-quality"></script><script src="data/product-image-quality.js?v=20261022-dawn-refresh-v1"></script><script src="app.js?v=20261030-featured-carousel-v1"></script>
+  <script src="products.js?v=20261111-b2b-v1"></script><script src="data/product-image-quality.js?v=20261111-b2b-v1"></script><script src="app.js?v=20261111-b2b-catalog-v1"></script>
+  <script src="dealer-request.js?v=20261111-b2b-v1"></script>
   <script src="rocky-assistant.js?v=20261021-audit-release-1"></script>
   <script src="rock-experience.js?v=20261030-immersive-rock-v1"></script>
 </body>
