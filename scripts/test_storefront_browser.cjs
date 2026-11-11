@@ -128,6 +128,9 @@ async function waitForCatalog(page) {
     await visible(page, '.story-mark-logo', 'The ROCK logo should appear inside the brand-story tile');
     const storyLogo = await page.locator('.story-mark-logo').evaluate(el => ({ complete: el.complete, width: el.naturalWidth, alt: el.alt }));
     assert.ok(storyLogo.complete && storyLogo.width > 0 && storyLogo.alt === 'ROCK', 'The official logo must load in the story tile');
+    await visible(page, '#business', 'Distributor quotation section should appear on the homepage');
+    assert.ok(await page.locator('#dealerRequestForm').count() === 1, 'Distributor request form should be unique');
+    assert.ok(await page.locator('.collection-card-art img').count() >= 1, 'Collection cards should use approved catalog product imagery');
     await noHorizontalOverflow(page, 'desktop homepage');
     await page.screenshot({ path: path.join(artifactDir, '01-home-desktop.png'), fullPage: true });
 
@@ -165,6 +168,26 @@ async function waitForCatalog(page) {
     assert.equal(await page.locator('#cartCount').textContent(), '1');
     assert.equal(await page.locator('#cartItems .cart-row').count(), 1);
     await page.screenshot({ path: path.join(artifactDir, '03-cart-mobile.png'), fullPage: false });
+
+    // Distributor quotation request uses the current bag and preserves model/barcode references.
+    await page.locator('#continueBtn').click();
+    await page.locator('#dealerRequestForm').scrollIntoViewIfNeeded();
+    await page.locator('#dealerRequestForm [name="company"]').fill('ROCK Retail Test');
+    await page.locator('#dealerRequestForm [name="contact"]').fill('Store Manager');
+    await page.locator('#dealerRequestForm [name="phone"]').fill('0501234567');
+    await page.locator('#dealerRequestForm [name="city"]').fill('Jeddah');
+    await page.locator('#dealerRequestForm [name="volume"]').selectOption('50-200');
+    await page.locator('#dealerRequestForm [name="needs"]').fill('Power accessories');
+    await page.locator('#dealerRequestForm button[type="submit"]').click();
+    await visible(page, '#dealerRequestResult', 'A valid business request should show a reviewable preview');
+    const businessPreview = await page.locator('#dealerRequestText').inputValue();
+    assert.ok(businessPreview.includes('ROCK Retail Test') && businessPreview.includes('RKCBL146') && businessPreview.includes('850079508156'), 'Business preview must include company, selected model and barcode');
+    await page.evaluate(() => { Object.defineProperty(navigator, 'share', { configurable: true, value: async payload => { window.__rockDealerShare = payload; } }); });
+    await page.locator('#dealerShareRequest').click();
+    await page.waitForFunction(() => Boolean(window.__rockDealerShare && window.__rockDealerShare.text));
+    assert.ok(await page.evaluate(() => window.__rockDealerShare.text.includes('850079508156')), 'Share request must include product barcode');
+    await page.locator('#cartBtn').click();
+    await visible(page, '#cartDrawer.open', 'Cart should reopen after distributor request generation');
 
     await page.locator('#cartItems [data-inc]').first().click();
     assert.equal(await page.locator('#cartItems .qty span').first().textContent(), '2',
@@ -270,7 +293,7 @@ async function waitForCatalog(page) {
     await page.screenshot({ path: path.join(artifactDir, '07-product-added-cart-desktop.png'), fullPage: false });
 
     assert.deepEqual(errors, [], 'Unexpected JavaScript page errors: ' + errors.join(' | '));
-    console.log('ROCK browser regression passed: homepage, navigation, language, filters, cart totals, live order preview, explicit confirmation, share sheet and copy fallback, and product details.');
+    console.log('ROCK browser regression passed: homepage, category imagery, distributor quotation preview and sharing, navigation, language, filters, cart totals, order review, share sheet and copy fallback, and product details.');
     console.log('Screenshots saved under ' + artifactDir);
   } finally {
     await context.close();
