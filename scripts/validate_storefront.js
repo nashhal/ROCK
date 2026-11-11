@@ -176,7 +176,7 @@ for (const file of ['index.html', 'product.html', 'policies.html']) {
   const html = read(file);
   assert.equal((html.match(/rock-design-system\.css/gi) || []).length, 1, `${file} must load the shared design stylesheet exactly once`);
 }
-const sharedDesignStyles = ['index.html', 'product.html', 'policies.html'].map(file => {
+const sharedDesignStyles = ['index.html', 'product.html', 'policies.html', '404.html'].map(file => {
   const match = read(file).match(/href="(rock-design-system\.css\?v=[^"]+)"/);
   assert.ok(match, `Versioned white-modern stylesheet reference missing in ${file}`);
   return match[1];
