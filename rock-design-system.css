@@ -340,3 +340,12 @@ html[dir="rtl"] .hero h1{line-height:1.35;letter-spacing:0}
 .featured-dot.is-active:before{width:22px;border-radius:5px;background:#238da4}
 .featured-arrow,.featured-pause{min-width:44px;min-height:44px}
 @media(max-width:650px){.mini-btn{min-width:36px;min-height:36px}.featured-arrow,.featured-pause{min-width:44px;min-height:44px}}
+
+/* Preserve component state semantics from the storefront application */
+[hidden]{display:none!important}
+.cart-drawer[aria-hidden="true"]{visibility:hidden;pointer-events:none}
+.modal[aria-hidden="true"]{visibility:hidden;pointer-events:none}
+html[dir="rtl"] .cart-drawer{right:auto;left:0;transform:translateX(-105%)}
+html[dir="rtl"] .cart-drawer.open{transform:none!important}
+html[dir="ltr"] .cart-drawer{left:auto;right:0;transform:translateX(105%)}
+html[dir="ltr"] .cart-drawer.open{transform:none!important}
