@@ -11,6 +11,11 @@ function sales_fail(string $message, int $status = 400): never { rock_json(['err
 function sales_schema(PDO $pdo): void {
     static $ready = false;
     if ($ready) return;
+    try {
+        $repTable = $pdo->query("SHOW TABLES LIKE 'rock_sales_reps'")->fetchColumn();
+        $lastTable = $pdo->query("SHOW TABLES LIKE 'rock_sales_stock_movements'")->fetchColumn();
+        if ($repTable && $lastTable) { $ready = true; return; }
+    } catch (Throwable $ignored) { /* Create missing sales tables below. */ }
     $sql = [
       "CREATE TABLE IF NOT EXISTS rock_sales_reps (
         id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, username VARCHAR(40) NOT NULL UNIQUE,
@@ -277,6 +282,7 @@ if($action==='save_rep'){
  if($rate!==''&&(!is_numeric($rate)||(float)$rate<0||(float)$rate>100))sales_fail('نسبة العمولة يجب أن تكون بين 0 و100.',422);
  $rateValue=$rate===''?null:number_format((float)$rate,3,'.','');
  $q=$pdo->prepare('SELECT id FROM rock_admin_users WHERE username=?');$q->execute([$username]);if($q->fetchColumn())sales_fail('اسم المستخدم مستخدم للإدارة.',409);
+ $q=$pdo->prepare('SELECT id FROM rock_sales_reps WHERE username=? AND id<>? LIMIT 1');$q->execute([$username,$id]);if($q->fetchColumn())sales_fail('اسم المستخدم مستخدم لمندوب آخر.',409);
  if($id>0){$q=$pdo->prepare('SELECT id FROM rock_sales_reps WHERE id=?');$q->execute([$id]);if(!$q->fetchColumn())sales_fail('المندوب غير موجود.',404);
   if($password!==''){if(strlen($password)<12)sales_fail('كلمة المرور لا تقل عن 12 حرفًا.',422);$q=$pdo->prepare('UPDATE rock_sales_reps SET username=?,full_name=?,phone=?,password_hash=?,commission_percent=?,active=? WHERE id=?');$q->execute([$username,$name,$phone,password_hash($password,PASSWORD_DEFAULT),$rateValue,$active?1:0,$id]);}
   else{$q=$pdo->prepare('UPDATE rock_sales_reps SET username=?,full_name=?,phone=?,commission_percent=?,active=? WHERE id=?');$q->execute([$username,$name,$phone,$rateValue,$active?1:0,$id]);}
@@ -303,7 +309,7 @@ if($action==='save_quote'){
   $q=$pdo->prepare('SELECT id,model,name_ar,price FROM rock_products WHERE id=? AND active=1 AND image_approved=1 LIMIT 1');$q->execute([$pid]);$p=$q->fetch();if(!is_array($p))sales_fail('أحد المنتجات لم يعد متاحًا في الكتالوج.',422);
   $line=round((float)$p['price']*$qty,2);$subtotal+=$line;$lines[]=['id'=>$pid,'model'=>(string)$p['model'],'name'=>(string)$p['name_ar'],'qty'=>$qty,'price'=>(float)$p['price'],'line'=>$line];
  }
- if(!$lines||$discount>$subtotal)sales_fail('تحقق من المنتجات أو قيمة الخصم.',422);$total=round($subtotal-$discount,2);$no=sales_doc_no('quote');
+ if(!$lines||$discount>$subtotal)sales_fail('تحقق من المنتجات أو قيمة الخصم.',422);$total=round($subtotal-$discount,2);if($total<=0)sales_fail('يجب أن يكون إجمالي العرض أكبر من صفر.',422);$no=sales_doc_no('quote');
  $pdo->beginTransaction();$q=$pdo->prepare("INSERT INTO rock_sales_documents (doc_no,doc_type,status,customer_id,rep_id,subtotal,discount_amount,total_amount,notes,valid_until,created_by_role) VALUES (?,'quote','draft',?,?,?,?,?,?,?,?)");
  $q->execute([$no,$customerId,$repId,number_format($subtotal,2,'.',''),number_format($discount,2,'.',''),number_format($total,2,'.',''),$notes,$valid?:null,$actor['role']]);$docId=(int)$pdo->lastInsertId();
  $q=$pdo->prepare('INSERT INTO rock_sales_document_items (document_id,product_id,model_snapshot,name_snapshot,quantity,unit_price,line_total) VALUES (?,?,?,?,?,?,?)');foreach($lines as $l)$q->execute([$docId,$l['id'],$l['model'],$l['name'],$l['qty'],number_format($l['price'],2,'.',''),number_format($l['line'],2,'.','')]);
@@ -330,7 +336,8 @@ if($action==='convert_quote'){
 if($action==='update_order_status'){
  sales_require($pdo,'admin');$id=(int)($_POST['id']??0);$status=(string)($_POST['status']??'');$allowed=['confirmed','preparing','shipped','delivered','cancelled'];if(!in_array($status,$allowed,true))sales_fail('حالة الطلب غير معروفة.',422);
  $pdo->beginTransaction();$q=$pdo->prepare("SELECT * FROM rock_sales_documents WHERE id=? AND doc_type='order' FOR UPDATE");$q->execute([$id]);$d=$q->fetch();if(!is_array($d)){$pdo->rollBack();sales_fail('الطلب غير موجود.',404);}
- if($d['status']==='cancelled'&&$status!=='cancelled'){$pdo->rollBack();sales_fail('لا يمكن إعادة فتح طلب ملغي.',409);}
+ $transitions=['confirmed'=>['confirmed','preparing','shipped','cancelled'],'preparing'=>['preparing','shipped','cancelled'],'shipped'=>['shipped','delivered'],'delivered'=>['delivered'],'cancelled'=>['cancelled']];
+ if(!in_array($status,$transitions[(string)$d['status']]??[],true)){$pdo->rollBack();sales_fail('لا يمكن نقل الطلب إلى هذه الحالة من مرحلته الحالية.',409);}
  if($status==='cancelled'&&$d['stock_deducted_at']!==null){$pdo->rollBack();sales_fail('تم شحن الطلب بالفعل. سجّل حركة مرتجع مخزون بشكل مستقل قبل أي تسوية.',409);}
  if($status==='shipped'&&$d['stock_deducted_at']===null){
   $q=$pdo->prepare('SELECT product_id,quantity FROM rock_sales_document_items WHERE document_id=?');$q->execute([$id]);$lines=$q->fetchAll();

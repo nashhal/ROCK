@@ -17,6 +17,7 @@ $checks = [
     'Quote prices must be loaded from the database' => str_contains($api, 'SELECT id,model,name_ar,price FROM rock_products'),
     'Tracked stock is deducted on shipping' => str_contains($api, "if(\$status==='shipped'&&\$d['stock_deducted_at']===null)"),
     'Payment over-collection must be rejected' => str_contains($api, 'المبلغ يتجاوز الرصيد المتبقي'),
+    'Order status transitions must prevent workflow regression' => str_contains($api, '$transitions=') && str_contains($app, 'const transitions='),
     'Customer and document detail endpoints must exist' => str_contains($api, 'customer_detail') && str_contains($api, 'document_detail'),
     'Portal must be marked private from search engines' => str_contains($html, 'noindex,nofollow'),
     'Portal must expose admin-only commission navigation' => str_contains($html, 'data-tab="commissions"') && str_contains($html, 'admin-only'),
