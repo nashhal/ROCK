@@ -803,6 +803,7 @@ html[dir="rtl"] .hero h1{font-size:clamp(42px,5.8vw,76px)!important;line-height:
   --rock-font-ar:"Almarai","Source Sans 3",sans-serif;
   --rock-font-en:"Source Sans 3","Almarai",sans-serif;
   --rock-font-display:"Barlow","Source Sans 3",sans-serif;
+  --rock-font-latin:"Barlow","Source Sans 3",sans-serif;
 }
 body{font-family:var(--rock-font-en)!important;font-synthesis:none}
 html[dir="rtl"] body{
@@ -828,4 +829,21 @@ html[dir="rtl"] :is(h1,h2,h3,h4,.hero h1,.section-head h2,.story-copy h2,.closin
 }
 html[dir="rtl"] :is(.product-name,.product-detail-copy,.policy-card,.policy-intro,.shop-intro,.story-copy){
   font-family:var(--rock-font-ar)!important;
+}
+
+
+/* Match detail-page microcopy and ROCKY assistant to the same type family */
+html[dir="rtl"] :is(.product-page-body,.rocky-widget){
+  font-family:var(--rock-font-ar)!important;
+}
+html[dir="ltr"] .rocky-widget{font-family:var(--rock-font-en)!important}
+:is(.detail-model,.product-image-watermark,.fact-symbol,.related-card small,.related-card-model b,.rocky-product-model){
+  font-family:var(--rock-font-display)!important;
+  font-variant-numeric:tabular-nums;
+}
+html[dir="rtl"] :is(.product-primary-button,.product-secondary-button){
+  font-family:var(--rock-font-ar)!important;
+}
+html[dir="ltr"] :is(.product-primary-button,.product-secondary-button){
+  font-family:var(--rock-font-en)!important;
 }
