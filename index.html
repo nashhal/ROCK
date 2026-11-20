@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#155EEF">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.pexels.com; connect-src 'self'; form-action 'self'; upgrade-insecure-requests">
   <link rel="canonical" href="https://nashhal.github.io/ROCK/">
+  <link rel="icon" href="assets/brand/rock-logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://images.pexels.com">
   <meta name="description" content="استكشف إكسسوارات ROCK للشحن والصوت والسيارة. قارن الموديلات والأسعار المدرجة بالريال السعودي.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
@@ -26,7 +28,7 @@
   <link rel="stylesheet" href="styles.css?v=20261022-dawn-refresh-v1">
   <link rel="stylesheet" href="rocky-assistant.css?v=20261022-catalog-quality">
   <link rel="stylesheet" href="rock-design-system.css?v=20261111-modern-industrial-v3">
-  <link rel="stylesheet" href="rock-vivid-brand.css?v=20261120-v1">
+  <link rel="stylesheet" href="rock-vivid-brand.css?v=20261120-v2">
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skipToContent">تجاوز إلى المحتوى</a>
@@ -44,8 +46,8 @@
       </nav>
       <div class="header-actions">
         <button class="text-btn" id="langBtn" data-i18n-aria="switchLanguage" aria-label="تغيير اللغة">EN</button>
-        <button class="icon-btn" id="searchBtn" aria-label="بحث" data-i18n-aria="search">⌕</button>
-        <button class="cart-btn" id="cartBtn" type="button" aria-label="عرض السلة" data-i18n-aria="viewCart" aria-controls="cartDrawer" aria-expanded="false"><span data-i18n="bag">السلة</span><b id="cartCount" aria-live="polite" aria-atomic="true">0</b></button>
+        <button class="icon-btn" id="searchBtn" type="button" aria-label="بحث" data-i18n-aria="search"><svg class="rock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m16.5 16.5 4 4"/></svg></button>
+        <button class="cart-btn" id="cartBtn" type="button" aria-label="عرض السلة" data-i18n-aria="viewCart" aria-controls="cartDrawer" aria-expanded="false"><svg class="rock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 13H6L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg><span data-i18n="bag">السلة</span><b id="cartCount" aria-live="polite" aria-atomic="true">0</b></button>
       </div>
     </div>
     <nav class="mobile-panel" id="mobilePanel" aria-label="قائمة التنقل" data-i18n-aria="navigationMenu" aria-hidden="true">
@@ -90,9 +92,9 @@
     </section>
 
     <section class="service-strip section-shell">
-      <article class="service-item"><div><h3 data-i18n="trustProductTitle">ابدأ بالموديل</h3><p data-i18n="trustProductText">أسماء الموديلات واضحة لتسهيل المقارنة.</p></div></article>
-      <article class="service-item"><div><h3 data-i18n="trustPriceTitle">السعر أمامك</h3><p data-i18n="trustPriceText">الأسعار المدرجة بالريال السعودي.</p></div></article>
-      <article class="service-item"><div><h3 data-i18n="trustOrderTitle">راجع طلبك أولًا</h3><p data-i18n="trustOrderText">أنشئ ملخص الطلب وراجعه قبل مشاركته.</p></div></article>
+      <article class="service-item"><span class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h2M18 5h2v2M20 17v2h-2M6 19H4v-2"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></svg></span><div><h3 data-i18n="trustProductTitle">ابدأ بالموديل</h3><p data-i18n="trustProductText">أسماء الموديلات واضحة لتسهيل المقارنة.</p></div></article>
+      <article class="service-item"><span class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16 8h-5.2a2 2 0 0 0 0 4h2.4a2 2 0 0 1 0 4H8M12 6v12"/></svg></span><div><h3 data-i18n="trustPriceTitle">السعر أمامك</h3><p data-i18n="trustPriceText">الأسعار المدرجة بالريال السعودي.</p></div></article>
+      <article class="service-item"><span class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6v3H9zM8.5 14l2.2 2.2 4.8-5"/></svg></span><div><h3 data-i18n="trustOrderTitle">راجع طلبك أولًا</h3><p data-i18n="trustOrderText">أنشئ ملخص الطلب وراجعه قبل مشاركته.</p></div></article>
     </section>
 
     <section class="section-shell shop-section" id="shop">
@@ -105,7 +107,7 @@
           <button class="chip active" data-cat="all" data-i18n="catAll">All</button><button class="chip" data-cat="power" data-i18n="catPower">Power</button><button class="chip" data-cat="audio" data-i18n="catAudio">Audio</button><button class="chip" data-cat="car" data-i18n="catDrive">Drive</button><button class="chip" data-cat="lifestyle" data-i18n="catLifestyle">Lifestyle</button>
         </div>
         <div class="shop-tools">
-          <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" aria-label="ابحث باسم المنتج أو الموديل" placeholder="ابحث عن موديل أو منتج" data-ph-ar="ابحث عن موديل أو منتج" data-ph-en="Search model or product"></label>
+          <label class="search-box"><svg class="rock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m16.5 16.5 4 4"/></svg><input id="searchInput" type="search" aria-label="ابحث باسم المنتج أو الموديل" placeholder="ابحث عن موديل أو منتج" data-ph-ar="ابحث عن موديل أو منتج" data-ph-en="Search model or product"></label>
           <label class="sort-control"><span class="sort-control-label" data-i18n="sortBy">ترتيب حسب</span><select id="sortSelect" aria-label="ترتيب حسب"><option value="featured" data-i18n="sortFeatured">Featured</option><option value="low" data-i18n="sortLow">Price: low to high</option><option value="high" data-i18n="sortHigh">Price: high to low</option><option value="name" data-i18n="sortName">Name</option></select></label>
         </div>
       </div>
@@ -125,10 +127,10 @@
     <section class="collections section-shell" id="collections">
       <div class="section-head"><div><div class="eyebrow">02 / <span data-i18n="collectionsLabel">المجموعات</span></div><h2 data-i18n="collectionsTitle">اختر حسب يومك</h2></div></div>
       <div class="collection-grid">
-        <button class="collection-card collection-power" data-collection="power"><div><b data-i18n="powerLabel">الشحن والطاقة</b><small data-i18n="powerText">طاقة وشحن</small></div><strong>↗</strong></button>
-        <button class="collection-card collection-audio" data-collection="audio"><div><b data-i18n="audioLabel">الصوت</b><small data-i18n="audioText">صوتك في كل مكان</small></div><strong>↗</strong></button>
-        <button class="collection-card collection-drive" data-collection="car"><div><b data-i18n="driveLabel">إكسسوارات السيارة</b><small data-i18n="driveText">حلول للسيارة</small></div><strong>↗</strong></button>
-        <button class="collection-card collection-life" data-collection="lifestyle"><div><b data-i18n="lifeLabel">إكسسوارات يومية</b><small data-i18n="lifeText">تفاصيل يومية</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-power" data-collection="power"><div><span class="collection-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M10 2h4M13 8l-3 5h3l-1 3 4-6h-3l1-2"/></svg></span><b data-i18n="powerLabel">الشحن والطاقة</b><small data-i18n="powerText">طاقة وشحن</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-audio" data-collection="audio"><div><span class="collection-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="2" y="13" width="4" height="7" rx="2"/><rect x="18" y="13" width="4" height="7" rx="2"/></svg></span><b data-i18n="audioLabel">الصوت</b><small data-i18n="audioText">صوتك في كل مكان</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-drive" data-collection="car"><div><span class="collection-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 11 1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/><path d="M3 11h18v7H3z"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/></svg></span><b data-i18n="driveLabel">إكسسوارات السيارة</b><small data-i18n="driveText">حلول للسيارة</small></div><strong>↗</strong></button>
+        <button class="collection-card collection-life" data-collection="lifestyle"><div><span class="collection-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg></span><b data-i18n="lifeLabel">إكسسوارات يومية</b><small data-i18n="lifeText">تفاصيل يومية</small></div><strong>↗</strong></button>
       </div>
     </section>
 
