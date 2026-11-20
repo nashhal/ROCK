@@ -228,7 +228,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* Brand story and final call-to-action */
 .story{position:relative}
-.story-mark-logo{filter:none!important;opacity:.94}
+.story-mark-logo{filter:brightness(0) saturate(100%) invert(10%) sepia(58%) saturate(1150%) hue-rotate(186deg) brightness(91%) contrast(104%)!important;opacity:.94}
 .story-copy h2{color:#0b2755!important}
 .story-copy h2 em,.story-copy strong{color:var(--rock-blue)!important}
 .story-copy p{color:#60748e!important}
