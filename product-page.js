@@ -89,7 +89,7 @@
       const card=document.createElement('article');card.className='related-card';
       const image=imagePath(item.image);
       const modelText=item.model&&item.model!=='—'?item.model:t('modelMissing');
-      const photo=image?'<img data-related-image loading="lazy" width="360" height="270" src="'+escapeHtml(image)+'" alt="'+escapeHtml(name(item))+'">':'<span class="product-photo-placeholder" role="img" aria-label="'+escapeHtml(t('photoPending'))+'"><strong>ROCK</strong><small>'+escapeHtml(t('photoPending'))+'</small></span>';
+      const photo=image?'<img data-related-image loading="lazy" decoding="async" width="360" height="270" src="'+escapeHtml(image)+'" alt="'+escapeHtml(name(item))+'">':'<span class="product-photo-placeholder" role="img" aria-label="'+escapeHtml(t('photoPending'))+'"><strong>ROCK</strong><small>'+escapeHtml(t('photoPending'))+'</small></span>';
       card.innerHTML='<a class="related-card-visual" href="'+detailUrl+'" aria-label="'+escapeHtml(t('viewProduct'))+': '+escapeHtml(name(item))+'">'+photo+'</a>'+
         '<div class="related-card-content">'+
           '<div class="related-card-model"><span>'+escapeHtml(t('modelLabel'))+'</span><b dir="ltr">'+escapeHtml(modelText)+'</b></div>'+
