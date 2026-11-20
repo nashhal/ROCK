@@ -267,3 +267,43 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
+
+/* ROCK geological imagery — real rock photography as a restrained brand texture.
+   Pexels photo credits: Francesco Ungaro (20713770), Goszton (30831663).
+   Used as background photography, never as the logo or a product image. */
+.hero.section-shell,.hero{
+  background:
+    linear-gradient(100deg,rgba(255,255,255,.94) 0%,rgba(247,250,255,.86) 48%,rgba(238,245,255,.66) 100%),
+    url("https://images.pexels.com/photos/20713770/pexels-photo-20713770.jpeg?auto=compress&cs=tinysrgb&w=2200")
+    center 48%/cover no-repeat!important;
+}
+.closing-banner{
+  background:
+    linear-gradient(110deg,rgba(7,26,51,.91) 0%,rgba(17,77,186,.86) 56%,rgba(4,120,173,.78) 100%),
+    url("https://images.pexels.com/photos/30831663/pexels-photo-30831663.jpeg?auto=compress&cs=tinysrgb&w=2200")
+    center 52%/cover no-repeat!important;
+}
+.story-mark{
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:250px;padding:28px;border-radius:20px;
+  background:
+    linear-gradient(135deg,rgba(7,26,51,.78),rgba(21,94,239,.48)),
+    url("https://images.pexels.com/photos/20713770/pexels-photo-20713770.jpeg?auto=compress&cs=tinysrgb&w=1200")
+    center/cover no-repeat;
+}
+.story-mark-logo{
+  position:relative;z-index:1;filter:brightness(0) invert(1)!important;
+  width:min(76%,290px);max-height:130px
+}
+@media(max-width:760px){
+  .hero.section-shell,.hero{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.93),rgba(245,249,255,.86)),
+      url("https://images.pexels.com/photos/20713770/pexels-photo-20713770.jpeg?auto=compress&cs=tinysrgb&w=1400")
+      center/cover no-repeat!important;
+  }
+  .story-mark{min-height:170px;padding:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero.section-shell,.hero,.closing-banner,.story-mark{background-attachment:scroll!important}
+}
