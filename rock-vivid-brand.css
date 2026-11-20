@@ -326,8 +326,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   --rock-surface:#FFFFFF;
   --rock-line:#DCE6F5;
   --rock-muted:#64758B;
-  --rock-font-ar:"IBM Plex Sans Arabic","Inter",sans-serif;
-  --rock-font-en:"Inter","IBM Plex Sans Arabic",sans-serif;
+  --rock-font-ar:"Almarai","Source Sans 3",sans-serif;
+  --rock-font-en:"Source Sans 3","Almarai",sans-serif;
   --rock-content-width:1280px;
   --rock-page-gutter:clamp(16px,3vw,32px);
   --rock-section-space:clamp(60px,7vw,96px);
@@ -795,4 +795,37 @@ html[dir="rtl"] .hero h1{font-size:clamp(42px,5.8vw,76px)!important;line-height:
 @media(max-height:620px) and (max-width:650px){
   .modal{padding-top:8px!important;padding-bottom:8px!important}
   .checkout-shell{padding-top:14px!important;padding-bottom:18px!important}
+}
+
+
+/* ROCK typography: editorial Latin + clear Arabic, avoiding generic UI font stacks */
+:root{
+  --rock-font-ar:"Almarai","Source Sans 3",sans-serif;
+  --rock-font-en:"Source Sans 3","Almarai",sans-serif;
+  --rock-font-display:"Barlow","Source Sans 3",sans-serif;
+}
+body{font-family:var(--rock-font-en)!important;font-synthesis:none}
+html[dir="rtl"] body{
+  font-family:var(--rock-font-ar)!important;
+  letter-spacing:0;
+}
+html[dir="ltr"] body{font-family:var(--rock-font-en)!important}
+html[dir="ltr"] :is(h1,h2,h3,h4,.hero h1,.section-head h2,.story-copy h2,.closing-banner h2,.product-detail-copy h1){
+  font-family:var(--rock-font-display)!important;
+  font-weight:700;
+  letter-spacing:-.025em;
+}
+html[dir="rtl"] :is(h1,h2,h3,h4,.hero h1,.section-head h2,.story-copy h2,.closing-banner h2,.product-detail-copy h1){
+  font-family:var(--rock-font-ar)!important;
+  font-weight:800;
+  letter-spacing:0;
+}
+:is(.product-model,.product-eyebrow,.price,.hero-meta strong,.featured-model b,.featured-price strong,
+.featured-media-caption,.featured-image-fallback,.featured-serial,.policy-number,.not-found-code,
+.login-foot,.stat-card>strong,.recent-main strong,.recent-side b,.performance-sales){
+  font-family:var(--rock-font-display)!important;
+  font-variant-numeric:tabular-nums;
+}
+html[dir="rtl"] :is(.product-name,.product-detail-copy,.policy-card,.policy-intro,.shop-intro,.story-copy){
+  font-family:var(--rock-font-ar)!important;
 }
