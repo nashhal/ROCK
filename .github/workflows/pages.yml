@@ -112,6 +112,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect product photo changes
+        id: photo_changes
+        env:
+          BASE_SHA: ${{ github.event.before }}
+        run: |
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$BASE_SHA" "$GITHUB_SHA" -- products.js assets/products; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Set up PHP for Hostinger backend checks
         uses: shivammathur/setup-php@v2
         with:
@@ -119,6 +133,7 @@ jobs:
           extensions: gd, pdo_mysql, mbstring
           coverage: none
       - name: Sync official product photo galleries
+        if: steps.photo_changes.outputs.changed == 'true'
         run: |
           python -m pip install --disable-pip-version-check pillow requests beautifulsoup4
           python scripts/sync_drive_photos.py
