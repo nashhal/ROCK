@@ -11,3 +11,27 @@
 @media(max-width:640px){.login-view{grid-template-columns:1fr}.login-aside{min-height:250px;padding:22px 25px 25px}.login-logo{width:76px}.login-message{margin:30px 0 10px}.login-message h1{font-size:48px;margin:13px 0}.login-message p{font-size:12px;margin:0}.login-foot{font-size:7px}.login-main{min-height:auto;padding:38px 23px 48px}.login-card{padding:0}.login-card h2{font-size:29px}.topbar{height:59px;padding:0 15px}.top-date{display:none}.topbar-right{gap:0}.content-wrap{padding:23px 14px}.page-heading{align-items:flex-start;flex-direction:column;gap:13px;margin-bottom:19px}.page-heading h1{font-size:30px}.page-heading .primary-btn{width:100%}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat-card{min-height:113px;padding:13px}.stat-card>strong{font-size:21px;margin:10px 0 1px}.dashboard-grid{grid-template-columns:1fr;gap:11px}.quick-panel{grid-column:auto}.panel-card{padding:15px;border-radius:13px}.table-card{padding:0}.table-toolbar{align-items:flex-start;flex-direction:column;padding:15px}.search-input{width:100%;max-width:none}.form-grid{grid-template-columns:1fr;gap:11px}.wide-field{grid-column:auto}.quote-line{grid-template-columns:minmax(0,1fr) 65px 78px 30px;gap:5px}.quote-line select,.quote-line input{font-size:9px;padding:0 6px}.quote-line-total{font-size:9px}.commission-settings form{align-items:stretch;gap:13px}.commission-settings form>div{min-width:0}.commission-settings form>label{width:100%}.commission-settings .primary-btn{width:100%}.detail-modal{padding:18px}.detail-summary{grid-template-columns:repeat(2,1fr)}.report-filter form{align-items:stretch;flex-direction:column}.report-filter label{min-width:0;flex:1}.report-filter .primary-btn{width:100%}.app-footer{font-size:7px}.system-live{font-size:9px}.table-scroll table{min-width:720px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media print{body{background:#fff}.sidebar,.topbar,.app-footer,.detail-actions,.modal-backdrop,.icon-close{display:none!important}.main-area{margin:0}.content-wrap{padding:0}.tab-panel{display:none!important}#detailModal{position:static;display:block!important;padding:0}#detailModal .detail-modal{width:100%;max-height:none;overflow:visible;border:0;box-shadow:none;padding:0}.modal-title{padding-top:0}}
+
+
+/* ROCK Sales — shared brand accent, while preserving the quieter operational UI */
+:root{
+  --navy:#071A33;
+  --blue:#155EEF;
+  --ink:#152438;
+  --muted:#64758B;
+  --line:#DFE8F6;
+  --paper:#F3F7FF;
+}
+.login-aside{
+  background:
+    linear-gradient(135deg,rgba(7,26,51,.94) 0%,rgba(12,51,116,.88) 56%,rgba(21,94,239,.56) 100%),
+    url("https://images.pexels.com/photos/20713770/pexels-photo-20713770.jpeg?auto=compress&cs=tinysrgb&w=1400&q=80")
+    center/cover no-repeat!important;
+}
+.login-message h1 em{color:#B9F4FF!important}
+.primary-btn{background:#155EEF!important}
+.primary-btn:hover{background:#1044B7!important}
+.nav-link.active{
+  background:rgba(21,94,239,.22)!important;
+  box-shadow:inset -3px 0 #68A4FF!important
+}
