@@ -161,7 +161,7 @@
       return `
         <article class="featured-slide" data-featured-slide="${index}" role="group" aria-roledescription="slide" aria-label="${slideLabel}" ${index===state.featuredIndex?'':'hidden'}>
           <div class="featured-media">
-            <img src="${esc(safeImage(product.image))}" alt="${esc(name(product))}" loading="${index===state.featuredIndex?'eager':'lazy'}" width="640" height="480">
+            <img src="${esc(safeImage(product.image))}" alt="${esc(name(product))}" loading="${index===state.featuredIndex?'eager':'lazy'}" decoding="async" fetchpriority="${index===state.featuredIndex?'high':'auto'}" width="640" height="480">
             <span class="featured-media-caption">ROCK / SELECTED</span>
           </div>
           <div class="featured-product-copy">
@@ -302,7 +302,7 @@
       const modelText = p.model && p.model !== '—' ? p.model : t('modelMissing');
       card.innerHTML = `
         <a class="product-image product-image-link" href="${detailUrl}" aria-label="${esc(t('viewProduct'))}: ${esc(name(p))}">
-          ${image ? `<img data-product-image loading="lazy" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="360">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
+          ${image ? `<img data-product-image loading="lazy" decoding="async" src="${esc(image)}" alt="${esc(name(p))}" width="480" height="360">` : `<span class="product-photo-placeholder" role="img" aria-label="${esc(t('photoPending'))}"><strong>ROCK</strong><small>${esc(t('photoPending'))}</small></span>`}
           <span class="product-tag">${esc(catLabel(p.category))}</span>
         </a>
         <div class="product-info">
@@ -310,8 +310,8 @@
           <a class="product-title-link" href="${detailUrl}"><div class="product-name">${esc(name(p))}</div></a>
           <div class="product-price-row"><span class="price-label">${esc(t('priceLabel'))}</span><span class="price">${money(p.price)}</span></div>
           <div class="product-actions">
-            <button class="product-action-btn product-action-view" data-view="${esc(p.id)}" aria-label="${esc(t('quickView'))}: ${esc(name(p))}" title="${esc(t('quickView'))}"><span>${esc(t('quickView'))}</span><span aria-hidden="true">↗</span></button>
-            <button class="product-action-btn product-action-add" data-add="${esc(p.id)}" aria-label="${esc(t('addToBag'))}: ${esc(name(p))}" title="${esc(t('addToBag'))}"><span>${esc(t('addToBag'))}</span><span aria-hidden="true">＋</span></button>
+            <button class="product-action-btn product-action-view" data-view="${esc(p.id)}" aria-label="${esc(t('quickView'))}: ${esc(name(p))}" title="${esc(t('quickView'))}"><span>${esc(t('quickView'))}</span><svg class="rock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></button>
+            <button class="product-action-btn product-action-add" data-add="${esc(p.id)}" aria-label="${esc(t('addToBag'))}: ${esc(name(p))}" title="${esc(t('addToBag'))}"><span>${esc(t('addToBag'))}</span><svg class="rock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>`;
       grid.appendChild(card);
